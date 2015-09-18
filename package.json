@@ -1,0 +1,9 @@
+{
+  "name": "git-commit-and-push-content",
+  "readable": "Git Commit and Push Content",
+  "version": "0.0.1",
+  "stable": true,
+  "description": "Version Controle your Content-Folder",
+  "author": "Pascal Küsgen",
+  "url": "http://pascalmh.de"
+}
