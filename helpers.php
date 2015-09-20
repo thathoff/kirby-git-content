@@ -6,19 +6,19 @@
 * @return false
 */
 function gitCommit($commitMessage) {
+    $branch = c::get('gcapc-branch') || 'master';
+    $pull = c::get('gcapc-pull') || true;
+    $push = c::get('gcapc-push') || true;
+    $commit = c::get('gcapc-commit') || true;
+    $pushCommand = c::get('gcapc-pushCommand') || 'git push';
+
     exec(
-        'cd ../content/ && ' .
-        'git add -A &&' .
-        'git commit -m "' . $commitMessage . ' by ' . site()->user() . '"' .
-        (
-            server::get('SERVER_ADDR') != "localhost"
-                ? ' && git push "ext::ssh -i ' .
-                    c::get('gcapcSshKeyPath') . ' ' .
-                    c::get('gcapcGitServer') . ' %S ' .
-                    c::get('gcapcGitRepository') . '"'
-                : ''
-        ),
-        $output
+        'cd ../content/' .
+        ' && git checkout -b ' . $branch . '' .
+        $pull ? ' && git pull' : '' .
+        $commit ? ' && git add -A' : '' .
+        $commit ? ' && git commit -m "' . $commitMessage . ' by ' . site()->user() . '"' : '' .
+        $push ? ' && ' . $pushCommand : ''
     );
 
     return false;
