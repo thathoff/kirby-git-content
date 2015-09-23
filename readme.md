@@ -37,6 +37,8 @@ git push origin master
 Go into your `site/plugins/` folder and  
 ```
 git submodule add --name git-commit-and-push-content https://github.com/Pascalmh/kirby-git-commit-and-push-content.git site/plugins/git-commit-and-push-content
+cd site/plugins/
+git submodule update --init --recursive
 ```
 
 Or: Put all the files into your `site/plugins/git-commit-and-push-content/` folder. If the `git-commit-and-push-content/` plugin folder doesn't exist then create it.
@@ -76,7 +78,6 @@ Default value: `''`
 Sets the location where git can be found 
 
 [See Git.php](http://kbjr.github.io/Git.php/) `void Git::set_bin ( string $path )`
-
 
 #### gcapc-windowsMode
 Type: `Boolean`
