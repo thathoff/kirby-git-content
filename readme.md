@@ -34,7 +34,10 @@ git push origin master
 
 ### Download and configure the Plugin
 
-Go into your `site/plugins/` folder and  `git clone https://github.com/Pascalmh/kirby-git-commit-and-push-content git-commit-and-push-content`.
+Go into your `site/plugins/` folder and  
+```
+git submodule add --name git-commit-and-push-content https://github.com/Pascalmh/kirby-git-commit-and-push-content.git site/plugins/git-commit-and-push-content
+```
 
 Or: Put all the files into your `site/plugins/git-commit-and-push-content/` folder. If the `git-commit-and-push-content/` plugin folder doesn't exist then create it.
 
@@ -44,7 +47,7 @@ You can use the following [Options](http://getkirby.com/docs/advanced/options) -
 
 #### gcapc-branch
 Type: `String`
-Default value: `master`
+Default value: `'master'`
 
 branch name to be checked out
 
@@ -66,11 +69,20 @@ Default value: `true`
  
 Push your changes to remote?
 
-#### gcapc-pushCommand
+#### gcapc-gitBin
 Type: `String`
-Default value: `git push`
+Default value: `''`
 
-[git push](http://git-scm.com/docs/git-push)
+Sets the location where git can be found 
+
+[See Git.php](http://kbjr.github.io/Git.php/) `void Git::set_bin ( string $path )`
+
+
+#### gcapc-windowsMode
+Type: `Boolean`
+Default value: `false`
+
+[See Git.php](http://kbjr.github.io/Git.php/) `void Git::windows_mode ( void )`
 
 ## Author
 

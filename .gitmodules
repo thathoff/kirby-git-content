@@ -1,0 +1,3 @@
+[submodule "Git.php"]
+	path = Git.php
+	url = https://github.com/kbjr/Git.php.git
