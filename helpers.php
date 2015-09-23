@@ -23,7 +23,7 @@ function gitCommit($commitMessage) {
         Git::windows_mode();
     }
     if ($gitBin) {
-        Git::set_bin('/usr/local/bin/git');
+        Git::set_bin($gitBin);
     }
 
     $repo = Git::open('../content');
