@@ -47,6 +47,8 @@ Or: Put all the files into your `site/plugins/git-commit-and-push-content/` fold
 
 You can use the following [Options](http://getkirby.com/docs/advanced/options) - make use of kirbys [Multi-environment setup](http://getkirby.com/blog/multi-environment-setup).
 
+(In case you need to use multiple git users on your environment - [Multiple SSH Keys settings for different github account](https://gist.github.com/jexchan/2351996))
+
 #### gcapc-branch
 Type: `String`
 Default value: `'master'`
