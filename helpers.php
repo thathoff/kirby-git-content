@@ -6,9 +6,12 @@ require_once('Git.php/Git.php');
  * Compose Commit message, appends " by Username"
  *
  * @param string $commitMessage
+ *
  * @return false
  */
-function gitCommit($commitMessage) {
+function gitCommit($commitMessage)
+{
+    $debugMode = c::get('debug', false);
     $branch = c::get('gcapc-branch', 'master');
     $pull = c::get('gcapc-pull', true);
     $push = c::get('gcapc-push', true);
@@ -19,7 +22,7 @@ function gitCommit($commitMessage) {
     /*
      * Setup git environment
      */
-    if($windowsMode) {
+    if ($windowsMode) {
         Git::windows_mode();
     }
     if ($gitBin) {
@@ -28,8 +31,17 @@ function gitCommit($commitMessage) {
 
     $repo = Git::open('../content');
 
-    // We are in the panel-Folder - go into content-Folder
-    chdir('../content');
+    if ($debugMode) {
+        if (!$repo->test_git()) {
+            echo 'git could not be found or is not working properly. ' . Git::get_bin();
+            exit;
+        }
+
+        if (!Git::is_repo($repo)) {
+            echo '$repo is not an instance of GitRepo';
+            exit;
+        }
+    }
 
     /*
      * Git Pull, Commit and Push
@@ -45,9 +57,6 @@ function gitCommit($commitMessage) {
     if ($push) {
         $repo->push('origin', $branch);
     }
-
-    // Go back into panel-Folder
-    chdir('../panel');
 
     return false;
 }
