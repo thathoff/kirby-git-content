@@ -36,7 +36,7 @@ git push origin master
 
 Go into your `site/plugins/` folder and  
 ```
-git submodule add --name git-commit-and-push-content https://github.com/Pascalmh/kirby-git-commit-and-push-content.git site/plugins/git-commit-and-push-content
+git submodule add --name git-commit-and-push-content https://github.com/blankogmbh/kirby-git-commit-and-push-content.git site/plugins/git-commit-and-push-content
 cd site/plugins/
 git submodule update --init --recursive
 ```
