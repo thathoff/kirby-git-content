@@ -1,3 +1,13 @@
+<a name="0.0.6"></a>
+## [0.0.6](//compare/v0.0.5...v0.0.6) (2015-10-29)
+
+
+### Bug Fixes
+
+* remove User and Avatar hook 1582ddc
+
+
+
 <a name="0.0.5"></a>
 ## [0.0.5](//compare/v0.0.4...v0.0.5) (2015-09-29)
 
