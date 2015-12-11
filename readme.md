@@ -57,19 +57,19 @@ branch name to be checked out
 
 #### gcapc-pull
 Type: `Boolean`
-Default value: `true`
+Default value: `false`
  
 Pull remote changes first?
 
 #### gcapc-commit
 Type: `Boolean`
-Default value: `true`
+Default value: `false`
  
 Commit your changes?
 
 #### gcapc-push
 Type: `Boolean`
-Default value: `true`
+Default value: `false`
  
 Push your changes to remote?
 

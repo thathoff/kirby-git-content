@@ -13,9 +13,9 @@ function gitCommit($commitMessage)
 {
     $debugMode = c::get('debug', false);
     $branch = c::get('gcapc-branch', 'master');
-    $pull = c::get('gcapc-pull', true);
-    $push = c::get('gcapc-push', true);
-    $commit = c::get('gcapc-commit', true);
+    $pull = c::get('gcapc-pull', false);
+    $push = c::get('gcapc-push', false);
+    $commit = c::get('gcapc-commit', false);
     $gitBin = c::get('gcapc-gitBin', '');
     $windowsMode = c::get('gcapc-windowsMode', false);
 
