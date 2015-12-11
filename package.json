@@ -1,7 +1,7 @@
 {
   "name": "git-commit-and-push-content",
   "readable": "Git Commit and Push Content",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "stable": true,
   "description": "Version Controle your Content-Folder",
   "author": "Pascal Küsgen",
