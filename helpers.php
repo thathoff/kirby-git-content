@@ -46,12 +46,13 @@ function gitCommit($commitMessage)
     /*
      * Git Pull, Commit and Push
      */
+    $repo->checkout($branch);
+
     if ($pull) {
-        $repo->checkout($branch);
         $repo->pull('origin', $branch);
     }
     if ($commit) {
-        $repo->add('.');
+        $repo->add('-A');
         $repo->commit($commitMessage . ' by ' . site()->user());
     }
     if ($push) {
