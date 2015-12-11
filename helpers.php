@@ -13,9 +13,9 @@ function gitCommit($commitMessage)
 {
     $debugMode = c::get('debug', false);
     $branch = c::get('gcapc-branch', 'master');
-    $pull = c::get('gcapc-pull', true);
-    $push = c::get('gcapc-push', true);
-    $commit = c::get('gcapc-commit', true);
+    $pull = c::get('gcapc-pull', false);
+    $push = c::get('gcapc-push', false);
+    $commit = c::get('gcapc-commit', false);
     $gitBin = c::get('gcapc-gitBin', '');
     $windowsMode = c::get('gcapc-windowsMode', false);
 
@@ -46,12 +46,13 @@ function gitCommit($commitMessage)
     /*
      * Git Pull, Commit and Push
      */
+    $repo->checkout($branch);
+
     if ($pull) {
-        $repo->checkout($branch);
         $repo->pull('origin', $branch);
     }
     if ($commit) {
-        $repo->add('.');
+        $repo->add('-A');
         $repo->commit($commitMessage . ' by ' . site()->user());
     }
     if ($push) {
