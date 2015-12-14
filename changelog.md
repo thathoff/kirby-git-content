@@ -1,8 +1,11 @@
 <a name="0.0.7"></a>
-## [0.0.7](//compare/v0.0.7...v0.0.7) (2015-12-11)
+## [0.0.7](//compare/v0.0.6...v0.0.7) (2015-12-11)
 
 
+### Features
 
+* make plugin opt-in instead of opt-out
+* git commit -A to include deletions
 
 <a name="0.0.6"></a>
 ## [0.0.6](//compare/v0.0.5...v0.0.6) (2015-10-29)
