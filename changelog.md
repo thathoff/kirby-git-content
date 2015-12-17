@@ -1,3 +1,9 @@
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v0.0.7...v1.0.0) (2015-12-17)
+
+
+
+
 <a name="0.0.7"></a>
 ## [0.0.7](//compare/v0.0.6...v0.0.7) (2015-12-11)
 
