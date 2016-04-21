@@ -49,6 +49,8 @@ You can use the following [Options](http://getkirby.com/docs/advanced/options) -
 
 (In case you need to use multiple git users on your environment - [Multiple SSH Keys settings for different github account](https://gist.github.com/jexchan/2351996))
 
+If you do not want to Pull and/or Push on every change you can also call `yourdomain.com/gcapc/push` or `yourdomain.com/gcapc/pull` manually (or automated with e.g. a cronjob).
+
 #### gcapc-branch
 Type: `String`
 Default value: `'master'`
