@@ -1,63 +1,87 @@
 <?php
 
-require_once('Git.php/Git.php');
-
-/**
- * Compose Commit message, appends " by Username"
- *
- * @param string $commitMessage
- *
- * @return false
- */
-function gitCommit($commitMessage)
+class KirbyGitHelper
 {
-    $debugMode = c::get('debug', false);
-    $branch = c::get('gcapc-branch', 'master');
-    $pull = c::get('gcapc-pull', false);
-    $push = c::get('gcapc-push', false);
-    $commit = c::get('gcapc-commit', false);
-    $gitBin = c::get('gcapc-gitBin', '');
-    $windowsMode = c::get('gcapc-windowsMode', false);
+    private $repo;
+    private $repoPath;
+    private $branch;
+    private $pullOnChange;
+    private $pushOnChange;
+    private $commitOnChange;
+    private $gitBin;
+    private $windowsMode;
 
-    /*
-     * Setup git environment
-     */
-    if ($windowsMode) {
-        Git::windows_mode();
-    }
-    if ($gitBin) {
-        Git::set_bin($gitBin);
+    public function __construct($repoPath = __DIR__ . "/../../../content")
+    {
+        $this->repoPath = $repoPath;
     }
 
-    $repo = Git::open('../content');
-
-    if ($debugMode) {
-        if (!$repo->test_git()) {
-            echo 'git could not be found or is not working properly. ' . Git::get_bin();
-            exit;
+    private function initRepo()
+    {
+        if (!class_exists("Git")) {
+            require('Git.php/Git.php');
         }
 
-        if (!Git::is_repo($repo)) {
-            echo '$repo is not an instance of GitRepo';
-            exit;
+        $this->branch = c::get('gcapc-branch', 'master');
+        $this->pullOnChange = c::get('gcapc-pull', false);
+        $this->pushOnChange = c::get('gcapc-push', false);
+        $this->commitOnChange = c::get('gcapc-commit', false);
+        $this->gitBin = c::get('gcapc-gitBin', '');
+        $this->windowsMode = c::get('gcapc-windowsMode', false);
+
+        if ($this->windowsMode) {
+            Git::windows_mode();
+        }
+        if ($this->gitBin) {
+            Git::set_bin($this->gitBin);
+        }
+
+        $this->repo = Git::open($this->repoPath);
+
+        if (!$this->repo->test_git()) {
+            trigger_error('git could not be found or is not working properly. ' . Git::get_bin());
         }
     }
 
-    /*
-     * Git Pull, Commit and Push
-     */
-    $repo->checkout($branch);
+    private function getRepo()
+    {
+        if ($this->repo == null) {
+            $this->initRepo();
+        }
 
-    if ($pull) {
-        $repo->pull('origin', $branch);
-    }
-    if ($commit) {
-        $repo->add('-A');
-        $repo->commit($commitMessage . ' by ' . site()->user());
-    }
-    if ($push) {
-        $repo->push('origin', $branch);
+        return $this->repo;
     }
 
-    return false;
+    public function commit($commitMessage)
+    {
+        $this->getRepo()->add('-A');
+        $this->getRepo()->commit($commitMessage);
+    }
+
+    public function push($branch = false)
+    {
+        $branch = $branch ? $branch : $this->branch;
+        $this->getRepo()->push('origin', $branch);
+    }
+
+    public function pull($branch = false)
+    {
+        $branch = $branch ? $branch : $this->branch;
+        $this->getRepo()->pull('origin', $branch);
+    }
+
+    public function kirbyChange($commitMessage)
+    {
+        $this->getRepo()->checkout($this->branch);
+
+        if ($this->pullOnChange) {
+            $this->pull();
+        }
+        if ($this->commitOnChange) {
+            $this->commit($commitMessage . "\n\nby " . site()->user());
+        }
+        if ($this->pushOnChange) {
+            $this->push();
+        }
+    }
 }
