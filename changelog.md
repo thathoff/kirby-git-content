@@ -1,3 +1,13 @@
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.0.0...v1.1.0) (2016-04-21)
+
+
+### Features
+
+* add option to manually push and pull content ([833960f](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/833960f))
+
+
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v0.0.7...v1.0.0) (2015-12-17)
 
