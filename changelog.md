@@ -1,3 +1,13 @@
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.1.0...v1.1.1) (2016-04-21)
+
+
+### Bug Fixes
+
+* make branch available for git pull and git push ([d1e17c3](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/d1e17c3))
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.0.0...v1.1.0) (2016-04-21)
 
