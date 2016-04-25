@@ -11,9 +11,9 @@ class KirbyGitHelper
     private $gitBin;
     private $windowsMode;
 
-    public function __construct($repoPath = __DIR__ . "/../../../content")
+    public function __construct($repoPath = false)
     {
-        $this->repoPath = $repoPath;
+        $this->repoPath = $repoPath ? $repoPath : __DIR__ . '/../../../content';
         $this->branch = c::get('gcapc-branch', 'master');
     }
 
