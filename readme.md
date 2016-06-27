@@ -75,6 +75,12 @@ Default value: `false`
  
 Push your changes to remote?
 
+#### gcapc-cron-hooks-enabled
+Type: `Boolean`
+Default value: `true`
+
+Whether `yourdomain.com/gcapc/push` and `yourdomain.com/gcapc/pull` are enabled or not.
+
 #### gcapc-gitBin
 Type: `String`
 Default value: `''`
