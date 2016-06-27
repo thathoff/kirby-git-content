@@ -1,3 +1,13 @@
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.1.1...v1.2.0) (2016-06-27)
+
+
+### Features
+
+* add cron-hooks-enabled option ([2118b28](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/2118b28))
+
+
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.1.0...v1.1.1) (2016-04-21)
 
