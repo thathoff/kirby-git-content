@@ -47,18 +47,20 @@ kirby()->hook('panel.file.delete', function ($file) use ($gitHelper){
     $gitHelper->kirbyChange('delete(file): ' . $file->page()->uri() . '/' . $file->filename());
 });
 
-kirby()->routes(array(
-    array(
-        'pattern' => 'gcapc/(:any)',
-        'action'  => function($gitCommand) use ($gitHelper) {
-            switch ($gitCommand) {
-                case "push":
-                    $gitHelper->push();
-                    break;
-                case "pull":
-                    $gitHelper->pull();
-                    break;
+if(c::get('gcapc-cron-hooks-enabled', true)) {
+    kirby()->routes(array(
+        array(
+            'pattern' => 'gcapc/(:any)',
+            'action'  => function($gitCommand) use ($gitHelper) {
+                switch ($gitCommand) {
+                    case "push":
+                        $gitHelper->push();
+                        break;
+                    case "pull":
+                        $gitHelper->pull();
+                        break;
+                }
             }
-        }
-    )
-));
+        )
+    ));
+}
