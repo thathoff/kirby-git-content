@@ -81,6 +81,12 @@ Default value: `true`
 
 Whether `yourdomain.com/gcapc/push` and `yourdomain.com/gcapc/pull` are enabled or not.
 
+#### gcapc-panel-widget
+Type: `Boolean`
+Default value: `true`
+
+Show or Hide the Panel widget. 
+
 #### gcapc-gitBin
 Type: `String`
 Default value: `''`
