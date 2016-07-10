@@ -1,3 +1,13 @@
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.2.0...v1.3.0) (2016-07-10)
+
+
+### Features
+
+* add panel widget ([6a6e3fd](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/6a6e3fd))
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.1.1...v1.2.0) (2016-06-27)
 
