@@ -54,13 +54,47 @@ if(c::get('gcapc-cron-hooks-enabled', true)) {
             'action'  => function($gitCommand) use ($gitHelper) {
                 switch ($gitCommand) {
                     case "push":
-                        $gitHelper->push();
+                        try {
+                            $gitHelper->push();
+
+                            echo response::json(array(
+                                "status" => "success",
+                                "data" => null,
+                                "message" => "successfully pulled the content folder",
+                            ));
+                        } catch (Exception $e) {
+                            echo response::json(array(
+                                "status" => "error",
+                                "data" => null,
+                                "message" => $e->getMessage(),
+                            ));
+                        }
+
                         break;
                     case "pull":
-                        $gitHelper->pull();
+                        try {
+                            $gitHelper->pull();
+
+                            echo response::json(array(
+                                "status" => "success",
+                                "data" => null,
+                                "message" => "successfully pushed the content folder",
+                            ));
+                        } catch (Exception $e) {
+                            echo response::json(array(
+                                "status" => "error",
+                                "data" => null,
+                                "message" => $e->getMessage(),
+                            ));
+                        }
+
                         break;
                 }
             }
         )
     ));
+}
+
+if (c::get('gcapc-panel-widget', true)) {
+    $kirby->set('widget', 'git-commit-and-push-content', __DIR__  . DS . 'widgets' . DS . 'git-commit-and-push-content');
 }
