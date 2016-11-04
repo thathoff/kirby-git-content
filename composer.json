@@ -1,0 +1,10 @@
+{
+  "name": "blankogmbh/kirby-git-commit-and-push-content",
+  "version": "1.3.0",
+  "repositories": [
+    {
+        "type": "vcs",
+        "url": "https://github.com/blankogmbh/kirby-git-commit-and-push-content"
+    }
+  ]
+}
