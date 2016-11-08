@@ -130,6 +130,19 @@ Default value: `false`
 
 [See Git.php](http://kbjr.github.io/Git.php/) `void Git::windows_mode ( void )`
 
+## Git LFS
+Your repository might increase over time, by adding Images, Audio, Video, Binaries, etc. 
+cloning and updating your content repostory can take a lot of time. If you are able to use
+[Git LFS](https://git-lfs.github.com/) you probably should. Here is what the .gitattributes-File could look like:
+
+```
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+*.gif filter=lfs diff=lfs merge=lfs -text
+```
+
 ## Author
 
 Pascal 'Pascalmh' Küsgen <http://pascalmh.de>
