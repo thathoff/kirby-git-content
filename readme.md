@@ -34,6 +34,7 @@ git push origin master
 
 ### Download and configure the Plugin
 
+#### git submodules
 Go into your `site/plugins/` folder and  
 ```
 git submodule add --name git-commit-and-push-content https://github.com/blankogmbh/kirby-git-commit-and-push-content.git site/plugins/git-commit-and-push-content
@@ -41,7 +42,35 @@ cd site/plugins/
 git submodule update --init --recursive
 ```
 
-Or: Put all the files into your `site/plugins/git-commit-and-push-content/` folder. If the `git-commit-and-push-content/` plugin folder doesn't exist then create it.
+#### Composer
+If you [installed kirby via composer](https://forum.getkirby.com/t/kirby-2-4-with-composer/5664/3?u=pascalmh) open your projects composer.json and add 
+`blankogmbh/kirby-git-commit-and-push-content` as a requirement and a custom path so it will be installed into the site/plugins-Folder
+
+Thats what your composer.json will look like afterwards:
+```
+{
+    "name": "your-company/your-project",
+    "require": {
+        "mnsami/composer-custom-directory-installer": "1.1.*",
+        "getkirby/kirby": "^2.4",
+        "getkirby/panel": "^2.4",
+        "blankogmbh/kirby-git-commit-and-push-content": "1.*"
+    },
+    "extra": {
+        "installer-paths": {
+            "./kirby": ["getkirby/kirby"],
+            "./kirby/toolkit": ["getkirby/toolkit"],
+            "./panel": ["getkirby/panel"],
+            "./site/plugins/git-commit-and-push-content": ["blankogmbh/kirby-git-commit-and-push-content"]
+        }
+    }
+}
+```
+
+
+
+#### copy & paste
+Put all the files into your `site/plugins/git-commit-and-push-content/` folder. If the `git-commit-and-push-content/` plugin folder doesn't exist then create it.
 
 ### Options
 
