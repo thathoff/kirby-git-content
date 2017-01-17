@@ -3,7 +3,7 @@
   "version": "1.3.0",
   "require": {
       "getkirby/kirby": "^2.1",
-      "kbjr/Git.php": "*"
+      "pascalmh/git.php": "^0.1"
   },
   "repositories": [
     {
