@@ -22,7 +22,8 @@ module.exports = function ( grunt ) {
                 ], // optional grunt tasks to run after file versions are bumped
                 beforeRelease: [], // optional grunt tasks to run after release version is bumped up but before release is packaged
                 afterRelease: [], // optional grunt tasks to run after release is packaged
-                updateVars: [] // optional grunt config objects to update (this will update/set the version property on the object specified)
+                updateVars: [], // optional grunt config objects to update (this will update/set the version property on the object specified)
+                additionalFiles: ['composer.json']
             }
         },
 
