@@ -20,7 +20,16 @@ class KirbyGitHelper
     private function initRepo()
     {
         if (!class_exists("Git")) {
-            require('Git.php/Git.php');
+            if (file_exists('Git.php/Git.php')) {
+                require 'Git.php/Git.php';
+            } else {
+                require kirby()->roots()->index() .
+                DS . 'vendor' . DS . 'pascalmh' . DS . 'git.php' . DS . 'Git.php';
+            }
+        }
+
+        if (!class_exists("Git")) {
+            die('Git class not found. Is the Git.php submodule installed?');
         }
 
         $this->pullOnChange = c::get('gcapc-pull', false);

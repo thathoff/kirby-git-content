@@ -1,3 +1,13 @@
+<a name="1.4.0"></a>
+# [1.4.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.3.0...v1.4.0) (2017-01-17)
+
+
+### Features
+
+* use composer dependency if applicable ([bd45077](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/bd45077))
+
+
+
 <a name="1.3.0"></a>
 # [1.3.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.2.0...v1.3.0) (2016-07-10)
 
