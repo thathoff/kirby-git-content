@@ -1,14 +1,14 @@
 {
   "name": "blankogmbh/kirby-git-commit-and-push-content",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "require": {
-      "getkirby/kirby": "^2.1",
-      "pascalmh/git.php": "^0.1"
+    "getkirby/kirby": "^2.1",
+    "pascalmh/git.php": "^0.1"
   },
   "repositories": [
     {
-        "type": "vcs",
-        "url": "https://github.com/blankogmbh/kirby-git-commit-and-push-content"
+      "type": "vcs",
+      "url": "https://github.com/blankogmbh/kirby-git-commit-and-push-content"
     }
   ]
 }

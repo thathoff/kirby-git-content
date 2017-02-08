@@ -20,8 +20,8 @@ class KirbyGitHelper
     private function initRepo()
     {
         if (!class_exists("Git")) {
-            if (file_exists('Git.php/Git.php')) {
-                require 'Git.php/Git.php';
+            if (file_exists(__DIR__ . DS . 'Git.php' . DS. 'Git.php')) {
+                require __DIR__ . DS . 'Git.php' . DS. 'Git.php';
             } else {
                 require kirby()->roots()->index() .
                 DS . 'vendor' . DS . 'pascalmh' . DS . 'git.php' . DS . 'Git.php';
