@@ -1,3 +1,14 @@
+<a name="1.4.1"></a>
+## [1.4.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.4.0...v1.4.1) (2017-02-08)
+
+
+### Bug Fixes
+
+* push/pull success messages ([76bc9b9](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/76bc9b9))
+* require Git.php ([d319cbd](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/d319cbd))
+
+
+
 <a name="1.4.0"></a>
 # [1.4.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.3.0...v1.4.0) (2017-01-17)
 
