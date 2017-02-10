@@ -5,12 +5,12 @@ return array(
         array(
             'text' => 'Pull',
             'icon' => 'arrow-down',
-            'link' => kirby()->urls()->index() . DS . 'gcapc' . DS . 'pull',
+            'link' => kirby()->urls()->index() . '/gcapc/pull',
         ),
         array(
             'text' => 'Push',
             'icon' => 'arrow-up',
-            'link' => kirby()->urls()->index() . DS . 'gcapc' . DS . 'push',
+            'link' => kirby()->urls()->index() . '/gcapc/push',
         )
     ),
     'html' => function () {
