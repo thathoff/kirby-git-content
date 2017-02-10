@@ -2,7 +2,9 @@
 
 <div class="gcapc-info">
     <ul class="gcapc-info-list">
-        <li>Branch: <?= c::get('gcapc-branch', 'master') ?></li>
+        <?php if (c::get('gcapc-branch') && c::get('gcapc-branch') != ''): ?>
+            <li>Branch: <?= c::get('gcapc-branch') ?></li>
+        <?php endif ?>
         <li>Committing: <i class="icon fa fa-<?= c::get('gcapc-commit', false) ? 'check' : 'times' ?>"></i></li>
         <li>Pulling: <i class="icon fa fa-<?= c::get('gcapc-pull', false) ? 'check' : 'times' ?>"></i></li>
         <li>Pushing: <i class="icon fa fa-<?= c::get('gcapc-push', false) ? 'check' : 'times' ?>"></i></li>

@@ -82,9 +82,9 @@ If you do not want to Pull and/or Push on every change you can also call `yourdo
 
 #### gcapc-branch
 Type: `String`
-Default value: `'master'`
+Default value: `''`
 
-branch name to be checked out
+branch name to be checked out (defauts to currently checked out branch)
 
 #### gcapc-pull
 Type: `Boolean`

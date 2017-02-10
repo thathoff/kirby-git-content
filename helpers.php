@@ -14,7 +14,7 @@ class KirbyGitHelper
     public function __construct($repoPath = false)
     {
         $this->repoPath = $repoPath ? $repoPath : kirby()->roots()->content();
-        $this->branch = c::get('gcapc-branch', 'master');
+        $this->branch = c::get('gcapc-branch', '');
     }
 
     private function initRepo()
@@ -81,7 +81,9 @@ class KirbyGitHelper
 
     public function kirbyChange($commitMessage)
     {
-        $this->getRepo()->checkout($this->branch);
+        if ($this->branch) {
+            $this->getRepo()->checkout($this->branch);
+        }
 
         if ($this->pullOnChange) {
             $this->pull();
