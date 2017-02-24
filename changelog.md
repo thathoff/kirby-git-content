@@ -1,3 +1,14 @@
+<a name="1.5.0"></a>
+# [1.5.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/1.4.2...v1.5.0) (2017-02-24)
+
+
+### Features
+
+* implemented `gcapc-path` configuration ([151e6d1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/151e6d1))
+* improved error handling ([ff36ea4](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/ff36ea4))
+
+
+
 <a name="1.4.2"></a>
 ## [1.4.2](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v1.4.1...v1.4.2) (2017-02-09)
 
