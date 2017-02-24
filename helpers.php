@@ -81,16 +81,20 @@ class KirbyGitHelper
 
     public function kirbyChange($commitMessage)
     {
-        $this->getRepo()->checkout($this->branch);
+        try {
+            $this->getRepo()->checkout($this->branch);
 
-        if ($this->pullOnChange) {
-            $this->pull();
-        }
-        if ($this->commitOnChange) {
-            $this->commit($commitMessage . "\n\nby " . site()->user());
-        }
-        if ($this->pushOnChange) {
-            $this->push();
+            if ($this->pullOnChange) {
+                $this->pull();
+            }
+            if ($this->commitOnChange) {
+                $this->commit($commitMessage . "\n\nby " . site()->user());
+            }
+            if ($this->pushOnChange) {
+                $this->push();
+            }
+        } catch(Exception $exception) {
+            trigger_error('Unable to update git: ' . $exception->getMessage());
         }
     }
 }
