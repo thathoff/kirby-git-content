@@ -80,6 +80,12 @@ You can use the following [Options](http://getkirby.com/docs/advanced/options) -
 
 If you do not want to Pull and/or Push on every change you can also call `yourdomain.com/gcapc/push` or `yourdomain.com/gcapc/pull` manually (or automated with e.g. a cronjob).
 
+#### gcapc-path
+Type: `String`
+Default value: `kirby()->roots()->content()`
+
+path to the repository to work in
+
 #### gcapc-branch
 Type: `String`
 Default value: `'master'`
