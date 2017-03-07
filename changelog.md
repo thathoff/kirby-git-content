@@ -1,3 +1,20 @@
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/1.4.2...v2.0.0) (2017-02-20)
+
+
+### Bug Fixes
+
+* use slashes for url, not DS ([d4e24b7](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/d4e24b7))
+
+### Features
+
+* allow usage of currently checked out branch ([033d10f](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/033d10f))
+
+
+### BREAKING CHANGES
+
+* the default branch is not the master anymore
+
 <a name="1.5.0"></a>
 # [1.5.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/1.4.2...v1.5.0) (2017-02-24)
 
