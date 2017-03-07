@@ -80,7 +80,7 @@ class KirbyGitHelper
     }
 
     public function kirbyChange($commitMessage)
-    {   
+    {
         try {
             if ($this->branch) {
               $this->getRepo()->checkout($this->branch);
