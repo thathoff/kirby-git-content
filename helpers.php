@@ -13,8 +13,8 @@ class KirbyGitHelper
 
     public function __construct($repoPath = false)
     {
-        $this->repoPath = $repoPath ? $repoPath : kirby()->roots()->content();
-        $this->branch = c::get('gcapc-branch', '');
+        $this->repoPath = $repoPath ? $repoPath : c::get('gcapc-path', kirby()->roots()->content());
+        $this->branch = c::get('gcapc-branch', 'master');
     }
 
     private function initRepo()
@@ -80,19 +80,23 @@ class KirbyGitHelper
     }
 
     public function kirbyChange($commitMessage)
-    {
-        if ($this->branch) {
-            $this->getRepo()->checkout($this->branch);
-        }
+    {   
+        try {
+            if ($this->branch) {
+              $this->getRepo()->checkout($this->branch);
+            }
 
-        if ($this->pullOnChange) {
-            $this->pull();
-        }
-        if ($this->commitOnChange) {
-            $this->commit($commitMessage . "\n\nby " . site()->user());
-        }
-        if ($this->pushOnChange) {
-            $this->push();
+            if ($this->pullOnChange) {
+                $this->pull();
+            }
+            if ($this->commitOnChange) {
+                $this->commit($commitMessage . "\n\nby " . site()->user());
+            }
+            if ($this->pushOnChange) {
+                $this->push();
+            }
+        } catch(Exception $exception) {
+            trigger_error('Unable to update git: ' . $exception->getMessage());
         }
     }
 }
