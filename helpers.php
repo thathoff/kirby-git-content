@@ -48,7 +48,12 @@ class KirbyGitHelper
         $this->repo = Git::open($this->repoPath);
 
         if (!$this->repo->test_git()) {
-            trigger_error('git could not be found or is not working properly. ' . Git::get_bin());
+            if (c::get('debug', false)) {
+                f::write(
+                    kirby()->roots()->index() .'/log-gcapc-' . time() . '.txt', 
+                    'git could not be found or is not working properly. ' . Git::get_bin()
+                );
+            }
         }
     }
 
@@ -96,7 +101,12 @@ class KirbyGitHelper
                 $this->push();
             }
         } catch(Exception $exception) {
-            trigger_error('Unable to update git: ' . $exception->getMessage());
+            if (c::get('debug', false)) {
+                f::write(
+                    kirby()->roots()->index() .'/log-gcapc-' . time() . '.txt', 
+                    'Unable to update git: ' . $exception->getMessage()
+                );
+            }
         }
     }
 }
