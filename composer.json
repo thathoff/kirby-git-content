@@ -1,6 +1,6 @@
 {
   "name": "blankogmbh/kirby-git-commit-and-push-content",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "require": {
     "getkirby/kirby": "^2.1",
     "pascalmh/git.php": "^1.0"
