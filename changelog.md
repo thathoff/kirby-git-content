@@ -1,3 +1,31 @@
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v2.0.1...v2.1.0) (2017-03-29)
+
+
+### Bug Fixes
+
+* init repo if no branch is specified ([f69515e](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/f69515e))
+
+### Features
+
+* do not initialise repository twice ([f32e90e](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/f32e90e))
+
+
+
+<a name="2.0.2"></a>
+## [2.0.2](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v2.0.1...v2.0.2) (2017-03-29)
+
+
+### Bug Fixes
+
+* init repo if no branch is specified ([f69515e](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/f69515e))
+
+### Features
+
+* do not initialise repository twice ([f32e90e](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/f32e90e))
+
+
+
 <a name="2.0.1"></a>
 ## [2.0.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/1.5.0...v2.0.1) (2017-03-29)
 
