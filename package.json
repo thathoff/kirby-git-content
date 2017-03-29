@@ -11,8 +11,8 @@
   "author": "Pascal Küsgen",
   "url": "http://pascalmh.de",
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-conventional-changelog": "^4.1.0",
-    "grunt-release": "^0.13.0"
+    "grunt": "^1.0.1",
+    "grunt-conventional-changelog": "^6.1.0",
+    "grunt-release": "^0.14.0"
   }
 }
