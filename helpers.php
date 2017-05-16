@@ -27,6 +27,7 @@ class KirbyGitHelper
     private $pullOnChange;
     private $pushOnChange;
     private $commitOnChange;
+    private $setGitUser;
     private $gitBin;
     private $windowsMode;
     private $commitMessages;
@@ -49,6 +50,7 @@ class KirbyGitHelper
         $this->pullOnChange = c::get('gcapc-pull', false);
         $this->pushOnChange = c::get('gcapc-push', false);
         $this->commitOnChange = c::get('gcapc-commit', false);
+        $this->setGitUser = c::get('gcapc-set-git-user', false);
         $this->gitBin = c::get('gcapc-gitBin', '');
         $this->windowsMode = c::get('gcapc-windowsMode', false);
 
@@ -77,6 +79,22 @@ class KirbyGitHelper
 
     public function commit($commitMessage)
     {
+        if ($this->setGitUser) {
+            $user = site()->user();
+
+            // TODO use a better template mechanism
+            if (!empty($user->firstname()) && !empty($user->lastname())) {
+                $userName = $user->firstname() . ' ' . $user->lastname() . ' (' . $user->username() . ')';
+            } else {
+                $userName = $user->username();
+            }
+
+            $userEmail = $user->email();
+
+            $this->getRepo()->run("config user.name '${userName}'");
+            $this->getRepo()->run("config user.email '${userEmail}'");
+        }
+
         $this->getRepo()->add('-A');
         $this->getRepo()->commit($commitMessage);
     }
