@@ -60,7 +60,7 @@ if(c::get('gcapc-cron-hooks-enabled', true)) {
                             echo response::json(array(
                                 "status" => "success",
                                 "data" => null,
-                                "message" => "successfully pushed the content folder",
+                                "message" => "Successfully pushed the content folder.",
                             ));
                         } catch (Exception $e) {
                             echo response::json(array(
@@ -78,7 +78,7 @@ if(c::get('gcapc-cron-hooks-enabled', true)) {
                             echo response::json(array(
                                 "status" => "success",
                                 "data" => null,
-                                "message" => "successfully pulled the content folder",
+                                "message" => "Successfully pulled the content folder.",
                             ));
                         } catch (Exception $e) {
                             echo response::json(array(

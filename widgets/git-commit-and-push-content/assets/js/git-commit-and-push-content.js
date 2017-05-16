@@ -14,7 +14,7 @@
                 $widget.find(' .gcapc-status').html(response.message);
             },
             error: function(response) {
-                $widget.find(' .gcapc-status').html('Error, see Console or try again.');
+                $widget.find(' .gcapc-status').html('Error, see console or try again.');
                 console.error(response);
             }
         });
@@ -38,6 +38,5 @@
             gcapcUpdate(method);
         }
     });
-    
-    
+
 })(window, document, jQuery);
