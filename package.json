@@ -10,6 +10,7 @@
   "description": "Version Controle your Content-Folder",
   "author": "Pascal Küsgen",
   "url": "http://pascalmh.de",
+  "type": "kirby-plugin",
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-conventional-changelog": "^4.1.0",
