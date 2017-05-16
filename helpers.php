@@ -2,6 +2,25 @@
 
 class KirbyGitHelper
 {
+
+    const DEFAULT_MESSAGES = array(
+        'page.create'  => 'create(page): %s',
+        'page.update'  => 'update(page): %s',
+        'page.delete'  => 'delete(page): %s',
+        'page.sort'    => 'sort(page): %s',
+        'page.hide'    => 'hide(page): %s',
+        'page.move'    => 'move(page): %s',
+
+        'file.upload'  => 'create(page): %s',
+        'file.replace' => 'update(page): %s',
+        'file.rename'  => 'delete(page): %s',
+        'file.update'  => 'sort(page): %s',
+        'file.sort'    => 'hide(page): %s',
+        'file.delete'  => 'move(page): %s',
+
+        'user.suffix'  => "\n\nby %s", // appended to the commit message
+    );
+
     private $repo;
     private $repoPath;
     private $branch;
@@ -10,11 +29,13 @@ class KirbyGitHelper
     private $commitOnChange;
     private $gitBin;
     private $windowsMode;
+    private $commitMessages;
 
     public function __construct($repoPath = false)
     {
         $this->repoPath = $repoPath ? $repoPath : c::get('gcapc-path', kirby()->roots()->content());
         $this->branch = c::get('gcapc-branch', '');
+        $this->messages = c::get('gcapc-messages', self::DEFAULT_MESSAGES);
     }
 
     private function initRepo()
@@ -83,7 +104,19 @@ class KirbyGitHelper
         $this->getRepo()->pull('origin', $branch);
     }
 
-    public function kirbyChange($commitMessage)
+    public function kirbyChangePage($key, $page) {
+        $commitMessage = $this->getMessage($key, $page->uri());
+
+        $this->kirbyChange($commitMessage);
+    }
+
+    public function kirbyChangeFile($key, $file) {
+        $commitMessage = $this->getMessage($key, $file->page()->uri() . '/' . $file->filename());
+
+        $this->kirbyChange($commitMessage);
+    }
+
+    private function kirbyChange($commitMessage)
     {
         try {
             $this->initRepo();
@@ -104,5 +137,12 @@ class KirbyGitHelper
         } catch(Exception $exception) {
             trigger_error('Unable to update git: ' . $exception->getMessage());
         }
+    }
+
+    private function getMessage($key, ...$params)
+    {
+        $message = isset($this->messages[$key]) ? $this->messages[$key] : self::DEFAULT_MESSAGES[$key];
+
+        return sprintf($message, ...$params);
     }
 }

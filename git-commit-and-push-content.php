@@ -7,44 +7,44 @@ $gitHelper = new KirbyGitHelper();
 * Pages
 */
 kirby()->hook('panel.page.create', function ($page) use ($gitHelper) {
-    $gitHelper->kirbyChange('create(page): ' . $page->uri());
+    $gitHelper->kirbyChangePage('page.create', $page);
 });
 kirby()->hook('panel.page.update', function ($page) use ($gitHelper) {
-    $gitHelper->kirbyChange('update(page): ' . $page->uri());
+    $gitHelper->kirbyChangePage('page.update', $page);
 });
 kirby()->hook('panel.page.delete', function ($page) use ($gitHelper){
-    $gitHelper->kirbyChange('delete(page): ' . $page->uri());
+    $gitHelper->kirbyChangePage('page.delete', $page);
 });
 kirby()->hook('panel.page.sort', function ($page) use ($gitHelper){
-    $gitHelper->kirbyChange('sort(page): ' . $page->uri());
+    $gitHelper->kirbyChangePage('page.sort', $page);
 });
 kirby()->hook('panel.page.hide', function ($page) use ($gitHelper){
-    $gitHelper->kirbyChange('hide(page): ' . $page->uri());
+    $gitHelper->kirbyChangePage('page.hide', $page);
 });
 kirby()->hook('panel.page.move', function ($page) use ($gitHelper){
-    $gitHelper->kirbyChange('move(page): ' . $page->uri());
+    $gitHelper->kirbyChangePage('page.move', $page);
 });
 
 /*
 * File
 */
 kirby()->hook('panel.file.upload', function ($file) use ($gitHelper){
-    $gitHelper->kirbyChange('upload(file): ' . $file->page()->uri() . '/' . $file->filename());
+    $gitHelper->kirbyChangeFile('file.upload', $file);
 });
 kirby()->hook('panel.file.replace', function ($file) use ($gitHelper){
-    $gitHelper->kirbyChange('replace(file): ' . $file->page()->uri() . '/' . $file->filename());
+    $gitHelper->kirbyChangeFile('file.replace', $file);
 });
 kirby()->hook('panel.file.rename', function ($file) use ($gitHelper){
-    $gitHelper->kirbyChange('rename(file): ' . $file->page()->uri() . '/' . $file->filename());
+    $gitHelper->kirbyChangeFile('file.rename', $file);
 });
 kirby()->hook('panel.file.update', function ($file) use ($gitHelper){
-    $gitHelper->kirbyChange('update(file): ' . $file->page()->uri() . '/' . $file->filename());
+    $gitHelper->kirbyChangeFile('file.update', $file);
 });
 kirby()->hook('panel.file.sort', function ($file) use ($gitHelper){
-    $gitHelper->kirbyChange('sort(file): ' . $file->page()->uri() . '/' . $file->filename());
+    $gitHelper->kirbyChangeFile('file.sort', $file);
 });
 kirby()->hook('panel.file.delete', function ($file) use ($gitHelper){
-    $gitHelper->kirbyChange('delete(file): ' . $file->page()->uri() . '/' . $file->filename());
+    $gitHelper->kirbyChangeFile('file.delete', $file);
 });
 
 if(c::get('gcapc-cron-hooks-enabled', true)) {
