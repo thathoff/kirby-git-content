@@ -44,18 +44,7 @@ class KirbyGitHelper
             return true;
         }
 
-        if (!class_exists("Git")) {
-            if (file_exists(__DIR__ . DS . 'Git.php' . DS. 'Git.php')) {
-                require __DIR__ . DS . 'Git.php' . DS. 'Git.php';
-            } else {
-                require kirby()->roots()->index() .
-                DS . 'vendor' . DS . 'pascalmh' . DS . 'git.php' . DS . 'Git.php';
-            }
-        }
-
-        if (!class_exists("Git")) {
-            die('Git class not found. Is the Git.php submodule installed?');
-        }
+        require_once(__DIR__ . DS . 'Git.php' . DS. 'Git.php');
 
         $this->pullOnChange = c::get('gcapc-pull', false);
         $this->pushOnChange = c::get('gcapc-push', false);
