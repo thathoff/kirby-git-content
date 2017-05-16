@@ -129,7 +129,7 @@ class KirbyGitHelper
                 $this->pull();
             }
             if ($this->commitOnChange) {
-                $this->commit($commitMessage . "\n\nby " . site()->user());
+                $this->commit($commitMessage . $this->getMessage('user.suffix', site()->user()));
             }
             if ($this->pushOnChange) {
                 $this->push();
