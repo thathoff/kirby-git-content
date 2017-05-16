@@ -73,7 +73,7 @@ class KirbyGitHelper
         $this->repo = Git::open($this->repoPath);
 
         if (!$this->repo->test_git()) {
-            trigger_error('git could not be found or is not working properly. ' . Git::get_bin());
+            trigger_error('git could not be found or is not working properly: ' . Git::get_bin());
         }
     }
 
