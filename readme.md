@@ -6,6 +6,10 @@ This is a plugin for [Kirby](http://getkirby.com/) that commits and pushes chang
 
 Just keep using the Panel as you are used to and watch the commits appear in your git repository!
 
+## Requirements
+
+An environment supported by [Git.php](https://github.com/kbjr/Git.php). In particular, [`proc_open`](http://php.net/manual/en/function.proc-open.php) needs to be enabled.
+
 ## Installation
 
 ### Create a new git repository for your content
