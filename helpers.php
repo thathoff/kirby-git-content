@@ -74,7 +74,7 @@ class KirbyGitHelper
     public function push($branch = false)
     {
         $branch = $branch ? $branch : $this->branch;
-        $this->getRepo()->push('origin', $branch);
+        $this->getRepo()->run("push origin $branch"); // push('origin', $branch) inserts a spurious --tags option
     }
 
     public function pull($branch = false)
