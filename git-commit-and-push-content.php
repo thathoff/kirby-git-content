@@ -3,6 +3,14 @@ require(__DIR__ . DS . 'helpers.php');
 
 $gitHelper = new KirbyGitHelper();
 
+
+/*
+* Site
+*/
+kirby()->hook('panel.site.update', function ($site) use ($gitHelper) {
+    $gitHelper->kirbyChange('update(site)');
+});
+
 /*
 * Pages
 */
