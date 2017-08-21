@@ -1,3 +1,13 @@
+<a name="2.2.0"></a>
+# [2.2.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v2.1.0...v2.2.0) (2017-08-21)
+
+
+### Features
+
+* track changes made to site.txt ([7aaf3be](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/7aaf3be))
+
+
+
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v2.0.1...v2.1.0) (2017-03-29)
 

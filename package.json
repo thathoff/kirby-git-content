@@ -1,7 +1,7 @@
 {
   "name": "git-commit-and-push-content",
   "readable": "Git Commit and Push Content",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/blankogmbh/kirby-git-commit-and-push-content.git"
