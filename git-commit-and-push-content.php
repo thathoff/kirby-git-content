@@ -55,30 +55,6 @@ kirby()->hook('panel.file.delete', function ($file) use ($gitHelper){
     $gitHelper->kirbyChange('delete(file): ' . $file->page()->uri() . '/' . $file->filename());
 });
 
-/*
-* User
-* NOTE: Only if `gcapc-user-hooks-enabled` was enabled explicitly
-*/
-if (c::get('gcapc-user-hooks-enabled', false)) {
-
-  kirby()->hook('panel.user.create', function ($user) use ($gitHelper){
-      $gitHelper->kirbyChange('create(user): ' . $user->username());
-  });
-  kirby()->hook('panel.user.update', function ($user) use ($gitHelper){
-    $gitHelper->kirbyChange('update(user): ' . $user->username());
-  });
-  kirby()->hook('panel.user.delete', function ($user) use ($gitHelper){
-    $gitHelper->kirbyChange('delete(user): ' . $user->username());
-  });
-  kirby()->hook('panel.avatar.upload', function ($avatar) use ($gitHelper){
-    $gitHelper->kirbyChange('upload(avatar)');
-  });
-  kirby()->hook('panel.avatar.delete', function ($avatar) use ($gitHelper){
-    $gitHelper->kirbyChange('delete(avatar)');
-  });
-
-}
-
 
 if(c::get('gcapc-cron-hooks-enabled', true)) {
     kirby()->routes(array(
