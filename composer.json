@@ -1,7 +1,9 @@
 {
   "name": "blankogmbh/kirby-git-commit-and-push-content",
   "version": "2.2.0",
+  "type": "kirby-plugin",
   "require": {
+    "composer/installers": "~1.0",
     "getkirby/kirby": "^2.1",
     "pascalmh/git.php": "^1.0"
   },
