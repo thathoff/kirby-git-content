@@ -1,3 +1,9 @@
+<a name="2.2.1"></a>
+## [2.2.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v2.2.0...v2.2.1) (2018-01-24)
+
+
+
+
 <a name="2.2.0"></a>
 # [2.2.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v2.1.0...v2.2.0) (2017-08-21)
 
