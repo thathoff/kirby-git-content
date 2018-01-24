@@ -37,7 +37,7 @@ git push origin master
 #### git submodules
 Go into your `site/plugins/` folder and
 ```
-git submodule add --name git-commit-and-push-content https://github.com/blankogmbh/kirby-git-commit-and-push-content.git site/plugins/git-commit-and-push-content
+git submodule add --name git-commit-and-push-content https://github.com/blankogmbh/kirby-git-commit-and-push-content.git site/plugins/kirby-git-commit-and-push-content
 cd site/plugins/
 git submodule update --init --recursive
 ```
@@ -46,7 +46,7 @@ git submodule update --init --recursive
 `composer require blankogmbh/kirby-git-commit-and-push-content`
 
 #### copy & paste
-Put all the files into your `site/plugins/git-commit-and-push-content/` folder. If the `git-commit-and-push-content/` plugin folder doesn't exist then create it.
+Put all the files into your `site/plugins/kirby-git-commit-and-push-content/` folder. If the `kirby-git-commit-and-push-content/` plugin folder doesn't exist then create it.
 
 ### Options
 
