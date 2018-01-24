@@ -1,3 +1,13 @@
+<a name="2.2.2"></a>
+## [2.2.2](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v2.2.1...v2.2.2) (2018-01-24)
+
+
+### Bug Fixes
+
+* rename main file tow work with new install method ([2e96543](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/2e96543))
+
+
+
 <a name="2.2.1"></a>
 ## [2.2.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v2.2.0...v2.2.1) (2018-01-24)
 
