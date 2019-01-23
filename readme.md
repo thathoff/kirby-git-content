@@ -34,19 +34,9 @@ git push origin master
 
 ### Download and configure the Plugin
 
-#### git submodules
-Go into your `site/plugins/` folder and
-```
-git submodule add --name git-commit-and-push-content https://github.com/blankogmbh/kirby-git-commit-and-push-content.git site/plugins/kirby-git-commit-and-push-content
-cd site/plugins/
-git submodule update --init --recursive
-```
-
 #### Composer
 `composer require blankogmbh/kirby-git-commit-and-push-content`
 
-#### copy & paste
-Put all the files into your `site/plugins/kirby-git-commit-and-push-content/` folder. If the `kirby-git-commit-and-push-content/` plugin folder doesn't exist then create it.
 
 ### Options
 
