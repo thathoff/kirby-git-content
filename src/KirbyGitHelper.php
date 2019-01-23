@@ -64,10 +64,19 @@ class KirbyGitHelper
         return $this->repo;
     }
 
-    public function commit($commitMessage)
+    public function commit($commitMessage, $author = null)
     {
         $this->getRepo()->add('-A');
-        $this->getRepo()->commit($commitMessage);
+
+        $command = "commit -m " . escapeshellarg($commitMessage);
+
+        if ($author) {
+            $command .= " --author=" . escapeshellarg($author);
+        }
+
+        // we use the raw run command here to optionally supply the git author
+        // IMPORTANT: make sure all arguments are escaped through escapeshellarg();
+        $this->getRepo()->run($command);
     }
 
     public function push($branch = false)
@@ -95,7 +104,14 @@ class KirbyGitHelper
                 $this->pull();
             }
             if ($this->commitOnChange) {
-                $this->commit($commitMessage . "\n\nby " . site()->user());
+                $user = $this->kirby->user();
+
+                $author = null;
+                if ($user) {
+                    $author = $user->name() . " <" . $user->email() . ">";
+                }
+
+                $this->commit($commitMessage, $author);
             }
             if ($this->pushOnChange) {
                 $this->push();
