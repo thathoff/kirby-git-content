@@ -37,7 +37,7 @@ class KirbyGitHelper
 
         $this->pullOnChange = option('blankogmbh.gcapc.pull', false);
         $this->pushOnChange = option('blankogmbh.gcapc.push', false);
-        $this->commitOnChange = option('blankogmbh.gcapc.commit', false);
+        $this->commitOnChange = option('blankogmbh.gcapc.commit', true);
         $this->gitBin = option('blankogmbh.gcapc.gitBin', '');
         $this->windowsMode = option('blankogmbh.gcapc.windowsMode', false);
 
