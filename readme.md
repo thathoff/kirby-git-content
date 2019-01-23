@@ -72,7 +72,7 @@ return [
 - `path` (String): Path to the repository, (default: `kirby()->root("content")`)
 - `branch` (String): branch name to be checked out (defaut: currently checked out branch)
 - `pull` (Boolean): Pull remote changes first? (default: `false`)
-- `commit` (Boolean): Commit your changes? (default: `false`)
+- `commit` (Boolean): Commit your changes? (default: `true`)
 - `push` (Boolean): Push your changes to remote? (default: `false`)
 - `cronHooksEnabled` (Boolean): Whether `/gcapc/push` and `/gcapc/pull` endpoints are enabled or not. (default: `true`)
 - `gitBin` (String): Path to the `git` binary, [See Git.php](http://kbjr.github.io/Git.php/) `Git::set_bin(string $path)`
