@@ -2,6 +2,7 @@
   "name": "blankogmbh/kirby-git-commit-and-push-content",
   "description": "Plugin to track changes to content in a git repository.",
   "type": "kirby-plugin",
+  "license": "MIT",
   "require": {
     "pascalmh/git.php": "^1.0",
     "php": ">=7.1.0",
