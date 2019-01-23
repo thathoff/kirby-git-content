@@ -1,7 +1,13 @@
 <?php
 
+namespace Blanko\Kirby\GCAPC;
+
+use Git;
+use Exception;
+
 class KirbyGitHelper
 {
+    private $kirby;
     private $repo;
     private $repoPath;
     private $branch;
@@ -13,8 +19,10 @@ class KirbyGitHelper
 
     public function __construct($repoPath = false)
     {
-        $this->repoPath = $repoPath ? $repoPath : c::get('gcapc-path', kirby()->roots()->content());
-        $this->branch = c::get('gcapc-branch', '');
+        $this->kirby = kirby();
+        $this->repoPath = $repoPath ? $repoPath : option('blankogmbh.gcapc.path', $this->kirby->root("content"));
+
+        $this->branch = option('blankogmbh.gcapc.branch', '');
     }
 
     private function initRepo()
@@ -24,23 +32,14 @@ class KirbyGitHelper
         }
 
         if (!class_exists("Git")) {
-            if (file_exists(__DIR__ . DS . 'Git.php' . DS. 'Git.php')) {
-                require __DIR__ . DS . 'Git.php' . DS. 'Git.php';
-            } else {
-                require kirby()->roots()->index() .
-                DS . 'vendor' . DS . 'pascalmh' . DS . 'git.php' . DS . 'Git.php';
-            }
+            throw new Exception('Git class not found. Make sure you run composer install inside this plugins directory');
         }
 
-        if (!class_exists("Git")) {
-            die('Git class not found. Is the Git.php submodule installed?');
-        }
-
-        $this->pullOnChange = c::get('gcapc-pull', false);
-        $this->pushOnChange = c::get('gcapc-push', false);
-        $this->commitOnChange = c::get('gcapc-commit', false);
-        $this->gitBin = c::get('gcapc-gitBin', '');
-        $this->windowsMode = c::get('gcapc-windowsMode', false);
+        $this->pullOnChange = option('blankogmbh.gcapc.pull', false);
+        $this->pushOnChange = option('blankogmbh.gcapc.push', false);
+        $this->commitOnChange = option('blankogmbh.gcapc.commit', false);
+        $this->gitBin = option('blankogmbh.gcapc.gitBin', '');
+        $this->windowsMode = option('blankogmbh.gcapc.windowsMode', false);
 
         if ($this->windowsMode) {
             Git::windows_mode();
@@ -52,7 +51,7 @@ class KirbyGitHelper
         $this->repo = Git::open($this->repoPath);
 
         if (!$this->repo->test_git()) {
-            trigger_error('git could not be found or is not working properly. ' . Git::get_bin());
+            throw new Exception('git could not be found or is not working properly. ' . Git::get_bin());
         }
     }
 
@@ -89,7 +88,7 @@ class KirbyGitHelper
             $this->initRepo();
 
             if ($this->branch) {
-              $this->getRepo()->checkout($this->branch);
+                $this->getRepo()->checkout($this->branch);
             }
 
             if ($this->pullOnChange) {
@@ -102,7 +101,7 @@ class KirbyGitHelper
                 $this->push();
             }
         } catch(Exception $exception) {
-            trigger_error('Unable to update git: ' . $exception->getMessage());
+            throw new Exception('Unable to update git: ' . $exception->getMessage());
         }
     }
 }
