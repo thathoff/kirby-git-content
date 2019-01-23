@@ -1,6 +1,8 @@
 # Kirby - Git Commit And Push Content
 
-This is a plugin for [Kirby](http://getkirby.com/) that Commits and Pushes Changes made via the Panel to your Git Repository.
+This is a plugin for [Kirby 3](http://getkirby.com/) that commits and pushes changes made via the Panel to your git repository.
+
+**⚠️ The current version only supports Kirby 3. For Kirby 2 support please use version 2 of this plugin.**
 
 ## Usage
 
@@ -15,7 +17,7 @@ Create a new git repository where you push your content to, name it `your-projec
 Init the content repo and push it
 
 Remove the `content/` folder from your current git repository
-```
+```bash
 git rm --cached -r content
 git add -A
 git commit -m "Move Content Folder to separate repository"
@@ -23,7 +25,7 @@ git commit -m "Move Content Folder to separate repository"
 
 Add the `content/` folder to new git repository
 
-```
+```bash
 cd content
 git init
 git remote add origin https://github.com/your-project/your-project_content.git
@@ -34,73 +36,48 @@ git push origin master
 
 ### Download and configure the Plugin
 
-#### Composer
 `composer require blankogmbh/kirby-git-commit-and-push-content`
 
+To install this plugin without composer (not recommended):
+
+- [download the source code](https://github.com/blankogmbh/kirby-git-commit-and-push-content/archive/master.zip)
+- run `composer install` locally
+- run `composer remove getkirby/cms` (See https://github.com/getkirby/getkirby.com/issues/138)
+- copy the folder to your site/plugins folder.
+
+We might create downloadable releases in the future which will make the above steps unnecessary.
 
 ### Options
 
-You can use the following [Options](http://getkirby.com/docs/advanced/options) - make use of kirbys [Multi-environment setup](http://getkirby.com/blog/multi-environment-setup).
+By default this plugin just commits changes to the content repository. It’s recommended to setup a cron job
+which calls `yourdomain.com/gcapc/push`. This will push changes to the remote repository. By using a cron job
+saving pages in panel is a lot faster then enabling the `push` option which will push changes after every commit.
 
-(In case you need to use multiple git users on your environment - [Multiple SSH Keys settings for different github account](https://gist.github.com/jexchan/2351996))
+This plugin is configurable via [Kirby Options](https://getkirby.com/docs/guide/configuration). Add the
+following entires to your `config.php`.
 
-If you do not want to Pull and/or Push on every change you can also call `yourdomain.com/gcapc/push` or `yourdomain.com/gcapc/pull` manually (or automated with e.g. a cronjob).
+```php
+return [
+  // other configuration options
+  'blankogmbh' => [
+    'gcapc' => [
+      'commit' => true,
+    ],
+  ],
+]
+```
 
-#### gcapc-path
-Type: `String`
-Default value: `kirby()->roots()->content()`
+#### Configuration Options
 
-path to the repository to work in
+- `path` (String): Path to the repository, (default: `kirby()->root("content")`)
+- `branch` (String): branch name to be checked out (defaut: currently checked out branch)
+- `pull` (Boolean): Pull remote changes first? (default: `false`)
+- `commit` (Boolean): Commit your changes? (default: `false`)
+- `push` (Boolean): Push your changes to remote? (default: `false`)
+- `cronHooksEnabled` (Boolean): Whether `/gcapc/push` and `/gcapc/pull` endpoints are enabled or not. (default: `true`)
+- `gitBin` (String): Path to the `git` binary, [See Git.php](http://kbjr.github.io/Git.php/) `Git::set_bin(string $path)`
+- `windowsMode` (Boolean): [See Git.php](http://kbjr.github.io/Git.php/) `Git::windows_mode()` (default: `false`)
 
-#### gcapc-branch
-Type: `String`
-Default value: `''`
-
-branch name to be checked out (defauts to currently checked out branch)
-
-#### gcapc-pull
-Type: `Boolean`
-Default value: `false`
-
-Pull remote changes first?
-
-#### gcapc-commit
-Type: `Boolean`
-Default value: `false`
-
-Commit your changes?
-
-#### gcapc-push
-Type: `Boolean`
-Default value: `false`
-
-Push your changes to remote?
-
-#### gcapc-cron-hooks-enabled
-Type: `Boolean`
-Default value: `true`
-
-Whether `yourdomain.com/gcapc/push` and `yourdomain.com/gcapc/pull` are enabled or not.
-
-#### gcapc-panel-widget
-Type: `Boolean`
-Default value: `true`
-
-Show or Hide the Panel widget.
-
-#### gcapc-gitBin
-Type: `String`
-Default value: `''`
-
-Sets the location where git can be found
-
-[See Git.php](http://kbjr.github.io/Git.php/) `void Git::set_bin ( string $path )`
-
-#### gcapc-windowsMode
-Type: `Boolean`
-Default value: `false`
-
-[See Git.php](http://kbjr.github.io/Git.php/) `void Git::windows_mode ( void )`
 
 ## Git LFS
 Your repository might increase over time, by adding Images, Audio, Video, Binaries, etc.
@@ -115,6 +92,7 @@ cloning and updating your content repostory can take a lot of time. If you are a
 *.gif filter=lfs diff=lfs merge=lfs -text
 ```
 
-## Author
+## Authors
 
-Pascal 'Pascalmh' Küsgen <http://pascalmh.de>
+- Pascal 'Pascalmh' Küsgen <http://pascalmh.de>
+- Markus Denhoff <https://markus.denhoff.com>

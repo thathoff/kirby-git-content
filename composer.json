@@ -1,10 +1,17 @@
 {
   "name": "blankogmbh/kirby-git-commit-and-push-content",
+  "description": "Plugin to track changes to content in a git repository.",
   "type": "kirby-plugin",
   "require": {
-    "composer/installers": "~1.0",
-    "getkirby/kirby": "^2.1",
-    "pascalmh/git.php": "^1.0"
+    "pascalmh/git.php": "^1.0",
+    "php": ">=7.1.0",
+    "getkirby/cms": "^3.0.0"
+  },
+  "autoload": {
+    "files": ["config.php"],
+    "psr-4": {
+      "Blanko\\Kirby\\GCAPC\\": "src/"
+    }
   },
   "repositories": [
     {
