@@ -1,3 +1,24 @@
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v2.2.2...v3.0.0) (2019-09-24)
+
+
+### Features
+
+* add support for kirby 3 ([f4393b8](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/f4393b8))
+* commit by default when plugin is installed ([48cd099](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/48cd099))
+* install Git.php with composer only ([6d1b9d3](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/6d1b9d3))
+* only log errors by default ([3f4e771](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/3f4e771))
+* use users email and name as commit author ([ebcba17](https://github.com/blankogmbh/kirby-git-commit-and-push-content/commit/ebcba17))
+
+
+### BREAKING CHANGES
+
+* The commit option now defaults to true
+* Support for Kirby 2 and the panel widget has been removed.
+* Remove support for installation with git submodules
+
+
+
 <a name="2.2.2"></a>
 ## [2.2.2](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v2.2.1...v2.2.2) (2018-01-24)
 
@@ -205,14 +226,14 @@
 ## v0.0.3 - 2015-09-23
 
 ### Refactoring
- 
-* use [Git.php](https://github.com/kbjr/Git.php) as php git library 
+
+* use [Git.php](https://github.com/kbjr/Git.php) as php git library
 
 
 <a name="v0.0.2"></a>
 ## v0.0.2 - 2015-09-21
 
-### Refactoring 
+### Refactoring
 
 * use Multi-environment setup, provide more variables
 
