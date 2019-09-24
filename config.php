@@ -14,5 +14,6 @@ Kirby::plugin('blankogmbh/gcapc', [
         'cronHooksEnabled' => null,
         'windowsMode' => null,
         'gitBin' => null,
+        'displayErrors' => null,
     ]
 ]);

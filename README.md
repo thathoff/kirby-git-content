@@ -75,6 +75,7 @@ return [
 - `commit` (Boolean): Commit your changes? (default: `true`)
 - `push` (Boolean): Push your changes to remote? (default: `false`)
 - `cronHooksEnabled` (Boolean): Whether `/gcapc/push` and `/gcapc/pull` endpoints are enabled or not. (default: `true`)
+- `displayErrors` (Boolean): Display git errors when saving pages (default: `false`)
 - `gitBin` (String): Path to the `git` binary, [See Git.php](http://kbjr.github.io/Git.php/) `Git::set_bin(string $path)`
 - `windowsMode` (Boolean): [See Git.php](http://kbjr.github.io/Git.php/) `Git::windows_mode()` (default: `false`)
 

@@ -117,7 +117,13 @@ class KirbyGitHelper
                 $this->push();
             }
         } catch(Exception $exception) {
-            throw new Exception('Unable to update git: ' . $exception->getMessage());
+            // only show exceptions when explicitly enabled
+            if (option('blankogmbh.gcapc.displayErrors', false)) {
+                throw new Exception('Unable to update git: ' . $exception->getMessage());
+            }
+
+            // still log for debug
+            error_log('Unable to update git: ' . $exception->getMessage(), E_USER_ERROR);
         }
     }
 }
