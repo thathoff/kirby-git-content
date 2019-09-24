@@ -126,7 +126,7 @@ class KirbyGit
             'file.changeSort:after' => function ($file) use ($gitHelper) {
                 $gitHelper->kirbyChange('sort(file): ' . $file->page()->uri() . '/' . $file->filename());
             },
-            'file.delete:after' => function ($file) use ($gitHelper) {
+            'file.delete:after' => function ($status, $file) use ($gitHelper) {
                 $gitHelper->kirbyChange('delete(file): ' . $file->page()->uri() . '/' . $file->filename());
             },
         ];
