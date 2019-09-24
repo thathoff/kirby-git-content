@@ -1,3 +1,12 @@
+<a name="3.0.1"></a>
+# [3.0.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v3.0.1...v3.0.0) (2019-09-24)
+
+### Bug Fixes
+
+* Fix hook for file:delete
+
+
+
 <a name="3.0.0"></a>
 # [3.0.0](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v2.2.2...v3.0.0) (2019-09-24)
 
