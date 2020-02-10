@@ -22,6 +22,7 @@ class KirbyGit
 
         $route = [];
         $route['pattern'] = 'gcapc/(:any)';
+        $route['method'] = 'GET|POST';
         $route['action'] = function($gitCommand) use ($gitHelper) {
             switch ($gitCommand) {
                 case "push":
