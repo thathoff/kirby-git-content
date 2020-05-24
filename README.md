@@ -50,7 +50,7 @@ We might create downloadable releases in the future which will make the above st
 ### Options
 
 By default this plugin just commits changes to the content repository. It’s recommended to setup a cron job
-which calls `yourdomain.com/gcapc/push`. This will push changes to the remote repository. By using a cron job
+which calls `yourdomain.com/git-content/push`. This will push changes to the remote repository. By using a cron job
 saving pages in panel is a lot faster then enabling the `push` option which will push changes after every commit.
 
 This plugin is configurable via [Kirby Options](https://getkirby.com/docs/guide/configuration). Add the
@@ -59,8 +59,8 @@ following entires to your `config.php`.
 ```php
 return [
   // other configuration options
-  'blankogmbh' => [
-    'gcapc' => [
+  'thathoff' => [
+    'git-content' => [
       'commit' => true,
     ],
   ],
@@ -74,7 +74,7 @@ return [
 - `pull` (Boolean): Pull remote changes first? (default: `false`)
 - `commit` (Boolean): Commit your changes? (default: `true`)
 - `push` (Boolean): Push your changes to remote? (default: `false`)
-- `cronHooksEnabled` (Boolean): Whether `/gcapc/push` and `/gcapc/pull` endpoints are enabled or not. (default: `true`)
+- `cronHooksEnabled` (Boolean): Whether `/git-content/push` and `/git-content/pull` endpoints are enabled or not. (default: `true`)
 - `displayErrors` (Boolean): Display git errors when saving pages (default: `false`)
 - `gitBin` (String): Path to the `git` binary, [See Git.php](http://kbjr.github.io/Git.php/) `Git::set_bin(string $path)`
 - `windowsMode` (Boolean): [See Git.php](http://kbjr.github.io/Git.php/) `Git::windows_mode()` (default: `false`)

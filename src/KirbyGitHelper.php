@@ -1,6 +1,6 @@
 <?php
 
-namespace Blanko\Kirby\GCAPC;
+namespace Thathoff\GitContent;
 
 use Git;
 use Exception;
@@ -20,9 +20,9 @@ class KirbyGitHelper
     public function __construct($repoPath = false)
     {
         $this->kirby = kirby();
-        $this->repoPath = $repoPath ? $repoPath : option('blankogmbh.gcapc.path', $this->kirby->root("content"));
+        $this->repoPath = $repoPath ? $repoPath : option('thathoff.git-content.path', $this->kirby->root("content"));
 
-        $this->branch = option('blankogmbh.gcapc.branch', '');
+        $this->branch = option('thathoff.git-content.branch', '');
     }
 
     private function initRepo()
@@ -35,11 +35,11 @@ class KirbyGitHelper
             throw new Exception('Git class not found. Make sure you run composer install inside this plugins directory');
         }
 
-        $this->pullOnChange = option('blankogmbh.gcapc.pull', false);
-        $this->pushOnChange = option('blankogmbh.gcapc.push', false);
-        $this->commitOnChange = option('blankogmbh.gcapc.commit', true);
-        $this->gitBin = option('blankogmbh.gcapc.gitBin', '');
-        $this->windowsMode = option('blankogmbh.gcapc.windowsMode', false);
+        $this->pullOnChange = option('thathoff.git-content.pull', false);
+        $this->pushOnChange = option('thathoff.git-content.push', false);
+        $this->commitOnChange = option('thathoff.git-content.commit', true);
+        $this->gitBin = option('thathoff.git-content.gitBin', '');
+        $this->windowsMode = option('thathoff.git-content.windowsMode', false);
 
         if ($this->windowsMode) {
             Git::windows_mode();
@@ -118,7 +118,7 @@ class KirbyGitHelper
             }
         } catch(Exception $exception) {
             // only show exceptions when explicitly enabled
-            if (option('blankogmbh.gcapc.displayErrors', false)) {
+            if (option('thathoff.git-content.displayErrors', false)) {
                 throw new Exception('Unable to update git: ' . $exception->getMessage());
             }
 
