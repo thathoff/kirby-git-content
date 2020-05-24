@@ -1,8 +1,8 @@
 <?php
 
-$kirbyGit = new Blanko\Kirby\GCAPC\KirbyGit();
+$kirbyGit = new Thathoff\GitContent\KirbyGit();
 
-Kirby::plugin('blankogmbh/gcapc', [
+Kirby::plugin('thathoff/git-content', [
     'hooks' => $kirbyGit->getHooks(),
     'routes' => $kirbyGit->getRoutes(),
     'options' => [

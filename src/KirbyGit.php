@@ -1,6 +1,6 @@
 <?php
 
-namespace Blanko\Kirby\GCAPC;
+namespace Thathoff\GitContent;
 
 use Exception;
 use Kirby\Http\Header;
@@ -14,14 +14,14 @@ class KirbyGit
 
     public function getRoutes()
     {
-        if (!option("blankogmbh.gcapc.cronHooksEnabled", true)) {
+        if (!option("thathoff.git-content.cronHooksEnabled", true)) {
             return [];
         }
 
         $gitHelper = $this->gitHelper;
 
         $route = [];
-        $route['pattern'] = 'gcapc/(:any)';
+        $route['pattern'] = 'git-content/(:any)';
         $route['action'] = function($gitCommand) use ($gitHelper) {
             switch ($gitCommand) {
                 case "push":

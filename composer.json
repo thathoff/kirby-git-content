@@ -11,7 +11,7 @@
   "autoload": {
     "files": ["config.php"],
     "psr-4": {
-      "Blanko\\Kirby\\GCAPC\\": "src/"
+      "Thathoff\\GitContent\\": "src/"
     }
   },
   "repositories": [
