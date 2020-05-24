@@ -1,3 +1,11 @@
+<a name="3.0.2"></a>
+# [3.0.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v3.0.2...v3.0.1) (2020-03-06)
+
+### Bug Fixes
+
+* Only handle files attached to pages
+
+
 <a name="3.0.1"></a>
 # [3.0.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v3.0.1...v3.0.0) (2019-09-24)
 
