@@ -1,4 +1,4 @@
-# Kirby - Git Commit And Push Content
+# Kirby - Git Content
 
 This is a plugin for [Kirby 3](http://getkirby.com/) that commits and pushes changes made via the Panel to your git repository.
 
@@ -36,11 +36,11 @@ git push origin master
 
 ### Download and configure the Plugin
 
-`composer require blankogmbh/kirby-git-commit-and-push-content`
+`composer require thathoff/kirby-git-content`
 
 To install this plugin without composer (not recommended):
 
-- [download the source code](https://github.com/blankogmbh/kirby-git-commit-and-push-content/archive/master.zip)
+- [download the source code](https://github.com/thathoff/kirby-git-content/archive/master.zip)
 - run `composer install` locally
 - run `composer remove getkirby/cms` (See https://github.com/getkirby/getkirby.com/issues/138)
 - copy the folder to your site/plugins folder.

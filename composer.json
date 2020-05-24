@@ -1,5 +1,5 @@
 {
-  "name": "blankogmbh/kirby-git-commit-and-push-content",
+  "name": "thathoff/kirby-git-content",
   "description": "Plugin to track changes to content in a git repository.",
   "type": "kirby-plugin",
   "license": "MIT",
@@ -17,7 +17,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/blankogmbh/kirby-git-commit-and-push-content"
+      "url": "https://github.com/thathoff/kirby-git-content"
     }
   ]
 }
