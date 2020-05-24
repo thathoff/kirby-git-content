@@ -112,21 +112,45 @@ class KirbyGit
             * File
             */
             'file.create:after' => function ($file) use ($gitHelper) {
+                if (!$file->page()) {
+                    return;
+                }
+
                 $gitHelper->kirbyChange('create(file): ' . $file->page()->uri() . '/' . $file->filename());
             },
             'file.replace:after' => function ($file) use ($gitHelper) {
+                if (!$file->page()) {
+                    return;
+                }
+
                 $gitHelper->kirbyChange('replace(file): ' . $file->page()->uri() . '/' . $file->filename());
             },
             'file.changeName:after' => function ($file) use ($gitHelper) {
+                if (!$file->page()) {
+                    return;
+                }
+
                 $gitHelper->kirbyChange('rename(file): ' . $file->page()->uri() . '/' . $file->filename());
             },
             'file.update:after' => function ($file) use ($gitHelper) {
+                if (!$file->page()) {
+                    return;
+                }
+
                 $gitHelper->kirbyChange('update(file): ' . $file->page()->uri() . '/' . $file->filename());
             },
             'file.changeSort:after' => function ($file) use ($gitHelper) {
+                if (!$file->page()) {
+                    return;
+                }
+
                 $gitHelper->kirbyChange('sort(file): ' . $file->page()->uri() . '/' . $file->filename());
             },
             'file.delete:after' => function ($status, $file) use ($gitHelper) {
+                if (!$file->page()) {
+                    return;
+                }
+
                 $gitHelper->kirbyChange('delete(file): ' . $file->page()->uri() . '/' . $file->filename());
             },
         ];
