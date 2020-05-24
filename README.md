@@ -70,7 +70,7 @@ return [
 #### Configuration Options
 
 - `path` (String): Path to the repository, (default: `kirby()->root("content")`)
-- `branch` (String): branch name to be checked out (defaut: currently checked out branch)
+- `branch` (String): branch name to be checked out (default: currently checked out branch)
 - `pull` (Boolean): Pull remote changes first? (default: `false`)
 - `commit` (Boolean): Commit your changes? (default: `true`)
 - `push` (Boolean): Push your changes to remote? (default: `false`)
@@ -82,7 +82,7 @@ return [
 
 ## Git LFS
 Your repository might increase over time, by adding Images, Audio, Video, Binaries, etc.
-cloning and updating your content repostory can take a lot of time. If you are able to use
+cloning and updating your content repository can take a lot of time. If you are able to use
 [Git LFS](https://git-lfs.github.com/) you probably should. Here is what the .gitattributes-File could look like:
 
 ```
