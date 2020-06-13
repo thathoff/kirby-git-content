@@ -5,14 +5,16 @@
   "license": "MIT",
   "require": {
     "pascalmh/git.php": "^1.0",
-    "php": ">=7.1.0",
-    "getkirby/cms": "^3.0.0"
+    "getkirby/composer-installer": "^1.1"
   },
   "autoload": {
     "files": ["config.php"],
     "psr-4": {
       "Blanko\\Kirby\\GCAPC\\": "src/"
     }
+  },
+  "extra": {
+    "installer-name": "git-content"
   },
   "repositories": [
     {
