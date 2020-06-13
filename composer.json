@@ -15,11 +15,5 @@
   },
   "extra": {
     "installer-name": "git-content"
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/thathoff/kirby-git-content"
-    }
-  ]
+  }
 }
