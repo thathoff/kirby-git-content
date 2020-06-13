@@ -5,11 +5,9 @@
   "license": "MIT",
   "require": {
     "coyl/git": "^0.1.7",
-    "php": ">=7.1.0",
-    "getkirby/cms": "^3.0.0"
+    "getkirby/composer-installer": "^1.1"
   },
   "autoload": {
-    "files": ["config.php"],
     "psr-4": {
       "Thathoff\\GitContent\\": "src/"
     }
@@ -19,5 +17,8 @@
       "type": "vcs",
       "url": "https://github.com/thathoff/kirby-git-content"
     }
-  ]
+  ],
+  "extra": {
+    "installer-name": "git-content"
+  }
 }

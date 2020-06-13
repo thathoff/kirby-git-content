@@ -42,7 +42,6 @@ To install this plugin without composer (not recommended):
 
 - [download the source code](https://github.com/thathoff/kirby-git-content/archive/master.zip)
 - run `composer install` locally
-- run `composer remove getkirby/cms` (See https://github.com/getkirby/getkirby.com/issues/138)
 - copy the folder to your site/plugins folder.
 
 We might create downloadable releases in the future which will make the above steps unnecessary.
