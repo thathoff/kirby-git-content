@@ -11,6 +11,7 @@ class KirbyGitHelper
     private $repo;
     private $repoPath;
     private $branch;
+    private $commitMessageTemplate;
     private $pullOnChange;
     private $pushOnChange;
     private $commitOnChange;
@@ -23,6 +24,7 @@ class KirbyGitHelper
         $this->repoPath = $repoPath ? $repoPath : option('thathoff.git-content.path', $this->kirby->root("content"));
 
         $this->branch = option('thathoff.git-content.branch', '');
+        $this->commitMessageTemplate = option('thathoff.git-content.commitMessage', ':action:(:item:): :url:');
     }
 
     private function initRepo()
@@ -91,7 +93,7 @@ class KirbyGitHelper
         $this->getRepo()->pull('origin', $branch);
     }
 
-    public function kirbyChange($commitMessage)
+    public function kirbyChange($action, $item, $url = '')
     {
         try {
             $this->initRepo();
@@ -111,7 +113,7 @@ class KirbyGitHelper
                     $author = $user->name() . " <" . $user->email() . ">";
                 }
 
-                $this->commit($commitMessage, $author);
+                $this->commit($this->commitMessage($action, $item, $url), $author);
             }
             if ($this->pushOnChange) {
                 $this->push();
@@ -125,5 +127,14 @@ class KirbyGitHelper
             // still log for debug
             error_log('Unable to update git: ' . $exception->getMessage(), E_USER_ERROR);
         }
+    }
+
+    private function commitMessage($action, $item, $url)
+    {
+        return strtr($this->commitMessageTemplate, [
+            ':action:' => $action,
+            ':item:' => $item,
+            ':url:' => $url,
+        ]);
     }
 }

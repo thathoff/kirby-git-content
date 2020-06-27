@@ -15,6 +15,7 @@ Kirby::plugin('thathoff/git-content', [
         'push' => null,
         'commit' => null,
         'cronHooksEnabled' => null,
+        'commitMessage' => ':action:(:item:): :url:',
         'windowsMode' => null,
         'gitBin' => null,
         'displayErrors' => null,
