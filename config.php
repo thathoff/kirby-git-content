@@ -11,6 +11,7 @@ Kirby::plugin('blankogmbh/gcapc', [
         'pull' => null,
         'push' => null,
         'commit' => null,
+        'commitMessage' => ':action:(:item:): :url:',
         'cronHooksEnabled' => null,
         'windowsMode' => null,
         'gitBin' => null,
