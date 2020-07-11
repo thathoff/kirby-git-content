@@ -2,7 +2,7 @@
 
 namespace Thathoff\GitContent;
 
-use Git;
+use Coyl\Git\Git;
 use Exception;
 
 class KirbyGitHelper
@@ -31,7 +31,7 @@ class KirbyGitHelper
             return true;
         }
 
-        if (!class_exists("Git")) {
+        if (!class_exists("Coyl\Git\Git")) {
             throw new Exception('Git class not found. Make sure you run composer install inside this plugins directory');
         }
 
