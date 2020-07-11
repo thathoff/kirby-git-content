@@ -4,7 +4,7 @@
   "type": "kirby-plugin",
   "license": "MIT",
   "require": {
-    "pascalmh/git.php": "^1.0",
+    "coyl/git": "^0.1.7",
     "php": ">=7.1.0",
     "getkirby/cms": "^3.0.0"
   },
