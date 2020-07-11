@@ -73,11 +73,19 @@ return [
 - `pull` (Boolean): Pull remote changes first? (default: `false`)
 - `commit` (Boolean): Commit your changes? (default: `true`)
 - `push` (Boolean): Push your changes to remote? (default: `false`)
+- `commitMessageTemplate` (String): Configure the template for the commit message (default: `:action:(:item:): :url:`)
 - `cronHooksEnabled` (Boolean): Whether `/git-content/push` and `/git-content/pull` endpoints are enabled or not. (default: `true`)
 - `displayErrors` (Boolean): Display git errors when saving pages (default: `false`)
 - `gitBin` (String): Path to the `git` binary, [See Git.php](http://kbjr.github.io/Git.php/) `Git::set_bin(string $path)`
 - `windowsMode` (Boolean): [See Git.php](http://kbjr.github.io/Git.php/) `Git::windows_mode()` (default: `false`)
 
+#### Custom Commit Message
+
+By default the commit message is composed from the template `:action:(:item:): :url:`. So for example a change to
+the page `example` will be committed with the message `update(page): example`. If you would like to change that
+message you can use the `thathoff.git-content.commitMessageTemplate` option to overwrite the template.
+
+#### Configuration Options
 
 ## Git LFS
 Your repository might increase over time, by adding Images, Audio, Video, Binaries, etc.
