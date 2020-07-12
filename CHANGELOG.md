@@ -1,5 +1,14 @@
+<a name="3.0.3"></a>
+# [3.0.3](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v3.0.2...v3.0.3) (2020-07-12)
+
+The maintainer has switched, be prepared for config option name changes in version 4 which will be released shortly.
+
+### Bug Fixes
+
+* Plugin works with Kirby 3.4 (#66)
+
 <a name="3.0.2"></a>
-# [3.0.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v3.0.2...v3.0.1) (2020-03-06)
+# [3.0.2](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v3.0.1...v3.0.2) (2020-03-06)
 
 ### Bug Fixes
 
@@ -7,7 +16,7 @@
 
 
 <a name="3.0.1"></a>
-# [3.0.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v3.0.1...v3.0.0) (2019-09-24)
+# [3.0.1](https://github.com/blankogmbh/kirby-git-commit-and-push-content/compare/v3.0.0...v3.0.1) (2019-09-24)
 
 ### Bug Fixes
 
