@@ -1,8 +1,8 @@
 <?php
 
-namespace Blanko\Kirby\GCAPC;
+namespace Thathoff\GitContent;
 
-use Git;
+use Coyl\Git\Git;
 use Exception;
 
 class KirbyGitHelper
@@ -11,6 +11,7 @@ class KirbyGitHelper
     private $repo;
     private $repoPath;
     private $branch;
+    private $commitMessageTemplate;
     private $pullOnChange;
     private $pushOnChange;
     private $commitOnChange;
@@ -20,9 +21,10 @@ class KirbyGitHelper
     public function __construct($repoPath = false)
     {
         $this->kirby = kirby();
-        $this->repoPath = $repoPath ? $repoPath : option('blankogmbh.gcapc.path', $this->kirby->root("content"));
+        $this->repoPath = $repoPath ? $repoPath : option('thathoff.git-content.path', $this->kirby->root("content"));
 
-        $this->branch = option('blankogmbh.gcapc.branch', '');
+        $this->branch = option('thathoff.git-content.branch', '');
+        $this->commitMessageTemplate = option('thathoff.git-content.commitMessage', ':action:(:item:): :url:');
     }
 
     private function initRepo()
@@ -31,15 +33,15 @@ class KirbyGitHelper
             return true;
         }
 
-        if (!class_exists("Git")) {
+        if (!class_exists("Coyl\Git\Git")) {
             throw new Exception('Git class not found. Make sure you run composer install inside this plugins directory');
         }
 
-        $this->pullOnChange = option('blankogmbh.gcapc.pull', false);
-        $this->pushOnChange = option('blankogmbh.gcapc.push', false);
-        $this->commitOnChange = option('blankogmbh.gcapc.commit', true);
-        $this->gitBin = option('blankogmbh.gcapc.gitBin', '');
-        $this->windowsMode = option('blankogmbh.gcapc.windowsMode', false);
+        $this->pullOnChange = option('thathoff.git-content.pull', false);
+        $this->pushOnChange = option('thathoff.git-content.push', false);
+        $this->commitOnChange = option('thathoff.git-content.commit', true);
+        $this->gitBin = option('thathoff.git-content.gitBin', '');
+        $this->windowsMode = option('thathoff.git-content.windowsMode', false);
 
         if ($this->windowsMode) {
             Git::windows_mode();
@@ -82,6 +84,13 @@ class KirbyGitHelper
     public function push($branch = false)
     {
         $branch = $branch ? $branch : $this->branch;
+
+        // if branch is still empty we use the active branch
+        // because otherwise pushes fail silently in some cases
+        if (!$branch) {
+            $branch = $this->getRepo()->getActiveBranch();
+        }
+
         $this->getRepo()->push('origin', $branch);
     }
 
@@ -91,7 +100,7 @@ class KirbyGitHelper
         $this->getRepo()->pull('origin', $branch);
     }
 
-    public function kirbyChange($commitMessage)
+    public function kirbyChange($action, $item, $url = '')
     {
         try {
             $this->initRepo();
@@ -111,19 +120,28 @@ class KirbyGitHelper
                     $author = $user->name() . " <" . $user->email() . ">";
                 }
 
-                $this->commit($commitMessage, $author);
+                $this->commit($this->commitMessage($action, $item, $url), $author);
             }
             if ($this->pushOnChange) {
                 $this->push();
             }
         } catch(Exception $exception) {
             // only show exceptions when explicitly enabled
-            if (option('blankogmbh.gcapc.displayErrors', false)) {
+            if (option('thathoff.git-content.displayErrors', false)) {
                 throw new Exception('Unable to update git: ' . $exception->getMessage());
             }
 
             // still log for debug
             error_log('Unable to update git: ' . $exception->getMessage(), E_USER_ERROR);
         }
+    }
+
+    private function commitMessage($action, $item, $url)
+    {
+        return strtr($this->commitMessageTemplate, [
+            ':action:' => $action,
+            ':item:' => $item,
+            ':url:' => $url,
+        ]);
     }
 }
