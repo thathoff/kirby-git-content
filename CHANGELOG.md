@@ -1,3 +1,20 @@
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/thathoff/kirby-git-content/compare/v3.0.3...v4.0.0) (2020-10-25)
+
+### Features
+- finalize Maintainer switch (see Breaking Changes)
+- finalize rename to GitContent (see Breaking Changes)
+- Allow POST request to webhooks (thanks to @graphichavoc)
+- Install into plugins folder (thanks to @s3ththompson)
+- Switch to `coyl/git` PHP git library
+- allow configuration of commit message (thanks to @JonasDoebertin)
+
+### BREAKING CHANGES:
+- Name Changed to Git Content
+- Config options changed (`blankogmbh.gcapc` to `thathoff.git-content`)
+- Webhook-URLS changed: `/gcapc/(push|pull)` changed to `/git-content/(push|pull)
+
+
 <a name="3.0.3"></a>
 # [3.0.3](https://github.com/thathoff/kirby-git-content/compare/v3.0.2...v3.0.3) (2020-07-12)
 
