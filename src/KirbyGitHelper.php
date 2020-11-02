@@ -117,7 +117,7 @@ class KirbyGitHelper
 
                 $author = null;
                 if ($user) {
-                    $author = $user->name() . " <" . $user->email() . ">";
+                    $author = $user->name()->or($user->email()) . " <" . $user->email() . ">";
                 }
 
                 $this->commit($this->commitMessage($action, $item, $url), $author);
