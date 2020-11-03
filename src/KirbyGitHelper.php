@@ -44,16 +44,16 @@ class KirbyGitHelper
         $this->windowsMode = option('thathoff.git-content.windowsMode', false);
 
         if ($this->windowsMode) {
-            Git::windows_mode();
+            Git::windowsMode();
         }
         if ($this->gitBin) {
-            Git::set_bin($this->gitBin);
+            Git::setBin($this->gitBin);
         }
 
         $this->repo = Git::open($this->repoPath);
 
         if (!$this->repo->test_git()) {
-            throw new Exception('git could not be found or is not working properly. ' . Git::get_bin());
+            throw new Exception('git could not be found or is not working properly. ' . Git::getBin());
         }
     }
 
