@@ -1,3 +1,11 @@
+<a name="4.0.1"></a>
+# [4.0.1](https://github.com/thathoff/kirby-git-content/compare/v4.0.0...v4.0.1) (2020-11-17)
+
+### Bugfixes
+- Setting path to git binary and enabling windows mode works again (thanks to @therephil)
+- Fix committing when Kirby user has no name (thanks to @qwerdee, fixes #57)
+
+
 <a name="4.0.0"></a>
 # [4.0.0](https://github.com/thathoff/kirby-git-content/compare/v3.0.3...v4.0.0) (2020-10-25)
 
