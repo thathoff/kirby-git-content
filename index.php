@@ -17,6 +17,7 @@ if (!option('thathoff.git-content.disable', false)) {
             'push'             => null,
             'commit'           => null,
             'cronHooksEnabled' => null,
+            'cronHooksSecret'  => null,
             'commitMessage'    => ':action:(:item:): :url:',
             'windowsMode'      => null,
             'gitBin'           => null,

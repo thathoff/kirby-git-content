@@ -75,10 +75,12 @@ return [
 - `push` (Boolean): Push your changes to remote? (default: `false`)
 - `commitMessageTemplate` (String): Configure the template for the commit message (default: `:action:(:item:): :url:`)
 - `cronHooksEnabled` (Boolean): Whether `/git-content/push` and `/git-content/pull` endpoints are enabled or not. (default: `true`)
+- `cronHooksSecret` (String): When set, this secret must be sent with the cronHooks as a get parameter.  Note: If you set
+  a secret, only the GET method will work on the webhooks.   `/git-content/(pull|push)?secret=S0up3rS3c3t`
 - `displayErrors` (Boolean): Display git errors when saving pages (default: `false`)
 - `gitBin` (String): Path to the `git` binary, [See Git.php](http://kbjr.github.io/Git.php/) `Git::set_bin(string $path)`
 - `windowsMode` (Boolean): [See Git.php](http://kbjr.github.io/Git.php/) `Git::windows_mode()` (default: `false`)
-- `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`) 
+- `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`)
 
 #### Custom Commit Message
 
