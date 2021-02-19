@@ -1,3 +1,11 @@
+<a name="4.1.0"></a>
+# [4.1.0](https://github.com/thathoff/kirby-git-content/compare/v4.0.1...4.1.0) (2021-02-19)
+
+## Features
+- Add the ability to disable the plugin via the config (Thanks @mrunkel)
+- Add secret parameter to the webhooks (Thanks @mrunkel)
+
+
 <a name="4.0.1"></a>
 # [4.0.1](https://github.com/thathoff/kirby-git-content/compare/v4.0.0...v4.0.1) (2020-11-17)
 

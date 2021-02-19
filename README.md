@@ -63,7 +63,7 @@ return [
       'commit' => true,
     ],
   ],
-]
+];
 ```
 
 #### Configuration Options
@@ -73,19 +73,20 @@ return [
 - `pull` (Boolean): Pull remote changes first? (default: `false`)
 - `commit` (Boolean): Commit your changes? (default: `true`)
 - `push` (Boolean): Push your changes to remote? (default: `false`)
-- `commitMessageTemplate` (String): Configure the template for the commit message (default: `:action:(:item:): :url:`)
+- `commitMessage` (String): Configure the template for the commit message (default: `:action:(:item:): :url:`)
 - `cronHooksEnabled` (Boolean): Whether `/git-content/push` and `/git-content/pull` endpoints are enabled or not. (default: `true`)
+- `cronHooksSecret` (String): When set, this secret must be sent with the cronHooks as a get parameter.  Note: If you set
+  a secret, only the GET method will work on the webhooks.   `/git-content/(pull|push)?secret=S0up3rS3c3t`
 - `displayErrors` (Boolean): Display git errors when saving pages (default: `false`)
 - `gitBin` (String): Path to the `git` binary, [See Git.php](http://kbjr.github.io/Git.php/) `Git::set_bin(string $path)`
 - `windowsMode` (Boolean): [See Git.php](http://kbjr.github.io/Git.php/) `Git::windows_mode()` (default: `false`)
+- `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`)
 
 #### Custom Commit Message
 
 By default the commit message is composed from the template `:action:(:item:): :url:`. So for example a change to
 the page `example` will be committed with the message `update(page): example`. If you would like to change that
-message you can use the `thathoff.git-content.commitMessageTemplate` option to overwrite the template.
-
-#### Configuration Options
+message you can use the `thathoff.git-content.commitMessage` option to overwrite the template.
 
 ## Git LFS
 Your repository might increase over time, by adding Images, Audio, Video, Binaries, etc.

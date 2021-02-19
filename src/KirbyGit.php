@@ -24,6 +24,17 @@ class KirbyGit
         $route['pattern'] = 'git-content/(:any)';
         $route['method'] = 'GET|POST';
         $route['action'] = function($gitCommand) use ($gitHelper) {
+            // check to see if a secret is set, and if it is, verify it
+            $secret = option('thathoff.git-content.cronHooksSecret', '');
+            if ($secret !== '') {
+                $passedSecret = kirby()->request()->get('secret', '');
+                if ($passedSecret !== $secret) {
+                    return [
+                        'status' => 'forbidden',
+                        'message' => 'Invalid secret passed',
+                    ];
+                }
+            }
             switch ($gitCommand) {
                 case "push":
                     try {
