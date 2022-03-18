@@ -4,6 +4,7 @@ namespace Thathoff\GitContent;
 
 use Coyl\Git\Git;
 use Coyl\Git\GitRepo;
+use DateTime;
 use Exception;
 
 class KirbyGitHelper
@@ -56,6 +57,29 @@ class KirbyGitHelper
         if (!$this->repo->test_git()) {
             throw new Exception('git could not be found or is not working properly. ' . Git::getBin());
         }
+    }
+
+    public function log(int $limit = 10)
+    {
+        $log = $this->getRepo()->logFormatted('%H|%s|%an|%ae|%cI', '', $limit);
+        $log = explode("\n", $log);
+
+        $log = array_map(
+            function ($line) {
+                $entry = explode("|", $line);
+
+                return [
+                    'hash' => $entry[0],
+                    'message' => $entry[1],
+                    'author' => $entry[2],
+                    'email' => $entry[3],
+                    'date' => DateTime::createFromFormat(DateTime::ISO8601, $entry[4]),
+                ];
+            },
+            $log
+        );
+
+        return $log;
     }
 
     private function getRepo(): GitRepo
