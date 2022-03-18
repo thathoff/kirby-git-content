@@ -18,12 +18,10 @@ class KirbyGit
             return [];
         }
 
-        $gitHelper = $this->gitHelper;
-
         $route = [];
         $route['pattern'] = 'git-content/(:any)';
         $route['method'] = 'GET|POST';
-        $route['action'] = function($gitCommand) use ($gitHelper) {
+        $route['action'] = function ($gitCommand) {
             // check to see if a secret is set, and if it is, verify it
             $secret = option('thathoff.git-content.cronHooksSecret', '');
             if ($secret !== '') {
@@ -35,38 +33,13 @@ class KirbyGit
                     ];
                 }
             }
+
             switch ($gitCommand) {
                 case "push":
-                    try {
-                        $gitHelper->push();
-
-                        return [
-                            "status" => "ok",
-                            "message" => "successfully pushed the content folder",
-                        ];
-                    } catch (Exception $e) {
-                        Header::panic();
-                        return [
-                            "status" => "error",
-                            "message" => $e->getMessage(),
-                        ];
-                    }
-
+                    return $this->httpGitHelperAction('push', "successfully pushed the content folder");
+                    break;
                 case "pull":
-                    try {
-                        $gitHelper->pull();
-
-                        return [
-                            "status" => "ok",
-                            "message" => "successfully pulled the content folder",
-                        ];
-                    } catch (Exception $e) {
-                        Header::panic();
-                        return [
-                            "status" => "error",
-                            "message" => $e->getMessage(),
-                        ];
-                    }
+                    return $this->httpGitHelperAction('pull', "successfully pulled the content folder");
                     break;
             }
 
@@ -78,6 +51,24 @@ class KirbyGit
         };
 
         return [$route];
+    }
+
+    public function httpGitHelperAction(string $action, ?string $successMessage = null)
+    {
+        try {
+            $this->gitHelper->$action();
+
+            return [
+                "status" => "ok",
+                "message" => $successMessage,
+            ];
+        } catch (Exception $e) {
+            Header::panic();
+            return [
+                "status" => "error",
+                "message" => $e->getMessage(),
+            ];
+        }
     }
 
     public function getHooks()
