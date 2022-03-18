@@ -3,6 +3,7 @@
 namespace Thathoff\GitContent;
 
 use Coyl\Git\Git;
+use Coyl\Git\GitRepo;
 use Exception;
 
 class KirbyGitHelper
@@ -57,7 +58,7 @@ class KirbyGitHelper
         }
     }
 
-    private function getRepo()
+    private function getRepo(): GitRepo
     {
         if ($this->repo == null) {
             $this->initRepo();
