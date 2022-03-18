@@ -7,6 +7,11 @@ use Kirby\Http\Header;
 
 class KirbyGit
 {
+    /**
+     * @var KirbyGitHelper
+     */
+    private $gitHelper = null;
+
     public function __construct()
     {
         $this->gitHelper = new KirbyGitHelper();
