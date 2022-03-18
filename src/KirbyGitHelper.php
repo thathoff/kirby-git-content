@@ -89,10 +89,15 @@ class KirbyGitHelper
         // if branch is still empty we use the active branch
         // because otherwise pushes fail silently in some cases
         if (!$branch) {
-            $branch = $this->getRepo()->getActiveBranch();
+            $branch = $this->getCurrentBranch();
         }
 
         $this->getRepo()->push('origin', $branch);
+    }
+
+    public function getCurrentBranch()
+    {
+        return $this->getRepo()->getActiveBranch();
     }
 
     public function pull($branch = false)
