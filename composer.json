@@ -5,6 +5,7 @@
   "license": "MIT",
   "require": {
     "coyl/git": "^0.1.7",
+    "getkirby/cms": "^3.6.0",
     "getkirby/composer-installer": "^1.1"
   },
   "autoload": {

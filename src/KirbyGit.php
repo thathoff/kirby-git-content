@@ -17,6 +17,29 @@ class KirbyGit
         $this->gitHelper = new KirbyGitHelper();
     }
 
+    public function getApiRoutes()
+    {
+        // save instance in variable because $this is not available in closures
+        $kirbyGit = $this;
+
+        return [
+            [
+                'pattern' => 'git-content/push',
+                'method'  => 'POST',
+                'action'  => function () use ($kirbyGit) {
+                    return $kirbyGit->httpGitHelperAction('push', "successfully pushed the content folder");
+                },
+            ],
+            [
+                'pattern' => 'git-content/pull',
+                'method'  => 'POST',
+                'action'  => function () use ($kirbyGit) {
+                    return $kirbyGit->httpGitHelperAction('pull', "successfully pulled the content folder");
+                },
+            ]
+        ];
+    }
+
     public function getRoutes()
     {
         if (!option("thathoff.git-content.cronHooksEnabled", true)) {

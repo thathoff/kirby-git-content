@@ -11,8 +11,14 @@ if (option('thathoff.git-content.disable', false)) {
 $kirbyGit = new Thathoff\GitContent\KirbyGit();
 
 Kirby::plugin('thathoff/git-content', [
-    'hooks'   => $kirbyGit->getHooks(),
-    'routes'  => $kirbyGit->getRoutes(),
+    'hooks' => $kirbyGit->getHooks(),
+    'routes' => $kirbyGit->getRoutes(),
+    'api' => [
+        'routes' => $kirbyGit->getApiRoutes()
+    ],
+    'areas' => [
+        'git-content' => require __DIR__ . '/src/areas/git-content.php',
+    ],
     'options' => [
         'path'             => null,
         'branch'           => null,
