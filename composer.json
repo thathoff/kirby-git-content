@@ -4,7 +4,7 @@
   "type": "kirby-plugin",
   "license": "MIT",
   "require": {
-    "coyl/git": "^0.1.7",
+    "czproject/git-php": "^4.0.1",
     "getkirby/cms": "^3.6.0",
     "getkirby/composer-installer": "^1.1"
   },

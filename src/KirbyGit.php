@@ -4,6 +4,7 @@ namespace Thathoff\GitContent;
 
 use Exception;
 use Kirby\Http\Header;
+use CzProject\GitPhp\GitException;
 
 class KirbyGit
 {
@@ -47,9 +48,11 @@ class KirbyGit
         }
 
         $route = [];
+        $helper = $this;
+
         $route['pattern'] = 'git-content/(:any)';
         $route['method'] = 'GET|POST';
-        $route['action'] = function ($gitCommand) {
+        $route['action'] = function ($gitCommand) use ($helper) {
             // check to see if a secret is set, and if it is, verify it
             $secret = option('thathoff.git-content.cronHooksSecret', '');
             if ($secret !== '') {
@@ -64,10 +67,10 @@ class KirbyGit
 
             switch ($gitCommand) {
                 case "push":
-                    return $this->httpGitHelperAction('push', "successfully pushed the content folder");
+                    return $helper->httpGitHelperAction('push', "successfully pushed the content folder");
                     break;
                 case "pull":
-                    return $this->httpGitHelperAction('pull', "successfully pulled the content folder");
+                    return $helper->httpGitHelperAction('pull', "successfully pulled the content folder");
                     break;
             }
 
@@ -91,11 +94,19 @@ class KirbyGit
                 "message" => $successMessage,
             ];
         } catch (Exception $e) {
-            Header::panic();
-            return [
+            $result = [
                 "status" => "error",
                 "message" => $e->getMessage(),
             ];
+
+            if ($e instanceof GitException) {
+                $runnerResult = $e->getRunnerResult();
+                $result['output'] = $runnerResult->getOutput();
+                $result['errorOutput'] = $runnerResult->getErrorOutput();
+            }
+
+            Header::panic();
+            return $result;
         }
     }
 

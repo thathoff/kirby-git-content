@@ -2,8 +2,10 @@
 
 namespace Thathoff\GitContent;
 
-use Coyl\Git\Git;
-use Coyl\Git\GitRepo;
+use CzProject\GitPhp\Git;
+use CzProject\GitPhp\Runners\CliRunner;
+use CzProject\GitPhp\GitException;
+use CzProject\GitPhp\GitRepository;
 use DateTime;
 use Exception;
 
@@ -18,7 +20,6 @@ class KirbyGitHelper
     private $pushOnChange;
     private $commitOnChange;
     private $gitBin;
-    private $windowsMode;
 
     public function __construct($repoPath = false)
     {
@@ -35,7 +36,7 @@ class KirbyGitHelper
             return true;
         }
 
-        if (!class_exists("Coyl\Git\Git")) {
+        if (!class_exists("CzProject\GitPhp\Git")) {
             throw new Exception('Git class not found. Make sure you run composer install inside this plugins directory');
         }
 
@@ -43,26 +44,16 @@ class KirbyGitHelper
         $this->pushOnChange = option('thathoff.git-content.push', false);
         $this->commitOnChange = option('thathoff.git-content.commit', true);
         $this->gitBin = option('thathoff.git-content.gitBin', '');
-        $this->windowsMode = option('thathoff.git-content.windowsMode', false);
 
-        if ($this->windowsMode) {
-            Git::windowsMode();
-        }
-        if ($this->gitBin) {
-            Git::setBin($this->gitBin);
-        }
-
-        $this->repo = Git::open($this->repoPath);
-
-        if (!$this->repo->test_git()) {
-            throw new Exception('git could not be found or is not working properly. ' . Git::getBin());
-        }
+        $runner = $this->gitBin ? new CliRunner($this->gitBin) : new CliRunner();
+        $this->git = new Git($runner);
+        $this->repo = $this->git->open($this->repoPath);
     }
 
     public function log(int $limit = 10)
     {
-        $log = $this->getRepo()->logFormatted('%H|%s|%an|%ae|%cI', '', $limit);
-        $log = explode("\n", $log);
+        $log = $this->getRepo()->execute('log', '--pretty=format:%H|%s|%an|%ae|%cI', '--max-count=' . $limit);
+
 
         $log = array_map(
             function ($line) {
@@ -82,7 +73,7 @@ class KirbyGitHelper
         return $log;
     }
 
-    private function getRepo(): GitRepo
+    private function getRepo(): GitRepository
     {
         if ($this->repo == null) {
             $this->initRepo();
@@ -93,17 +84,14 @@ class KirbyGitHelper
 
     public function commit($commitMessage, $author = null)
     {
-        $this->getRepo()->add('-A');
+        $this->getRepo()->addAllChanges();
 
-        $command = "commit -m " . escapeshellarg($commitMessage);
-
+        $params = [];
         if ($author) {
-            $command .= " --author=" . escapeshellarg($author);
+            $params[] = "--author=" . $author;
         }
 
-        // we use the raw run command here to optionally supply the git author
-        // IMPORTANT: make sure all arguments are escaped through escapeshellarg();
-        $this->getRepo()->run($command);
+        $this->getRepo()->commit($commitMessage, $params);
     }
 
     public function push($branch = false)
@@ -116,18 +104,23 @@ class KirbyGitHelper
             $branch = $this->getCurrentBranch();
         }
 
-        $this->getRepo()->push('origin', $branch);
+        $this->getRepo()->push('origin', [$branch]);
     }
 
     public function getCurrentBranch()
     {
-        return $this->getRepo()->getActiveBranch();
+        return $this->getRepo()->getCurrentBranchName();
     }
 
-    public function pull($branch = false)
+    public function pull($branch = null)
     {
         $branch = $branch ? $branch : $this->branch;
-        $this->getRepo()->pull('origin', $branch);
+        $parameters = [];
+        if ($branch) {
+            $parameters[] = $branch;
+        }
+
+        $this->getRepo()->pull('origin', $parameters);
     }
 
     public function kirbyChange($action, $item, $url = '')
@@ -156,13 +149,22 @@ class KirbyGitHelper
                 $this->push();
             }
         } catch(Exception $exception) {
-            // only show exceptions when explicitly enabled
-            if (option('thathoff.git-content.displayErrors', false)) {
-                throw new Exception('Unable to update git: ' . $exception->getMessage());
+            $message = $exception->getMessage();
+
+            // enrich message with more info if we got a GitException
+            if ($exception instanceof GitException) {
+                $runnerResult = $exception->getRunnerResult();
+                $message .= "\n\n" . implode("\n", $runnerResult->getErrorOutput());
             }
 
+            // only show exceptions when explicitly enabled
+            if (option('thathoff.git-content.displayErrors', false)) {
+                throw new Exception('Unable to update git: ' . $message);
+            }
+
+
             // still log for debug
-            error_log('Unable to update git: ' . $exception->getMessage(), E_USER_ERROR);
+            error_log('Unable to update git: ' . $message, E_USER_ERROR);
         }
     }
 
