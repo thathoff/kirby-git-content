@@ -14,7 +14,6 @@ class KirbyGitHelper
     private $kirby;
     private $repo;
     private $repoPath;
-    private $branch;
     private $commitMessageTemplate;
     private $pullOnChange;
     private $pushOnChange;
@@ -25,8 +24,6 @@ class KirbyGitHelper
     {
         $this->kirby = kirby();
         $this->repoPath = $repoPath ? $repoPath : option('thathoff.git-content.path', $this->kirby->root("content"));
-
-        $this->branch = option('thathoff.git-content.branch', '');
         $this->commitMessageTemplate = option('thathoff.git-content.commitMessage', ':action:(:item:): :url:');
     }
 
@@ -94,17 +91,9 @@ class KirbyGitHelper
         $this->getRepo()->commit($commitMessage, $params);
     }
 
-    public function push($branch = false)
+    public function push()
     {
-        $branch = $branch ? $branch : $this->branch;
-
-        // if branch is still empty we use the active branch
-        // because otherwise pushes fail silently in some cases
-        if (!$branch) {
-            $branch = $this->getCurrentBranch();
-        }
-
-        $this->getRepo()->push('origin', [$branch]);
+        $this->getRepo()->push();
     }
 
     public function getCurrentBranch()
@@ -112,17 +101,9 @@ class KirbyGitHelper
         return $this->getRepo()->getCurrentBranchName();
     }
 
-    public function pull($branch = null)
+    public function pull()
     {
-        $branch = $branch ? $branch : $this->branch;
-        $parameters = [];
-        if ($branch) {
-            $parameters[] = $branch;
-        }
-
-        $parameters[] = '--no-rebase';
-
-        $this->getRepo()->pull('origin', $parameters);
+        $this->getRepo()->pull(null, ['--no-rebase']);
     }
 
     public function kirbyChange($action, $item, $url = '')
@@ -130,13 +111,10 @@ class KirbyGitHelper
         try {
             $this->initRepo();
 
-            if ($this->branch) {
-                $this->getRepo()->checkout($this->branch);
-            }
-
             if ($this->pullOnChange) {
                 $this->pull();
             }
+
             if ($this->commitOnChange) {
                 $user = $this->kirby->user();
 
@@ -147,10 +125,11 @@ class KirbyGitHelper
 
                 $this->commit($this->commitMessage($action, $item, $url), $author);
             }
+
             if ($this->pushOnChange) {
                 $this->push();
             }
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             $message = $exception->getMessage();
 
             // enrich message with more info if we got a GitException

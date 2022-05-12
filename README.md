@@ -69,7 +69,6 @@ return [
 #### Configuration Options
 
 - `path` (String): Path to the repository, (default: `kirby()->root("content")`)
-- `branch` (String): branch name to be checked out (default: currently checked out branch)
 - `pull` (Boolean): Pull remote changes first? (default: `false`)
 - `commit` (Boolean): Commit your changes? (default: `true`)
 - `push` (Boolean): Push your changes to remote? (default: `false`)

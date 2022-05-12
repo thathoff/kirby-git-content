@@ -21,7 +21,6 @@ Kirby::plugin('thathoff/git-content', [
     ],
     'options' => [
         'path'             => null,
-        'branch'           => null,
         'pull'             => null,
         'push'             => null,
         'commit'           => null,
