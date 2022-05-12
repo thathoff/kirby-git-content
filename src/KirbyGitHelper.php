@@ -120,6 +120,8 @@ class KirbyGitHelper
             $parameters[] = $branch;
         }
 
+        $parameters[] = '--no-rebase';
+
         $this->getRepo()->pull('origin', $parameters);
     }
 
