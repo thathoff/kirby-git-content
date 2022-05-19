@@ -1,8 +1,10 @@
 # Kirby - Git Content
 
-This is a plugin for [Kirby 3](http://getkirby.com/) that commits and pushes changes made via the Panel to your git repository.
+This is a plugin for [Kirby 3](http://getkirby.com/) that commits and pushes content changes made via the Panel to your git repository.
 
-**⚠️ The current version only supports Kirby 3. For Kirby 2 support please use version 2 of this plugin.**
+## Requirements
+
+This plugin supports **Kirby from version 3.6** and requires **git version > 2.24**
 
 ## Usage
 
