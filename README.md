@@ -34,6 +34,14 @@ git commit -m "Initial Content Commit"
 git push origin master
 ```
 
+Optional step: We advise you to include `.lock` files into the .gitignore of your newly created content repository.
+
+```bash
+echo ".lock" >> .gitignore
+```
+
+That's it! The plugin should work as of now.
+
 ### Download and configure the Plugin
 
 `composer require thathoff/kirby-git-content`
