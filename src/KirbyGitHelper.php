@@ -79,9 +79,10 @@ class KirbyGitHelper
         return $this->repo;
     }
 
-    public function commit($commitMessage, $author = null)
+    public function commit($commitMessage, $paths, $author = null)
     {
-        $this->getRepo()->addAllChanges();
+        $uniquePaths = array_unique($paths);
+        $this->getRepo()->execute('add', '--', ...$uniquePaths);
 
         $params = [];
         if ($author) {
@@ -106,7 +107,7 @@ class KirbyGitHelper
         $this->getRepo()->pull(null, ['--no-rebase']);
     }
 
-    public function kirbyChange($action, $item, $url = '')
+    public function kirbyChange($action, $item, $paths, $url = '')
     {
         try {
             $this->initRepo();
@@ -123,7 +124,7 @@ class KirbyGitHelper
                     $author = $user->name()->or($user->email()) . " <" . $user->email() . ">";
                 }
 
-                $this->commit($this->commitMessage($action, $item, $url), $author);
+                $this->commit($this->commitMessage($action, $item, $url), $paths, $author);
             }
 
             if ($this->pushOnChange) {
