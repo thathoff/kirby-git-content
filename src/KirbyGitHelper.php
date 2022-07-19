@@ -41,8 +41,11 @@ class KirbyGitHelper
         $this->pushOnChange = option('thathoff.git-content.push', false);
         $this->commitOnChange = option('thathoff.git-content.commit', true);
         $this->gitBin = option('thathoff.git-content.gitBin', '');
-
-        $runner = $this->gitBin ? new CliRunner($this->gitBin) : new CliRunner();
+        if (!$this->gitBin) {
+            $this->gitBin = 'git';
+        }
+        // force English locale for predictable command outputs
+        $runner = new CliRunner('LC_ALL=C ' . $this->gitBin);
         $this->git = new Git($runner);
         $this->repo = $this->git->open($this->repoPath);
     }
@@ -81,15 +84,34 @@ class KirbyGitHelper
 
     public function commit($commitMessage, $paths, $author = null)
     {
-        $uniquePaths = array_unique($paths);
-        $this->getRepo()->execute('add', '--', ...$uniquePaths);
+        try {
+            $uniquePaths = array_unique($paths);
+            $this->getRepo()->execute('add', '--', ...$uniquePaths);
 
-        $params = [];
-        if ($author) {
-            $params[] = "--author=" . $author;
+            $params = [];
+            if ($author) {
+                $params[] = "--author=" . $author;
+            }
+
+            $this->getRepo()->commit($commitMessage, $params);
+        } catch (GitException $e) {
+            /* Sometimes a change results in multiple hooks being fired (for example status change). This causes a race condition:
+               As the file change can only be committed once, latter hooks will fail when calling either 'git add' or 'git commit'.
+               The files in question have actually been committed already in an earlier hook call and therefore we may ignore the errors.
+
+               We don’t run git status in front because that is much slower in large repositories.
+
+               Refer to #84
+            */
+
+            $errorMessage = $e->getRunnerResult() ? implode("\n", $e->getRunnerResult()->getErrorOutput()) : $e->getMessage();
+            if (
+                !str_contains($errorMessage, 'nothing to commit') &&
+                !str_contains($errorMessage, 'did not match any files')
+            ) {
+                throw $e;
+            }
         }
-
-        $this->getRepo()->commit($commitMessage, $params);
     }
 
     public function push()
