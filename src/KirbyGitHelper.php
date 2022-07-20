@@ -129,6 +129,23 @@ class KirbyGitHelper
         $this->getRepo()->pull(null, ['--no-rebase']);
     }
 
+    public function status() {
+        /* git returns a two character code for every entry in 'git status --porcelain'. these codes are shown below, split in index and worktree codes.
+           the first code character always refers to the index state of the file, the second for the worktree
+           for more info refer to https://git-scm.com/docs/git-status#_short_format
+        */
+        $files = $this->getRepo()->execute('status',  '--porcelain');
+
+        foreach ($files as $key => $file) {
+            $files[$key] = [
+                'code' => substr($file, 0, 2),
+                'filename' => substr ($file, 3)
+            ];
+        }
+
+        return $files;
+    }
+
     public function kirbyChange($action, $item, $paths, $url = '')
     {
         try {

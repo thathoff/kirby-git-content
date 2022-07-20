@@ -23,12 +23,15 @@ return [
                     $git->log()
                 );
 
+
+
                 return [
                     'component' => 'git-content',
                     'title' => 'Git Content',
                     'props' => [
                         'log' => $logFormatted,
                         'branch' => $git->getCurrentBranch(),
+                        'files' => $git->status(),
                     ],
                 ];
             }

@@ -37,6 +37,13 @@ class KirbyGit
                 'action'  => function () use ($kirbyGit) {
                     return $kirbyGit->httpGitHelperAction('pull', "successfully pulled the content folder");
                 },
+            ],
+            [
+                'pattern' => 'git-content/status',
+                'method' => 'GET',
+                'action' => function () use ($kirbyGit) {
+                    return $kirbyGit->httpGitHelperAction('status', null); // response message is response of 'git status'
+                }
             ]
         ];
     }
@@ -87,11 +94,12 @@ class KirbyGit
     public function httpGitHelperAction(string $action, ?string $successMessage = null)
     {
         try {
-            $this->gitHelper->$action();
+            // when no $successMessage is provided, the response of the $action call is returned
+            $response = $this->gitHelper->$action();
 
             return [
                 "status" => "ok",
-                "message" => $successMessage,
+                "message" => $successMessage ?? $response,
             ];
         } catch (Exception $e) {
             $result = [
