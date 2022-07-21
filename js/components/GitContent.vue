@@ -3,12 +3,19 @@
     <k-view class="k-git-content-view">
       <k-header>Git Content {{ size }}</k-header>
 
-      <section v-if="files.length" class="k-section">
+      <section v-if="status.files.length" class="k-section">
           <header class="k-section-header">
             <k-headline>Uncommitted changes</k-headline>
           </header>
 
           <k-collection :items="statusItems" help="Refer to the <a target='_blank' href='https://git-scm.com/docs/git-status#_short_format'>Git documentation</a> on how to interpret the status codes to the right." />
+      </section>
+
+      <section class="k-section">
+        <header class="k-section-header">
+          <k-headline>Remote synchronization</k-headline>
+        </header>
+        <k-box :text="remoteStatus.text" :theme="remoteStatus.theme" />
       </section>
 
       <section class="k-section">
@@ -38,9 +45,8 @@ import formatDistance from 'date-fns/formatDistance'
 export default {
   name: 'GitContent',
   props: {
-    files: {
-      type: String,
-      default: []
+    status: {
+      type: Object,
     },
     log: {
       type: Array,
@@ -55,7 +61,7 @@ export default {
     statusItems () {
       const items = []
 
-      this.files.forEach(file => {
+      this.status.files.forEach(file => {
         items.push({
           text: file.filename,
           info: file.code,
@@ -64,6 +70,28 @@ export default {
       })
 
       return items
+    },
+    remoteStatus () {
+      if (!this.status.hasRemote) {
+        return {
+          text: 'No remote branch found.',
+          theme: 'negative',
+        }
+      }
+
+      if (this.status.diffFromOrigin === 0) {
+        return {
+          text: 'Your branch is up to date with origin/' + this.branch,
+          theme: 'positive',
+        }
+      }
+
+      const absDiff = Math.abs(this.status.diffFromOrigin)
+
+      return {
+        text: `Your branch is ${this.status.diffFromOrigin > 0 ? "ahead" : "behind"} of origin/${this.branch} by ${absDiff} commit${absDiff !== 1 ? "s" : ""}.`,
+        theme: 'notice',
+      }
     }
   },
   methods: {

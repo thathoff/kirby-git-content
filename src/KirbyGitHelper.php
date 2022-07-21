@@ -134,16 +134,45 @@ class KirbyGitHelper
            the first code character always refers to the index state of the file, the second for the worktree
            for more info refer to https://git-scm.com/docs/git-status#_short_format
         */
-        $files = $this->getRepo()->execute('status',  '--porcelain');
+        $upstreamResponse = $this->getRepo()->execute('status',  '--porcelain=2', '--branch');
+        $filesResponse = $this->getRepo()->execute('status', '--porcelain');
 
-        foreach ($files as $key => $file) {
+        // REMOTE INFORMATION --------------
+        // the first few lines (length depending on whether remote branch is available) are branch information.
+        // line about ahead/behind commits looks as follows:
+        // # branch.ab +0 -0
+        $hasRemote = false;
+        $diff = null;
+        foreach ($upstreamResponse as $key => $line) {
+            if (str_contains($line, 'branch.ab')) {
+                $hasRemote = true;
+
+                preg_match('/\+\d+/', $line, $ahead);
+                preg_match('/\-\d+/', $line, $behind);
+                $ahead = substr($ahead[0], 1);
+                $behind = substr($behind[0], 1);
+
+                $diff = $ahead - $behind;
+                break;
+            }
+        }
+
+        // CHANGED FILES -------------------
+        // one line per file. line looks like this:
+        // XY filename.txt
+        $files = [];
+        foreach ($filesResponse as $key => $file) {
             $files[$key] = [
                 'code' => substr($file, 0, 2),
-                'filename' => substr ($file, 3)
+                'filename' => substr($file, 3)
             ];
         }
 
-        return $files;
+        return [
+            'hasRemote' => $hasRemote,
+            'diffFromOrigin' => $diff,
+            'files' => $files,
+        ];
     }
 
     public function kirbyChange($action, $item, $paths, $url = '')
