@@ -108,9 +108,10 @@ class KirbyGit
             ];
 
             if ($e instanceof GitException) {
-                $runnerResult = $e->getRunnerResult();
-                $result['output'] = $runnerResult->getOutput();
-                $result['errorOutput'] = $runnerResult->getErrorOutput();
+                if ($runnerResult = $e->getRunnerResult()) {
+                    $result['output'] = $runnerResult->getOutput();
+                    $result['errorOutput'] = $runnerResult->getErrorOutput();
+                }
             }
 
             Header::panic();

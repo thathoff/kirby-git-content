@@ -104,10 +104,16 @@ class KirbyGitHelper
                Refer to #84
             */
 
-            $errorMessage = $e->getRunnerResult() ? implode("\n", $e->getRunnerResult()->getErrorOutput()) : $e->getMessage();
+            /* We concat the actual git error message, the error output and regular output together to then search for "exclusion strings".
+            For some reason, the output is sometimes obtainable using getErrorOutput() and sometimes using getOutput(). */
+            $errorMessage = $e->getMessage();
+            if ($runnerResult = $e->getRunnerResult()) {
+                $errorMessage .= "\n\n" . implode("\n", $runnerResult->getErrorOutput()) . "\n\n" . implode("\n", $runnerResult->getOutput());
+            }
+
             if (
-                !str_contains($errorMessage, 'nothing to commit') &&
-                !str_contains($errorMessage, 'did not match any files')
+                !strpos($errorMessage, 'nothing to commit') &&
+                !strpos($errorMessage, 'did not match any files')
             ) {
                 throw $e;
             }
@@ -203,8 +209,9 @@ class KirbyGitHelper
 
             // enrich message with more info if we got a GitException
             if ($exception instanceof GitException) {
-                $runnerResult = $exception->getRunnerResult();
-                $message .= "\n\n" . implode("\n", $runnerResult->getErrorOutput());
+                if ($runnerResult = $exception->getRunnerResult()) {
+                    $message .= "\n\n" . implode("\n", $runnerResult->getErrorOutput());
+                }
             }
 
             // only show exceptions when explicitly enabled
