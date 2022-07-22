@@ -214,13 +214,11 @@ class KirbyGitHelper
                 }
             }
 
-            // only show exceptions when explicitly enabled
-            if (option('thathoff.git-content.displayErrors', false)) {
+            // show exceptions by default
+            if (option('thathoff.git-content.displayErrors', true)) {
                 throw new Exception('Unable to update git: ' . $message);
             }
 
-
-            // still log for debug
             error_log('Unable to update git: ' . $message, E_USER_ERROR);
         }
     }

@@ -84,7 +84,7 @@ return [
 - `cronHooksEnabled` (Boolean): Whether `/git-content/push` and `/git-content/pull` endpoints are enabled or not. (default: `true`)
 - `cronHooksSecret` (String): When set, this secret must be sent with the cronHooks as a get parameter.  Note: If you set
   a secret, only the GET method will work on the webhooks.   `/git-content/(pull|push)?secret=S0up3rS3c3t`
-- `displayErrors` (Boolean): Display git errors when saving pages (default: `false`)
+- `displayErrors` (Boolean): Display git errors when saving pages (default: `true`)
 - `gitBin` (String): Path to the `git` binary
 - `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`)
 
