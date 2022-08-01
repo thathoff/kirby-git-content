@@ -2,6 +2,8 @@
 
 This is a plugin for [Kirby 3](http://getkirby.com/) that commits and pushes content changes made via the Panel to your git repository.
 
+![Screnshot of Panel Area](/.github/screenshot.png?raw=true)
+
 ## Requirements
 
 This plugin supports **Kirby from version 3.6** and requires **git version > 2.24**
