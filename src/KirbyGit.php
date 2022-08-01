@@ -107,11 +107,9 @@ class KirbyGit
                 "message" => $e->getMessage(),
             ];
 
-            if ($e instanceof GitException) {
-                if ($runnerResult = $e->getRunnerResult()) {
-                    $result['output'] = $runnerResult->getOutput();
-                    $result['errorOutput'] = $runnerResult->getErrorOutput();
-                }
+            // enhance message when exception is a GitException
+            if ($e instanceof GitException && $runnerResult = $e->getRunnerResult()) {
+                $result['message'] = implode("\n", $runnerResult->getErrorOutput());
             }
 
             Header::panic();
