@@ -20,7 +20,7 @@
 
       <section class="k-section">
         <header class="k-section-header">
-          <k-headline>Latest {{ log.length }} changes on branch »{{ branch }}«</k-headline>
+          <k-headline>Latest {{ log.length }} changes on branch »{{ branch }}«</k-headline>
 
           <k-button-group
             :buttons="[
@@ -30,11 +30,7 @@
           />
 
         </header>
-        <k-item v-for="commit in log" :key="commit.hash"
-          :text="commit.message"
-          :link="false"
-          :info="formatRelative(commit.date) + ' / ' + commit.hash.substr(0, 7)"
-        />
+        <k-collection :items="commitItems" />
       </section>
     </k-view>
   </k-inside>
@@ -58,6 +54,19 @@ export default {
     },
   },
   computed: {
+    commitItems () {
+      const items = []
+
+      this.log.forEach(commit => {
+        items.push({
+          text: commit.message,
+          info: this.formatRelative(commit.date) + ' / ' + commit.hash.substr(0, 7),
+          link: false,
+        })
+      })
+
+      return items
+    },
     statusItems () {
       const items = []
 
