@@ -111,5 +111,6 @@ cloning and updating your content repository can take a lot of time. If you are 
 
 ## Authors
 
-- Pascal 'Pascalmh' Küsgen <http://pascalmh.de>
-- Markus Denhoff <https://markus.denhoff.com>
+Maintained and developed by [Markus Denhoff](https://markus.denhoff.com) and [Contributors](https://github.com/thathoff/kirby-git-content/graphs/contributors). Initial version by [Pascal Küsgen](https://github.com/Pascalmh).
+
+Supported by [reinorange GmbH](https://reinorange.com).
