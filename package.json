@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "npx -y kirbyup js/index.js --watch",
+    "build": "npx -y kirbyup js/index.js",
+    "lint": "npx standard js/**/*.js"
+  },
+  "dependencies": {
+    "date-fns": "^2.28.0"
+  }
+}

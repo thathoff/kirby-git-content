@@ -2,7 +2,11 @@
 
 namespace Thathoff\GitContent;
 
-use Coyl\Git\Git;
+use CzProject\GitPhp\Git;
+use CzProject\GitPhp\Runners\CliRunner;
+use CzProject\GitPhp\GitException;
+use CzProject\GitPhp\GitRepository;
+use DateTime;
 use Exception;
 
 class KirbyGitHelper
@@ -10,20 +14,16 @@ class KirbyGitHelper
     private $kirby;
     private $repo;
     private $repoPath;
-    private $branch;
     private $commitMessageTemplate;
     private $pullOnChange;
     private $pushOnChange;
     private $commitOnChange;
     private $gitBin;
-    private $windowsMode;
 
     public function __construct($repoPath = false)
     {
         $this->kirby = kirby();
         $this->repoPath = $repoPath ? $repoPath : option('thathoff.git-content.path', $this->kirby->root("content"));
-
-        $this->branch = option('thathoff.git-content.branch', '');
         $this->commitMessageTemplate = option('thathoff.git-content.commitMessage', ':action:(:item:): :url:');
     }
 
@@ -33,7 +33,7 @@ class KirbyGitHelper
             return true;
         }
 
-        if (!class_exists("Coyl\Git\Git")) {
+        if (!class_exists("CzProject\GitPhp\Git")) {
             throw new Exception('Git class not found. Make sure you run composer install inside this plugins directory');
         }
 
@@ -41,23 +41,39 @@ class KirbyGitHelper
         $this->pushOnChange = option('thathoff.git-content.push', false);
         $this->commitOnChange = option('thathoff.git-content.commit', true);
         $this->gitBin = option('thathoff.git-content.gitBin', '');
-        $this->windowsMode = option('thathoff.git-content.windowsMode', false);
-
-        if ($this->windowsMode) {
-            Git::windowsMode();
+        if (!$this->gitBin) {
+            $this->gitBin = 'git';
         }
-        if ($this->gitBin) {
-            Git::setBin($this->gitBin);
-        }
-
-        $this->repo = Git::open($this->repoPath);
-
-        if (!$this->repo->test_git()) {
-            throw new Exception('git could not be found or is not working properly. ' . Git::getBin());
-        }
+        // force English locale for predictable command outputs
+        $runner = new CliRunner('LC_ALL=C ' . $this->gitBin);
+        $this->git = new Git($runner);
+        $this->repo = $this->git->open($this->repoPath);
     }
 
-    private function getRepo()
+    public function log(int $limit = 10)
+    {
+        $log = $this->getRepo()->execute('log', '--pretty=format:%H|%s|%an|%ae|%cI', '--max-count=' . $limit);
+
+
+        $log = array_map(
+            function ($line) {
+                $entry = explode("|", $line);
+
+                return [
+                    'hash' => $entry[0],
+                    'message' => $entry[1],
+                    'author' => $entry[2],
+                    'email' => $entry[3],
+                    'date' => DateTime::createFromFormat(DateTime::ISO8601, $entry[4]),
+                ];
+            },
+            $log
+        );
+
+        return $log;
+    }
+
+    private function getRepo(): GitRepository
     {
         if ($this->repo == null) {
             $this->initRepo();
@@ -66,52 +82,114 @@ class KirbyGitHelper
         return $this->repo;
     }
 
-    public function commit($commitMessage, $author = null)
+    public function commit($commitMessage, $paths, $author = null)
     {
-        $this->getRepo()->add('-A');
+        try {
+            $uniquePaths = array_unique($paths);
+            $this->getRepo()->execute('add', '--', ...$uniquePaths);
 
-        $command = "commit -m " . escapeshellarg($commitMessage);
+            $params = [];
+            if ($author) {
+                $params[] = "--author=" . $author;
+            }
 
-        if ($author) {
-            $command .= " --author=" . escapeshellarg($author);
+            $this->getRepo()->commit($commitMessage, $params);
+        } catch (GitException $e) {
+            /* Sometimes a change results in multiple hooks being fired (for example status change). This causes a race condition:
+               As the file change can only be committed once, latter hooks will fail when calling either 'git add' or 'git commit'.
+               The files in question have actually been committed already in an earlier hook call and therefore we may ignore the errors.
+
+               We don’t run git status in front because that is much slower in large repositories.
+
+               Refer to #84
+            */
+
+            /* We concat the actual git error message, the error output and regular output together to then search for "exclusion strings".
+            For some reason, the output is sometimes obtainable using getErrorOutput() and sometimes using getOutput(). */
+            $errorMessage = $e->getMessage();
+            if ($runnerResult = $e->getRunnerResult()) {
+                $errorMessage .= "\n\n" . implode("\n", $runnerResult->getErrorOutput()) . "\n\n" . implode("\n", $runnerResult->getOutput());
+            }
+
+            if (
+                !strpos($errorMessage, 'nothing to commit') &&
+                !strpos($errorMessage, 'did not match any files')
+            ) {
+                throw $e;
+            }
+        }
+    }
+
+    public function push()
+    {
+        $this->getRepo()->push();
+    }
+
+    public function getCurrentBranch()
+    {
+        return $this->getRepo()->getCurrentBranchName();
+    }
+
+    public function pull()
+    {
+        $this->getRepo()->pull(null, ['--no-rebase']);
+    }
+
+    public function status() {
+        /* git returns a two character code for every entry in 'git status --porcelain'. these codes are shown below, split in index and worktree codes.
+           the first code character always refers to the index state of the file, the second for the worktree
+           for more info refer to https://git-scm.com/docs/git-status#_short_format
+        */
+        $upstreamResponse = $this->getRepo()->execute('status',  '--porcelain=2', '--branch');
+        $filesResponse = $this->getRepo()->execute('status', '--porcelain');
+
+        // REMOTE INFORMATION --------------
+        // the first few lines (length depending on whether remote branch is available) are branch information.
+        // line about ahead/behind commits looks as follows:
+        // # branch.ab +0 -0
+        $hasRemote = false;
+        $diff = null;
+        foreach ($upstreamResponse as $key => $line) {
+            if (str_contains($line, 'branch.ab')) {
+                $hasRemote = true;
+
+                preg_match('/\+\d+/', $line, $ahead);
+                preg_match('/\-\d+/', $line, $behind);
+                $ahead = substr($ahead[0], 1);
+                $behind = substr($behind[0], 1);
+
+                $diff = $ahead - $behind;
+                break;
+            }
         }
 
-        // we use the raw run command here to optionally supply the git author
-        // IMPORTANT: make sure all arguments are escaped through escapeshellarg();
-        $this->getRepo()->run($command);
-    }
-
-    public function push($branch = false)
-    {
-        $branch = $branch ? $branch : $this->branch;
-
-        // if branch is still empty we use the active branch
-        // because otherwise pushes fail silently in some cases
-        if (!$branch) {
-            $branch = $this->getRepo()->getActiveBranch();
+        // CHANGED FILES -------------------
+        // one line per file. line looks like this:
+        // XY filename.txt
+        $files = [];
+        foreach ($filesResponse as $key => $file) {
+            $files[$key] = [
+                'code' => substr($file, 0, 2),
+                'filename' => substr($file, 3)
+            ];
         }
 
-        $this->getRepo()->push('origin', $branch);
+        return [
+            'hasRemote' => $hasRemote,
+            'diffFromOrigin' => $diff,
+            'files' => $files,
+        ];
     }
 
-    public function pull($branch = false)
-    {
-        $branch = $branch ? $branch : $this->branch;
-        $this->getRepo()->pull('origin', $branch);
-    }
-
-    public function kirbyChange($action, $item, $url = '')
+    public function kirbyChange($action, $item, $paths, $url = '')
     {
         try {
             $this->initRepo();
 
-            if ($this->branch) {
-                $this->getRepo()->checkout($this->branch);
-            }
-
             if ($this->pullOnChange) {
                 $this->pull();
             }
+
             if ($this->commitOnChange) {
                 $user = $this->kirby->user();
 
@@ -120,19 +198,28 @@ class KirbyGitHelper
                     $author = $user->name()->or($user->email()) . " <" . $user->email() . ">";
                 }
 
-                $this->commit($this->commitMessage($action, $item, $url), $author);
+                $this->commit($this->commitMessage($action, $item, $url), $paths, $author);
             }
+
             if ($this->pushOnChange) {
                 $this->push();
             }
-        } catch(Exception $exception) {
-            // only show exceptions when explicitly enabled
-            if (option('thathoff.git-content.displayErrors', false)) {
-                throw new Exception('Unable to update git: ' . $exception->getMessage());
+        } catch (Exception $exception) {
+            $message = $exception->getMessage();
+
+            // enrich message with more info if we got a GitException
+            if ($exception instanceof GitException) {
+                if ($runnerResult = $exception->getRunnerResult()) {
+                    $message .= "\n\n" . implode("\n", $runnerResult->getErrorOutput());
+                }
             }
 
-            // still log for debug
-            error_log('Unable to update git: ' . $exception->getMessage(), E_USER_ERROR);
+            // show exceptions by default
+            if (option('thathoff.git-content.displayErrors', true)) {
+                throw new Exception('Unable to update git: ' . $message);
+            }
+
+            error_log('Unable to update git: ' . $message, E_USER_ERROR);
         }
     }
 

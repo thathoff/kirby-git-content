@@ -2,3 +2,7 @@ node_modules/
 .DS_Store
 .idea/
 vendor/
+composer.lock
+yarn.lock
+vendor
+kirby

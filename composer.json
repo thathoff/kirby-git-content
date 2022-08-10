@@ -3,8 +3,19 @@
   "description": "Plugin to track changes to content in a git repository.",
   "type": "kirby-plugin",
   "license": "MIT",
+  "authors": [
+    {
+      "name": "Markus Denhoff",
+      "email": "markus@denhoff.com"
+    }
+  ],
+  "support": {
+		"issues": "https://github.com/thathoff/kirby-git-content/issues",
+		"source": "https://github.com/thathoff/kirby-git-content"
+	},
   "require": {
-    "coyl/git": "^0.1.7",
+    "czproject/git-php": "^4.0.1",
+    "getkirby/cms": "^3.6.0",
     "getkirby/composer-installer": "^1.1"
   },
   "autoload": {
