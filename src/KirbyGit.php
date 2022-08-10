@@ -37,6 +37,13 @@ class KirbyGit
                 'action'  => function () use ($kirbyGit) {
                     return $kirbyGit->httpGitHelperAction('pull', "successfully pulled the content folder");
                 },
+            ],
+            [
+                'pattern' => 'git-content/status',
+                'method' => 'GET',
+                'action' => function () use ($kirbyGit) {
+                    return $kirbyGit->httpGitHelperAction('status', null); // response message is response of 'git status'
+                }
             ]
         ];
     }
@@ -87,11 +94,12 @@ class KirbyGit
     public function httpGitHelperAction(string $action, ?string $successMessage = null)
     {
         try {
-            $this->gitHelper->$action();
+            // when no $successMessage is provided, the response of the $action call is returned
+            $response = $this->gitHelper->$action();
 
             return [
                 "status" => "ok",
-                "message" => $successMessage,
+                "message" => $successMessage ?? $response,
             ];
         } catch (Exception $e) {
             $result = [
@@ -99,10 +107,9 @@ class KirbyGit
                 "message" => $e->getMessage(),
             ];
 
-            if ($e instanceof GitException) {
-                $runnerResult = $e->getRunnerResult();
-                $result['output'] = $runnerResult->getOutput();
-                $result['errorOutput'] = $runnerResult->getErrorOutput();
+            // enhance message when exception is a GitException
+            if ($e instanceof GitException && $runnerResult = $e->getRunnerResult()) {
+                $result['message'] = implode("\n", $runnerResult->getErrorOutput());
             }
 
             Header::panic();
@@ -118,84 +125,61 @@ class KirbyGit
             /*
             * Site
             */
-            'site.update:after' => function () use ($gitHelper) {
-                $gitHelper->kirbyChange('update', 'site');
+            'site.update:after' => function ($newSite) use ($gitHelper) {
+                $gitHelper->kirbyChange('update', 'site', [$newSite->contentFileDirectory()], $newSite);
             },
 
             /*
             * Pages
             */
             'page.create:after' => function ($page) use ($gitHelper) {
-                $gitHelper->kirbyChange('create', 'page', $page->uri());
+                $gitHelper->kirbyChange('create', 'page', [$page->contentFileDirectory()], $page->id());
             },
             'page.update:after' => function ($newPage) use ($gitHelper) {
-                $gitHelper->kirbyChange('update', 'page', $newPage->uri());
+                $gitHelper->kirbyChange('update', 'page', [$newPage->contentFileDirectory()], $newPage->id());
             },
             'page.delete:after' => function ($status, $page) use ($gitHelper) {
-                $gitHelper->kirbyChange('delete', 'page', $page->uri());
+                $gitHelper->kirbyChange('delete', 'page', [$page->contentFileDirectory()], $page->id());
             },
             'page.changeNum:after' => function ($newPage) use ($gitHelper) {
-                $gitHelper->kirbyChange('sort', 'page', $newPage->uri());
+                $parent = $newPage->parent() ?: kirby()->site();
+                $gitHelper->kirbyChange('sort', 'page', [$parent->contentFileDirectory()], $newPage->id());
             },
-            'page.changeSlug:after' => function ($newPage) use ($gitHelper) {
-                $gitHelper->kirbyChange('update', 'page', $newPage->uri());
+            'page.changeSlug:after' => function ($newPage, $oldPage) use ($gitHelper) {
+                $gitHelper->kirbyChange('update', 'page', [$newPage->contentFileDirectory(), $oldPage->contentFileDirectory()], $newPage->id());
             },
-            'page.changeStatus:after' => function ($newPage) use ($gitHelper) {
-                $gitHelper->kirbyChange('update', 'page', $newPage->uri());
+            'page.changeStatus:after' => function ($newPage, $oldPage) use ($gitHelper) {
+                $parent = $newPage->parent() ?: kirby()->site();
+                $gitHelper->kirbyChange('update', 'page', [$parent->contentFileDirectory(), $oldPage->contentFileDirectory()], $newPage->id());
             },
             'page.changeTemplate:after' => function ($newPage) use ($gitHelper) {
-                $gitHelper->kirbyChange('update', 'page', $newPage->uri());
+                $gitHelper->kirbyChange('update', 'page', [$newPage->contentFileDirectory()], $newPage->id());
             },
             'page.changeTitle:after' => function ($newPage) use ($gitHelper) {
-                $gitHelper->kirbyChange('update', 'page', $newPage->uri());
+                $gitHelper->kirbyChange('update', 'page', [$newPage->contentFileDirectory()], $newPage->id());
             },
 
             /*
             * File
             */
             'file.create:after' => function ($file) use ($gitHelper) {
-                if (!$file->page()) {
-                    return;
-                }
-
-                $gitHelper->kirbyChange('create', 'file', $file->page()->uri() . '/' . $file->filename());
+                $gitHelper->kirbyChange('create', 'file', [$file->contentFileDirectory()], $file->id());
             },
             'file.replace:after' => function ($newFile) use ($gitHelper) {
-                if (!$newFile->page()) {
-                    return;
-                }
-
-                $gitHelper->kirbyChange('replace', 'file', $newFile->page()->uri() . '/' . $newFile->filename());
+                $gitHelper->kirbyChange('replace', 'file', [$newFile->contentFileDirectory()], $newFile->id());
             },
             'file.changeName:after' => function ($newFile) use ($gitHelper) {
-                if (!$newFile->page()) {
-                    return;
-                }
-
-                $gitHelper->kirbyChange('rename', 'file', $newFile->page()->uri() . '/' . $newFile->filename());
+                $gitHelper->kirbyChange('rename', 'file', [$newFile->contentFileDirectory()], $newFile->id());
             },
             'file.update:after' => function ($newFile) use ($gitHelper) {
-                if (!$newFile->page()) {
-                    return;
-                }
-
-                $gitHelper->kirbyChange('update', 'file', $newFile->page()->uri() . '/' . $newFile->filename());
+                $gitHelper->kirbyChange('update', 'file', [$newFile->contentFileDirectory()], $newFile->id());
             },
             'file.changeSort:after' => function ($newFile) use ($gitHelper) {
-                if (!$newFile->page()) {
-                    return;
-                }
-
-                $gitHelper->kirbyChange('sort', 'file', $newFile->page()->uri() . '/' . $newFile->filename());
+                $gitHelper->kirbyChange('sort', 'file', [$newFile->contentFileDirectory()], $newFile->id());
             },
             'file.delete:after' => function ($status, $file) use ($gitHelper) {
-                if (!$file->page()) {
-                    return;
-                }
-
-                $gitHelper->kirbyChange('delete', 'file', $file->page()->uri() . '/' . $file->filename());
+                $gitHelper->kirbyChange('delete', 'file', [$file->contentFileDirectory()], $file->id());
             },
         ];
     }
-
 }

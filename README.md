@@ -1,8 +1,12 @@
 # Kirby - Git Content
 
-This is a plugin for [Kirby 3](http://getkirby.com/) that commits and pushes changes made via the Panel to your git repository.
+This is a plugin for [Kirby 3](http://getkirby.com/) that commits and pushes content changes made via the Panel to your git repository.
 
-**⚠️ The current version only supports Kirby 3. For Kirby 2 support please use version 2 of this plugin.**
+![Screnshot of Panel Area](/.github/screenshot.png?raw=true)
+
+## Requirements
+
+This plugin supports **Kirby from version 3.6** and requires **git version > 2.24**
 
 ## Usage
 
@@ -33,6 +37,14 @@ git add -A
 git commit -m "Initial Content Commit"
 git push origin master
 ```
+
+Optional step: We advise you to include `.lock` files into the .gitignore of your newly created content repository.
+
+```bash
+echo ".lock" >> .gitignore
+```
+
+That's it! The plugin should work as of now.
 
 ### Download and configure the Plugin
 
@@ -76,7 +88,7 @@ return [
 - `cronHooksEnabled` (Boolean): Whether `/git-content/push` and `/git-content/pull` endpoints are enabled or not. (default: `true`)
 - `cronHooksSecret` (String): When set, this secret must be sent with the cronHooks as a get parameter.  Note: If you set
   a secret, only the GET method will work on the webhooks.   `/git-content/(pull|push)?secret=S0up3rS3c3t`
-- `displayErrors` (Boolean): Display git errors when saving pages (default: `false`)
+- `displayErrors` (Boolean): Display git errors when saving pages (default: `true`)
 - `gitBin` (String): Path to the `git` binary
 - `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`)
 
@@ -101,5 +113,6 @@ cloning and updating your content repository can take a lot of time. If you are 
 
 ## Authors
 
-- Pascal 'Pascalmh' Küsgen <http://pascalmh.de>
-- Markus Denhoff <https://markus.denhoff.com>
+Maintained and developed by [Markus Denhoff](https://markus.denhoff.com) and [Contributors](https://github.com/thathoff/kirby-git-content/graphs/contributors). Initial version by [Pascal Küsgen](https://github.com/Pascalmh).
+
+Supported by [reinorange GmbH](https://reinorange.com).
