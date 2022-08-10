@@ -150,7 +150,7 @@ class KirbyGitHelper
         $hasRemote = false;
         $diff = null;
         foreach ($upstreamResponse as $key => $line) {
-            if (str_contains($line, 'branch.ab')) {
+            if (!empty($line) && strpos($line, 'branch.ab') !== false) {
                 $hasRemote = true;
 
                 preg_match('/\+\d+/', $line, $ahead);
