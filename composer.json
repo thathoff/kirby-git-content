@@ -2,6 +2,7 @@
   "name": "thathoff/kirby-git-content",
   "description": "Plugin to track changes to content in a git repository.",
   "type": "kirby-plugin",
+  "version": "5.0.2",
   "license": "MIT",
   "authors": [
     {
