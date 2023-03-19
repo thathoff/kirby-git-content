@@ -25,5 +25,11 @@
   },
   "extra": {
     "installer-name": "git-content"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "getkirby/composer-installer": false
+    }
   }
 }
