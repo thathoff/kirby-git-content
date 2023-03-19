@@ -34,6 +34,7 @@
     "kirby-cms-path": false
   },
   "config": {
+    "optimize-autoloader": true,
     "allow-plugins": {
       "getkirby/composer-installer": true
     }
