@@ -9,7 +9,6 @@ use CzProject\GitPhp\GitRepository;
 use DateTime;
 use Exception;
 
-#[\AllowDynamicProperties]
 class KirbyGitHelper
 {
     private $kirby;
@@ -20,6 +19,7 @@ class KirbyGitHelper
     private $pushOnChange;
     private $commitOnChange;
     private $gitBin;
+    private $git;
 
     public function __construct($repoPath = false)
     {
@@ -47,8 +47,8 @@ class KirbyGitHelper
         }
         // force English locale for predictable command outputs
         $runner = new CliRunner('LC_ALL=C ' . $this->gitBin);
-        $this->git = new Git($runner);
-        $this->repo = $this->git->open($this->repoPath);
+        $git = new Git($runner);
+        $this->repo = $git->open($this->repoPath);
     }
 
     public function log(int $limit = 10)
