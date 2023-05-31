@@ -47,8 +47,8 @@ class KirbyGitHelper
         }
         // force English locale for predictable command outputs
         $runner = new CliRunner('LC_ALL=C ' . $this->gitBin);
-        $git = new Git($runner);
-        $this->repo = $git->open($this->repoPath);
+        $this->git = new Git($runner);
+        $this->repo = $this->git->open($this->repoPath);
     }
 
     public function log(int $limit = 10)
