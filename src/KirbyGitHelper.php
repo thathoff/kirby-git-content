@@ -9,6 +9,7 @@ use CzProject\GitPhp\GitRepository;
 use DateTime;
 use Exception;
 
+#[\AllowDynamicProperties]
 class KirbyGitHelper
 {
     private $kirby;
