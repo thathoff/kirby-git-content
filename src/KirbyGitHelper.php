@@ -19,6 +19,7 @@ class KirbyGitHelper
     private $pushOnChange;
     private $commitOnChange;
     private $gitBin;
+    private $git;
 
     public function __construct($repoPath = false)
     {
