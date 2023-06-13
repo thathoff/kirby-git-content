@@ -1,3 +1,9 @@
+<a name="5.0.1"></a>
+# [5.0.1](https://github.com/thathoff/kirby-git-content/compare/v5.0.0...v5.0.1) (2022-08-10)
+
+### Bugfixes
+- restore php 7.4 support
+
 <a name="5.0.0"></a>
 # [5.0.0](https://github.com/thathoff/kirby-git-content/compare/v4.1.0...v5.0.0) (2022-08-10)
 
