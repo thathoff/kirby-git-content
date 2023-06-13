@@ -1,3 +1,10 @@
+<a name="5.0.2"></a>
+# [5.0.2](https://github.com/thathoff/kirby-git-content/compare/v5.0.1...v5.0.2) (2023-06-13)
+
+### Bugfixes
+- fix PHP 8.1 compatibility (see #98, thanks to @CHE1RON)
+
+
 <a name="5.0.1"></a>
 # [5.0.1](https://github.com/thathoff/kirby-git-content/compare/v5.0.0...v5.0.1) (2022-08-10)
 
