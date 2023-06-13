@@ -1,5 +1,5 @@
 <a name="5.0.0"></a>
-# [5.0.0](https://github.com/thathoff/kirby-git-content/compare/v4.0.1...4.1.0) (2022-08-08)
+# [5.0.0](https://github.com/thathoff/kirby-git-content/compare/v4.1.0...v5.0.0) (2022-08-10)
 
 ### Features
 - only add modified files with `git add` instead of iterating over entire directory tree (`git add .`) (see #90)
