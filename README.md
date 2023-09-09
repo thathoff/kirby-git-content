@@ -1,6 +1,6 @@
 # Kirby Git Content
 
-This is a plugin for [Kirby 3](http://getkirby.com/) that commits and pushes content changes made via the Panel to your git repository.
+This is a plugin for [Kirby](http://getkirby.com/) that commits and pushes content changes made via the Panel to your git repository.
 
 ![Screnshot of Panel Area](/.github/screenshot.png?raw=true)
 
