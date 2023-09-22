@@ -23,8 +23,6 @@ return [
                     $git->log()
                 );
 
-
-                $status = $git->status();
                 return [
                     'component' => 'git-content',
                     'title' => 'Git Content',
