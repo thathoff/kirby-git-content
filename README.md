@@ -13,6 +13,34 @@ This plugin supports **Kirby from version 3.6** and requires **git version > 2.2
 You can use this plugin to commit and push changes made via the Panel to your git repository. Either automatically
 by setting the `commit` option to `true` or manually by visiting the panel view and adding a commit.
 
+### Hooks
+
+The plugin triggers hooks before and after content is pulled or pushed via the interface or the web endpoints.
+You can use these hooks to trigger other actions, for example to deploy your site after a push or clear caches
+after a pull.
+
+```php
+// site/config/config.php
+
+return [
+  // other configuration options
+  'hooks' => [
+    'thathoff.git-content.push:before' => function () {
+      // do something before a push
+    },
+    'thathoff.git-content.push:after' => function ($response) {
+      // do something after a push
+    },
+    'thathoff.git-content.pull:before' => function () {
+      // do something before a pull
+    },
+    'thathoff.git-content.pull:after' => function ($response) {
+      // do something after a pull
+    },
+  ],
+];
+```
+
 ## Installation
 
 ### Create a new git repository for your content
