@@ -10,7 +10,8 @@ This plugin supports **Kirby from version 3.6** and requires **git version > 2.2
 
 ## Usage
 
-Just keep using the Panel as you are used to and watch the commits appear in your git repository!
+You can use this plugin to commit and push changes made via the Panel to your git repository. Either automatically
+by setting the `commit` option to `true` or manually by visiting the panel view and adding a commit.
 
 ## Installation
 
@@ -53,7 +54,7 @@ That's it! The plugin should work as of now.
 To install this plugin without composer (not recommended):
 
 - [download the source code](https://github.com/thathoff/kirby-git-content/archive/master.zip)
-- run `composer install` locally
+- run `composer install --no-dev` locally
 - copy the folder to your site/plugins folder.
 
 We might create downloadable releases in the future which will make the above steps unnecessary.
