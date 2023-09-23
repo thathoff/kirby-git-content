@@ -3,6 +3,10 @@
     <k-view class="k-git-content-view">
       <k-header>Git Content {{ size }}</k-header>
 
+      <section class="k-section" v-if="helpText">
+        <k-box :text="helpText" html="true" theme="info" />
+      </section>
+
       <section v-if="status.files.length" class="k-section">
           <header class="k-section-header">
             <k-headline>Uncommitted changes</k-headline>
@@ -69,6 +73,8 @@ export default {
     disableBranchManagement: {
       type: Boolean,
       default: false
+    },
+    helpText: {
     },
   },
   computed: {

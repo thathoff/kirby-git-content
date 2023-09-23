@@ -121,6 +121,7 @@ return [
 - `gitBin` (String): Path to the `git` binary
 - `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`)
 - `disableBranchManagement` (Boolean): If set to `true`, the options to create and switch branches are hidden. (default: `false`)
+- `helpText` (String): Supply a custom help text shown in the panel UI. (default: `null`)
 
 #### Custom Commit Message
 

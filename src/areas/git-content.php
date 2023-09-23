@@ -158,6 +158,7 @@ return [
                     'props' => [
                         'disableBranchManagement' => (bool)option('thathoff.git-content.disableBranchManagement', false),
                         'log' => $logFormatted,
+                        'helpText' => option('thathoff.git-content.helpText'),
                         'branch' => $git->getCurrentBranch(),
                         'status' => $git->status(), // is associative array consisting of changed files and whether repo is ahead/behind to origin
                     ],
