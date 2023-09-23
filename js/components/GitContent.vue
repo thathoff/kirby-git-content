@@ -37,6 +37,7 @@
           <k-headline>Latest {{ log.length }} changes on branch »{{ branch }}«</k-headline>
 
           <k-button-group
+            v-if="!disableBranchManagement"
             :buttons="[
               { text: 'Create Branch', icon: 'add', click: createBranch },
               { text: 'Switch Branch', icon: 'refresh', click: switchBranch },
@@ -64,6 +65,10 @@ export default {
     branch: {
       type: String,
       default: ''
+    },
+    disableBranchManagement: {
+      type: Boolean,
+      default: false
     },
   },
   computed: {

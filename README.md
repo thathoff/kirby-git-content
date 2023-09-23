@@ -120,6 +120,7 @@ return [
 - `displayErrors` (Boolean): Display git errors when saving pages (default: `true`)
 - `gitBin` (String): Path to the `git` binary
 - `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`)
+- `disableBranchManagement` (Boolean): If set to `true`, the options to create and switch branches are hidden. (default: `false`)
 
 #### Custom Commit Message
 

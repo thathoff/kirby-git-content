@@ -156,6 +156,7 @@ return [
                     'component' => 'git-content',
                     'title' => 'Git Content',
                     'props' => [
+                        'disableBranchManagement' => (bool)option('thathoff.git-content.disableBranchManagement', false),
                         'log' => $logFormatted,
                         'branch' => $git->getCurrentBranch(),
                         'status' => $git->status(), // is associative array consisting of changed files and whether repo is ahead/behind to origin
