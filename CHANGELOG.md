@@ -1,3 +1,12 @@
+<a name="5.1.0"></a>
+# [5.1.0](https://github.com/thathoff/kirby-git-content/compare/v5.0.2...v5.1.0) (2023-10-16)
+
+### Features
+- Support git submodule installation (see #74, thanks to @CHE1RON)
+- Enhanced panel UI with support to switch and create branches, manual commits and resets
+- Add before and after hooks for push and pull
+- Add optional help text in the UI
+
 <a name="5.0.2"></a>
 # [5.0.2](https://github.com/thathoff/kirby-git-content/compare/v5.0.1...v5.0.2) (2023-06-13)
 

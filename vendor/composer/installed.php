@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'thathoff/kirby-git-content',
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
-        'reference' => 'a7cd22cdcf2c61d7c2d703191acce65737b2d036',
+        'pretty_version' => '5.1.0',
+        'version' => '5.1.0.0',
+        'reference' => NULL,
         'type' => 'kirby-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'thathoff/kirby-git-content' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => 'a7cd22cdcf2c61d7c2d703191acce65737b2d036',
+            'pretty_version' => '5.1.0',
+            'version' => '5.1.0.0',
+            'reference' => NULL,
             'type' => 'kirby-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
