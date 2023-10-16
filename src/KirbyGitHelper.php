@@ -86,8 +86,10 @@ class KirbyGitHelper
     public function commit($commitMessage, $paths, $author = null)
     {
         try {
-            $uniquePaths = array_unique($paths);
-            $this->getRepo()->execute('add', '--', ...$uniquePaths);
+            if ($paths) {
+                $uniquePaths = array_unique($paths);
+                $this->getRepo()->execute('add', '--', ...$uniquePaths);
+            }
 
             $params = [];
             if ($author) {
@@ -136,6 +138,36 @@ class KirbyGitHelper
         $this->getRepo()->pull(null, ['--no-rebase']);
     }
 
+    public function reset()
+    {
+        $this->getRepo()->execute('reset', '--hard', 'HEAD');
+    }
+
+    public function clean()
+    {
+        $this->getRepo()->execute('clean', '-fd');
+    }
+
+    public function addAll()
+    {
+        $this->getRepo()->addAllChanges();
+    }
+
+    public function checkout(string $branch)
+    {
+        $this->getRepo()->checkout($branch);
+    }
+
+    public function getBranches()
+    {
+        return $this->getRepo()->getLocalBranches();
+    }
+
+    public function createBranch(string $branch)
+    {
+        return $this->getRepo()->createBranch($branch, true);
+    }
+
     public function status() {
         /* git returns a two character code for every entry in 'git status --porcelain'. these codes are shown below, split in index and worktree codes.
            the first code character always refers to the index state of the file, the second for the worktree
@@ -182,6 +214,15 @@ class KirbyGitHelper
         ];
     }
 
+    public function getAuthorString(): ?string
+    {
+        if (!$user = $this->kirby->user()) {
+            return null;
+        }
+
+        return $user->name()->or($user->email()) . " <" . $user->email() . ">";
+    }
+
     public function kirbyChange($action, $item, $paths, $url = '')
     {
         try {
@@ -192,12 +233,7 @@ class KirbyGitHelper
             }
 
             if ($this->commitOnChange) {
-                $user = $this->kirby->user();
-
-                $author = null;
-                if ($user) {
-                    $author = $user->name()->or($user->email()) . " <" . $user->email() . ">";
-                }
+                $author = $this->getAuthorString();
 
                 $this->commit($this->commitMessage($action, $item, $url), $paths, $author);
             }

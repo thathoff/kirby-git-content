@@ -94,8 +94,12 @@ class KirbyGit
     public function httpGitHelperAction(string $action, ?string $successMessage = null)
     {
         try {
+            kirby()->trigger('thathoff.git-content.' . $action . ':before');
+
             // when no $successMessage is provided, the response of the $action call is returned
             $response = $this->gitHelper->$action();
+
+            kirby()->trigger('thathoff.git-content.' . $action . ':after', ['response' => $response]);
 
             return [
                 "status" => "ok",

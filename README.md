@@ -1,4 +1,4 @@
-# Kirby - Git Content
+# Kirby Git Content
 
 This is a plugin for [Kirby 3](http://getkirby.com/) that commits and pushes content changes made via the Panel to your git repository.
 
@@ -10,75 +10,67 @@ This plugin supports **Kirby from version 3.6** and requires **git version > 2.2
 
 ## Usage
 
-Just keep using the Panel as you are used to and watch the commits appear in your git repository!
+You can use this plugin to commit and push changes made via the Panel to your git repository. Either automatically
+by setting the `commit` option to `true` or manually by visiting the panel view and adding a commit.
 
-## Installation
+## Setup
+
+### Download and configure the Plugin
+
+#### Installation via composer (recommended)
+
+`composer require thathoff/kirby-git-content`
+
+#### Installation via git submodule
+
+`git submodule add https://github.com/thathoff/kirby-git-content.git site/plugins/git-content`
+
+#### Manual Installation
+- [download the source code](https://github.com/thathoff/kirby-git-content/archive/master.zip)
+- copy the folder to `site/plugins/git-content`.
+
 
 ### Create a new git repository for your content
 
-Create a new git repository where you push your content to, name it `your-project_content`.
+Create a new git repository where you push your content to init the content repo and push it.
 
-Init the content repo and push it
+```bash
+cd content
+
+# include .lock files in .gitignore
+echo ".lock" >> .gitignore
+
+# init repo
+git init
+git add .
+git commit -m "Initial Commit"
+```
 
 Remove the `content/` folder from your current git repository
+
 ```bash
+cd ..
 git rm --cached -r content
 git add -A
 git commit -m "Move Content Folder to separate repository"
 ```
 
-Add the `content/` folder to new git repository
-
-```bash
-cd content
-git init
-git remote add origin https://github.com/your-project/your-project_content.git
-git add -A
-git commit -m "Initial Content Commit"
-git push origin master
-```
-
-Optional step: We advise you to include `.lock` files into the .gitignore of your newly created content repository.
-
-```bash
-echo ".lock" >> .gitignore
-```
-
-That's it! The plugin should work as of now.
-
-### Download and configure the Plugin
-
-`composer require thathoff/kirby-git-content`
-
-To install this plugin without composer (not recommended):
-
-- [download the source code](https://github.com/thathoff/kirby-git-content/archive/master.zip)
-- run `composer install` locally
-- copy the folder to your site/plugins folder.
-
-We might create downloadable releases in the future which will make the above steps unnecessary.
-
-### Options
+## Configuration
 
 By default this plugin just commits changes to the content repository. It’s recommended to setup a cron job
 which calls `yourdomain.com/git-content/push`. This will push changes to the remote repository. By using a cron job
 saving pages in panel is a lot faster then enabling the `push` option which will push changes after every commit.
 
-This plugin is configurable via [Kirby Options](https://getkirby.com/docs/guide/configuration). Add the
-following entires to your `config.php`.
+This plugin is configurable via [Kirby Options](https://getkirby.com/docs/guide/configuration). Add the following entires to your `config.php`.
 
 ```php
 return [
   // other configuration options
-  'thathoff' => [
-    'git-content' => [
-      'commit' => true,
-    ],
-  ],
+  'thathoff.git-content.commit' => true,
 ];
 ```
 
-#### Configuration Options
+### Configuration Options
 
 - `path` (String): Path to the repository, (default: `kirby()->root("content")`)
 - `pull` (Boolean): Pull remote changes first? (default: `false`)
@@ -91,12 +83,42 @@ return [
 - `displayErrors` (Boolean): Display git errors when saving pages (default: `true`)
 - `gitBin` (String): Path to the `git` binary
 - `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`)
+- `disableBranchManagement` (Boolean): If set to `true`, the options to create and switch branches are hidden. (default: `false`)
+- `helpText` (String): Supply a custom help text shown in the panel UI. (default: `null`)
 
-#### Custom Commit Message
+### Custom Commit Message
 
 By default the commit message is composed from the template `:action:(:item:): :url:`. So for example a change to
 the page `example` will be committed with the message `update(page): example`. If you would like to change that
 message you can use the `thathoff.git-content.commitMessage` option to overwrite the template.
+
+## Hooks
+
+The plugin triggers hooks before and after content is pulled or pushed via the interface or the web endpoints.
+You can use these hooks to trigger other actions, for example to deploy your site after a push or clear caches
+after a pull.
+
+```php
+// site/config/config.php
+
+return [
+  // other configuration options
+  'hooks' => [
+    'thathoff.git-content.push:before' => function () {
+      // do something before a push
+    },
+    'thathoff.git-content.push:after' => function ($response) {
+      // do something after a push
+    },
+    'thathoff.git-content.pull:before' => function () {
+      // do something before a pull
+    },
+    'thathoff.git-content.pull:after' => function ($response) {
+      // do something after a pull
+    },
+  ],
+];
+```
 
 ## Git LFS
 Your repository might increase over time, by adding Images, Audio, Video, Binaries, etc.

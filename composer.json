@@ -3,10 +3,15 @@
   "description": "Plugin to track changes to content in a git repository.",
   "type": "kirby-plugin",
   "license": "MIT",
+  "version": "5.1.0",
   "authors": [
     {
       "name": "Markus Denhoff",
       "email": "markus@denhoff.com"
+    },
+    {
+      "name": "reinorange GmbH",
+      "email": "info@reinorange.com"
     }
   ],
   "support": {
@@ -15,8 +20,10 @@
 	},
   "require": {
     "czproject/git-php": "^4.0.1",
-    "getkirby/cms": "^3.6.0",
     "getkirby/composer-installer": "^1.1"
+  },
+  "require-dev": {
+    "getkirby/cms": "^3.6.0"
   },
   "autoload": {
     "psr-4": {
@@ -24,6 +31,13 @@
     }
   },
   "extra": {
-    "installer-name": "git-content"
+    "installer-name": "git-content",
+    "kirby-cms-path": false
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "getkirby/composer-installer": true
+    }
   }
 }

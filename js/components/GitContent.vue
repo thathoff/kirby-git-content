@@ -3,9 +3,20 @@
     <k-view class="k-git-content-view">
       <k-header>Git Content {{ size }}</k-header>
 
+      <section class="k-section" v-if="helpText">
+        <k-box :text="helpText" html="true" theme="info" />
+      </section>
+
       <section v-if="status.files.length" class="k-section">
           <header class="k-section-header">
             <k-headline>Uncommitted changes</k-headline>
+
+             <k-button-group
+              :buttons="[
+                { text: 'Revert Changes', icon: 'undo', click: revert },
+                { text: 'Commit Changes', icon: 'check', click: commit },
+              ]"
+            />
           </header>
 
           <k-collection :items="statusItems" help="Refer to the <a target='_blank' href='https://git-scm.com/docs/git-status#_short_format'>Git documentation</a> on how to interpret the status codes to the right." />
@@ -14,6 +25,13 @@
       <section class="k-section">
         <header class="k-section-header">
           <k-headline>Remote synchronization</k-headline>
+
+          <k-button-group
+            :buttons="[
+              { text: 'Pull', icon: 'download', click: pull },
+              { text: 'Push', icon: 'upload', click: push },
+            ]"
+          />
         </header>
         <k-box :text="remoteStatus.text" :theme="remoteStatus.theme" />
       </section>
@@ -23,12 +41,12 @@
           <k-headline>Latest {{ log.length }} changes on branch »{{ branch }}«</k-headline>
 
           <k-button-group
+            v-if="!disableBranchManagement"
             :buttons="[
-              { text: 'Pull', icon: 'download', click: pull },
-              { text: 'Push', icon: 'upload', click: push },
+              { text: 'Create Branch', icon: 'add', click: createBranch },
+              { text: 'Switch Branch', icon: 'refresh', click: switchBranch },
             ]"
           />
-
         </header>
         <k-collection :items="commitItems" />
       </section>
@@ -51,6 +69,12 @@ export default {
     branch: {
       type: String,
       default: ''
+    },
+    disableBranchManagement: {
+      type: Boolean,
+      default: false
+    },
+    helpText: {
     },
   },
   computed: {
@@ -111,6 +135,18 @@ export default {
     push: async function () {
       await panel.app.$api.post('/git-content/push')
       this.$reload()
+    },
+    revert: async function () {
+      this.$dialog("git-content/revert");
+    },
+    commit: async function () {
+      this.$dialog("git-content/commit");
+    },
+    switchBranch: async function () {
+      this.$dialog("git-content/branch");
+    },
+    createBranch: async function () {
+      this.$dialog("git-content/create-branch");
     },
     formatRelative (date) {
       return formatDistance(new Date(date), new Date(), {

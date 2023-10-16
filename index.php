@@ -30,6 +30,7 @@ Kirby::plugin('thathoff/git-content', [
         'windowsMode'      => null,
         'gitBin'           => null,
         'displayErrors'    => null,
+        'disableBranchManagement' => null,
         'disable'          => null,
     ],
 ]);
