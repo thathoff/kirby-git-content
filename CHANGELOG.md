@@ -1,3 +1,10 @@
+<a name="5.2.0"></a>
+# [5.2.0](https://github.com/thathoff/kirby-git-content/compare/v5.1.0...v5.2.0) (2023-12-09)
+
+### Features
+- Add support for Kirby 4
+- Configurable panel menu item
+
 <a name="5.1.0"></a>
 # [5.1.0](https://github.com/thathoff/kirby-git-content/compare/v5.0.2...v5.1.0) (2023-10-16)
 
