@@ -85,6 +85,8 @@ return [
 - `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`)
 - `disableBranchManagement` (Boolean): If set to `true`, the options to create and switch branches are hidden. (default: `false`)
 - `helpText` (String): Supply a custom help text shown in the panel UI. (default: `null`)
+- `menuIcon` (String): Supply a custom icon for the panel menu item. (default: `sitemap`)
+- `menuLabel` (String): Supply a custom label for the panel menu item. (default: `Git Content`)
 
 ### Custom Commit Message
 

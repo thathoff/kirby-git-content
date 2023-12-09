@@ -3,8 +3,8 @@
 use Thathoff\GitContent\KirbyGitHelper;
 
 return [
-    'label' => 'Git Content',
-    'icon'  => 'sitemap',
+    'label' => option('thathoff.git-content.menuLabel', 'Git Content'),
+    'icon'  => option('thathoff.git-content.menuIcon', 'sitemap'),
     'menu'  => true,
     'link'  => 'git-content',
     'dialogs' => [
