@@ -1,12 +1,12 @@
 # Kirby Git Content
 
-This is a plugin for [Kirby 3](http://getkirby.com/) that commits and pushes content changes made via the Panel to your git repository.
+This is a plugin for [Kirby](http://getkirby.com/) that commits and pushes content changes made via the Panel to your git repository.
 
 ![Screnshot of Panel Area](/.github/screenshot.png?raw=true)
 
 ## Requirements
 
-This plugin supports **Kirby from version 3.6** and requires **git version > 2.24**
+This plugin supports **Kirby from version 3.6 (including Kirby 4)** and requires **git version > 2.24**
 
 ## Usage
 
@@ -85,6 +85,8 @@ return [
 - `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`)
 - `disableBranchManagement` (Boolean): If set to `true`, the options to create and switch branches are hidden. (default: `false`)
 - `helpText` (String): Supply a custom help text shown in the panel UI. (default: `null`)
+- `menuIcon` (String): Supply a custom icon for the panel menu item. (default: `sitemap`)
+- `menuLabel` (String): Supply a custom label for the panel menu item. (default: `Git Content`)
 
 ### Custom Commit Message
 
