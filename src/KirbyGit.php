@@ -39,6 +39,13 @@ class KirbyGit
                 },
             ],
             [
+                'pattern' => 'git-content/reset',
+                'method'  => 'POST',
+                'action'  => function () use ($kirbyGit) {
+                    return $kirbyGit->httpGitHelperAction('reset', "successfully reset the content folder");
+                },
+            ],
+            [
                 'pattern' => 'git-content/status',
                 'method' => 'GET',
                 'action' => function () use ($kirbyGit) {

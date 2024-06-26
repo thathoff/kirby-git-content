@@ -30,6 +30,7 @@
             :buttons="[
               { text: 'Pull', icon: 'download', click: pull },
               { text: 'Push', icon: 'upload', click: push },
+              { text: 'Discard all local changes', icon: 'reset-left', click: reset },
             ]"
           />
         </header>
@@ -134,6 +135,10 @@ export default {
     },
     push: async function () {
       await panel.app.$api.post('/git-content/push')
+      this.$reload()
+    },
+    reset: async function () {
+      await panel.app.$api.post('/git-content/reset')
       this.$reload()
     },
     revert: async function () {
