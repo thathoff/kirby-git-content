@@ -48,6 +48,50 @@ class KirbyGit
         ];
     }
 
+    public static function parseFilesData($filesJson)
+    {
+        $files = $filesJson ? json_decode($filesJson, true) : [];
+        return $files;
+    }
+
+    public static function userByEmail($email)
+    {
+        $users = kirby()->users()->filter(function ($user) use ($email) {
+            return $user->email() === $email;
+        });
+
+        return $users->first() ?? null;
+    }
+
+    public static function changesForFiles($files) {
+        $changes = [];
+
+        foreach ($files as $file) {
+            $change = self::gitCodeToChange($file['code']);
+            if (!isset($changes[$change])) {
+                $changes[$change] = 0;
+            }
+
+            $changes[$change]++;
+        }
+
+        return $changes;
+    }
+
+    public static function gitCodeToChange($code)
+    {
+        switch ($code) {
+            case '??':
+                return 'create';
+            case 'D':
+                return 'delete';
+            case 'R':
+                return 'move';
+            default:
+                return 'update';
+        }
+    }
+
     public function getRoutes()
     {
         if (!option("thathoff.git-content.cronHooksEnabled", true)) {

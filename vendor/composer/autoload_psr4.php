@@ -6,6 +6,18 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Whoops\\' => array($vendorDir . '/filp/whoops/src/Whoops'),
     'Thathoff\\GitContent\\' => array($baseDir . '/src'),
-    'Kirby\\' => array($vendorDir . '/getkirby/composer-installer/src'),
+    'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
+    'Symfony\\Polyfill\\Intl\\Normalizer\\' => array($vendorDir . '/symfony/polyfill-intl-normalizer'),
+    'Symfony\\Polyfill\\Intl\\Idn\\' => array($vendorDir . '/symfony/polyfill-intl-idn'),
+    'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
+    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
+    'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
+    'League\\ColorExtractor\\' => array($vendorDir . '/league/color-extractor/src'),
+    'Laminas\\Escaper\\' => array($vendorDir . '/laminas/laminas-escaper/src'),
+    'Kirby\\' => array($vendorDir . '/getkirby/composer-installer/src', $vendorDir . '/getkirby/cms/src'),
+    'Composer\\Semver\\' => array($vendorDir . '/composer/semver/src'),
+    'Base32\\' => array($vendorDir . '/christian-riesen/base32/src'),
 );

@@ -13,13 +13,23 @@
 
              <k-button-group
               :buttons="[
-                { text: 'Revert Changes', icon: 'undo', click: revert },
-                { text: 'Commit Changes', icon: 'check', click: commit },
+                { text: listTypeInfo.label, icon: listTypeInfo.icon, click: toggleList },
+                { text: 'Revert all Changes', icon: 'undo', click: revert },
+                { text: 'Commit all Changes', icon: 'check', click: commit },
               ]"
             />
           </header>
 
-          <k-collection :items="statusItems" help="Refer to the <a target='_blank' href='https://git-scm.com/docs/git-status#_short_format'>Git documentation</a> on how to interpret the status codes to the right." />
+          <k-collection
+            :items="statusItems"
+            v-if="listType === 'files'"
+            help="Refer to the <a target='_blank' href='https://git-scm.com/docs/git-status#_short_format'>Git documentation</a>
+              on how to interpret the status codes to the right."
+          />
+          <k-collection
+            v-else
+            :items="statusPages"
+          />
       </section>
 
       <section class="k-section">
@@ -77,14 +87,35 @@ export default {
     helpText: {
     },
   },
+  data: function () {
+    return {
+      listType: 'pages',
+    }
+  },
   computed: {
+    listTypeInfo () {
+      if (this.listType === 'pages') {
+        return {
+          label: 'by Pages',
+          icon: 'page',
+        }
+      }
+
+      return {
+        label: 'by Files',
+        icon: 'file',
+      }
+    },
     commitItems () {
       const items = []
 
       this.log.forEach(commit => {
+        const authorName = commit.user?.username || commit.author || 'Unknown'
+        const avatar = commit.user?.avatar ? '<img class="git-content-view__avatar" src="'+ commit.user?.avatar + '">' : ''
+
         items.push({
-          text: commit.message,
-          info: this.formatRelative(commit.date) + ' / ' + commit.hash.substr(0, 7),
+          text: commit.message + ' <small class="git-content-view__commit-id">' + commit.hash.substr(0, 7) + '</small>',
+          info: avatar + authorName + ', ' + this.formatRelative(commit.date),
           link: false,
         })
       })
@@ -99,6 +130,46 @@ export default {
           text: file.filename,
           info: file.code,
           link: false,
+        })
+      })
+
+      return items
+    },
+    statusPages () {
+      const items = []
+
+      this.status.pages.forEach(page => {
+        const infoText = page.changeString
+
+        const title =
+          page.pageName + ' <small class="git-content-view__page-id">' +
+            page.pageId + '</small>'
+        const dialogUrl = 'page=' + encodeURIComponent(page.pageId)
+          + '&files=' + encodeURIComponent(JSON.stringify(page.files))
+
+        items.push({
+          text: title,
+          info: infoText,
+          image: page.image,
+          link: page.panelUrl,
+          options: [
+            {
+              text: 'Commit Changes',
+              icon: 'check',
+              click: () => {
+                this.$dialog('git-content/commit/?' + dialogUrl, {
+                  width: 'large'
+                })
+              }
+            },
+            {
+              text: 'Revert Changes',
+              icon: 'refresh',
+              click: () => {
+                this.$dialog('git-content/revert?=' + dialogUrl)
+              }
+            }
+          ]
         })
       })
 
@@ -128,6 +199,9 @@ export default {
     }
   },
   methods: {
+    toggleList: function () {
+      this.listType = this.listType === 'pages' ? 'files' : 'pages'
+    },
     pull: async function () {
       await panel.app.$api.post('/git-content/pull')
       this.$reload()
@@ -156,3 +230,23 @@ export default {
   }
 }
 </script>
+<style>
+.git-content-view__commit-id {
+  color: var(--color-gray-500);
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+}
+
+.git-content-view__page-id {
+  color: var(--color-gray-500);
+  font-size: 0.8em;
+}
+
+.git-content-view__avatar {
+  border-radius: 50%;
+  height: 20px;
+  aspect-ratio: 1/1;
+  margin-right: 0.5em;
+  float: left;
+}
+</style>

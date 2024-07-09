@@ -1,0 +1,17 @@
+
+.git-content-view__commit-id {
+  color: var(--color-gray-500);
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+}
+.git-content-view__page-id {
+  color: var(--color-gray-500);
+  font-size: 0.8em;
+}
+.git-content-view__avatar {
+  border-radius: 50%;
+  height: 20px;
+  aspect-ratio: 1/1;
+  margin-right: 0.5em;
+  float: left;
+}

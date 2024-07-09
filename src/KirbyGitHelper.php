@@ -153,6 +153,11 @@ class KirbyGitHelper
         $this->getRepo()->addAllChanges();
     }
 
+    public function addFile($file)
+    {
+        $this->getRepo()->execute('add', '--end-of-options', $file);
+    }
+
     public function checkout(string $branch)
     {
         $this->getRepo()->checkout($branch);
@@ -166,6 +171,69 @@ class KirbyGitHelper
     public function createBranch(string $branch)
     {
         return $this->getRepo()->createBranch($branch, true);
+    }
+
+    public function statusByPages()
+    {
+        $status = $this->status();
+        $pages = [];
+
+        foreach ($status['files'] as $file) {
+            $fileName = $file['filename'];
+
+            // remove _drafts from path
+            $pageId = str_replace('_drafts/', '', $fileName);
+
+            if ($fileName[-1] == '/') {
+                // if the file is a directory, we need to remove the / at the end
+                $pageId = rtrim($pageId, '/');
+            } else {
+                // if the file is a file, we need to remove the file name
+                $pageId = dirname($pageId);
+            }
+
+            $page = $this->kirby->page($pageId);
+            $id = $page?->id();
+
+            if ($pageId == '.') {
+                $id = 'site';
+                $page = $this->kirby->site();
+            }
+
+            if ($page) {
+                if (!isset($pages[$id])) {
+                    $pages[$id] = [
+                        'pageId' => $id,
+                        'pageName' => $page->title()->or($id)->toString(),
+                        'panelUrl' => $page->panel()->url(),
+                        'image' => $page->panel()->image(),
+                        'changeString' => '',
+                        'files' => []
+                    ];
+                }
+
+                $pages[$id]['files'][] = $file;
+            }
+        }
+
+        $pages = array_map(function ($page) {
+            $changes = KirbyGit::changesForFiles($page['files']);
+
+            $changeString = [];
+            foreach ($changes as $key => $changeCount) {
+                $fileFiles = $changeCount == 1 ? ' file ' : ' files ';
+                $actionInPastTense = $key . 'd';
+                $changeString[] =  $changeCount . $fileFiles . $actionInPastTense;
+            }
+
+            $page['changeString'] = implode(", ", $changeString);
+            return $page;
+        }, $pages);
+
+        return [
+            ...$status,
+            'pages' => array_values($pages),
+        ];
     }
 
     public function status() {
@@ -200,10 +268,19 @@ class KirbyGitHelper
         // one line per file. line looks like this:
         // XY filename.txt
         $files = [];
-        foreach ($filesResponse as $key => $file) {
+        foreach ($filesResponse as $key => $fileLine) {
+            $code = trim(substr($fileLine, 0, 2));
+            $fileName = substr($fileLine, 3);
+
+            // support renames
+            $fileRename = explode(' -> ', $fileName);
+            if (count($fileRename) > 1) {
+                $fileName = $fileRename[1];
+            }
+
             $files[$key] = [
-                'code' => substr($file, 0, 2),
-                'filename' => substr($file, 3)
+                'code' => $code,
+                'filename' => $fileName,
             ];
         }
 
