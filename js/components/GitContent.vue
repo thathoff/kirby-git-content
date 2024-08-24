@@ -72,7 +72,11 @@ export default {
         items.push({
           text: commit.message,
           info:
-            this.formatRelative(commit.date) + " / " + commit.hash.substr(0, 7),
+            this.formatRelative(commit.date)
+            + " / "
+            + commit.author
+            + " / "
+            + commit.hash.substr(0, 7),
           link: false,
         });
       });
