@@ -84,7 +84,7 @@ export default {
       this.log.forEach(commit => {
         items.push({
           text: commit.message,
-          info: this.formatRelative(commit.date) + ' / ' + commit.hash.substr(0, 7),
+          info: this.formatRelative(commit.date) + ' / ' + commit.author + ' / ' + commit.hash.substr(0, 7),
           link: false,
         })
       })
