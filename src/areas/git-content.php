@@ -157,7 +157,10 @@ return [
                     'title' => 'Git Content',
                     'props' => [
                         'disableBranchManagement' => (bool)option('thathoff.git-content.disableBranchManagement', false),
+                        'disableRemoteManagement' => (bool)option('thathoff.git-content.disableRemoteManagement', false),
+                        'showAuthor' => (bool)option('thathoff.git-content.showAuthor', false),
                         'log' => $logFormatted,
+                        'lockedPages' => (bool)option('thathoff.git-content.enableLockedPages', false) ? $git->getLockedPages() : [],
                         'helpText' => option('thathoff.git-content.helpText'),
                         'branch' => $git->getCurrentBranch(),
                         'status' => $git->status(), // is associative array consisting of changed files and whether repo is ahead/behind to origin

@@ -84,9 +84,12 @@ return [
 - `gitBin` (String): Path to the `git` binary
 - `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`)
 - `disableBranchManagement` (Boolean): If set to `true`, the options to create and switch branches are hidden. (default: `false`)
+- `disableRemoteManagement` (Boolean): If set to `true`, the section to push and pull to a remote is hidden (default: `false`)
 - `helpText` (String): Supply a custom help text shown in the panel UI. (default: `null`)
 - `menuIcon` (String): Supply a custom icon for the panel menu item. (default: `sitemap`)
 - `menuLabel` (String): Supply a custom label for the panel menu item. (default: `Git Content`)
+- `showAuthor` (Boolean): Show the author of the commit in the panel UI. (default: `false`)
+- `enableLockedPages` (Boolean): Show a list of the currently locked pages above the git section. (default: `false`)
 
 ### Custom Commit Message
 

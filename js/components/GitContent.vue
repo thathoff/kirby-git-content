@@ -7,6 +7,13 @@
         <k-box :text="helpText" html="true" theme="info" />
       </section>
 
+      <section v-if="lockedPages.length" class="k-section">
+        <header class="k-section-header">
+          <k-headline>Locked pages</k-headline>
+        </header>
+        <k-collection :items="lockItems" />
+      </section>
+
       <section v-if="status.files.length" class="k-section">
           <header class="k-section-header">
             <k-headline>Uncommitted changes</k-headline>
@@ -22,7 +29,7 @@
           <k-collection :items="statusItems" help="Refer to the <a target='_blank' href='https://git-scm.com/docs/git-status#_short_format'>Git documentation</a> on how to interpret the status codes to the right." />
       </section>
 
-      <section class="k-section">
+      <section v-if="!disableRemoteManagement" class="k-section">
         <header class="k-section-header">
           <k-headline>Remote synchronization</k-headline>
 
@@ -66,11 +73,23 @@ export default {
       type: Array,
       default: []
     },
+    lockedPages: {
+      type: Array,
+      default: []
+    },
     branch: {
       type: String,
       default: ''
     },
     disableBranchManagement: {
+      type: Boolean,
+      default: false
+    },
+    disableRemoteManagement: {
+      type: Boolean,
+      default: false
+    },
+    showAuthor: {
       type: Boolean,
       default: false
     },
@@ -84,8 +103,20 @@ export default {
       this.log.forEach(commit => {
         items.push({
           text: commit.message,
-          info: this.formatRelative(commit.date) + ' / ' + commit.hash.substr(0, 7),
+          info: (this.showAuthor ? (commit.author + ' / ') : '') + this.formatRelative(commit.date) + ' / ' + commit.hash.substr(0, 7),
           link: false,
+        })
+      })
+
+      return items
+    },
+    lockItems () {
+      const items = []
+
+      this.lockedPages.forEach(lock => {
+        items.push({
+          text: lock.file,
+          info: lock.user + ' / ' + this.formatRelative(lock.date),
         })
       })
 
