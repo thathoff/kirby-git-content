@@ -3,7 +3,6 @@
   "description": "Plugin to track changes to content in a git repository.",
   "type": "kirby-plugin",
   "license": "MIT",
-  "version": "5.2.0",
   "authors": [
     {
       "name": "Markus Denhoff",
