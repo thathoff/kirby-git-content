@@ -11,6 +11,8 @@ This plugin supports **Kirby from version 3.6 (including Kirby 4 and 5)** and re
 Please make sure that PHP on your server has not disabled both `proc_open` and `proc_close` as they are required
 by czproject/git-php used to communicate with git.
 
+If you are **updating to Kirby 5**, please make sure to add the `_changes` folder to your `.gitignore` file.
+
 ## Usage
 
 You can use this plugin to commit and push changes made via the Panel to your git repository. Either automatically
@@ -40,8 +42,11 @@ Create a new git repository where you push your content to init the content repo
 ```bash
 cd content
 
-# include .lock files in .gitignore
+# for Kirby 3 and 4 include .lock files in .gitignore
 echo ".lock" >> .gitignore
+
+# for Kirby 5 add the _changes folder to .gitignore
+echo "_changes" >> .gitignore
 
 # init repo
 git init
