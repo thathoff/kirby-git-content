@@ -1,3 +1,10 @@
+<a name="5.3.0"></a>
+# [5.3.0](https://github.com/thathoff/kirby-git-content/compare/v5.2.0...v5.3.0) (2025-05-24)
+
+### Features
+- Add support for Kirby 5 (Thanks to @bastianallgeier)
+- Display author in list of commits (Thanks to @hariom147)
+
 <a name="5.2.0"></a>
 # [5.2.0](https://github.com/thathoff/kirby-git-content/compare/v5.1.0...v5.2.0) (2023-12-09)
 
