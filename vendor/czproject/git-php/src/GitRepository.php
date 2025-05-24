@@ -16,7 +16,7 @@
 		 * @param  string $repository
 		 * @throws GitException
 		 */
-		public function __construct($repository, IRunner $runner = NULL)
+		public function __construct($repository, ?IRunner $runner = NULL)
 		{
 			if (basename($repository) === '.git') {
 				$repository = dirname($repository);
@@ -466,7 +466,7 @@
 		 * @return static
 		 * @throws GitException
 		 */
-		public function pull($remote = NULL, array $options = NULL)
+		public function pull($remote = NULL, ?array $options = NULL)
 		{
 			$this->run('pull', $options, '--end-of-options', $remote);
 			return $this;
@@ -480,7 +480,7 @@
 		 * @return static
 		 * @throws GitException
 		 */
-		public function push($remote = NULL, array $options = NULL)
+		public function push($remote = NULL, ?array $options = NULL)
 		{
 			$this->run('push', $options, '--end-of-options', $remote);
 			return $this;
@@ -494,7 +494,7 @@
 		 * @return static
 		 * @throws GitException
 		 */
-		public function fetch($remote = NULL, array $options = NULL)
+		public function fetch($remote = NULL, ?array $options = NULL)
 		{
 			$this->run('fetch', $options, '--end-of-options', $remote);
 			return $this;
@@ -509,7 +509,7 @@
 		 * @return static
 		 * @throws GitException
 		 */
-		public function addRemote($name, $url, array $options = NULL)
+		public function addRemote($name, $url, ?array $options = NULL)
 		{
 			$this->run('remote', 'add', $options, '--end-of-options', $name, $url);
 			return $this;
@@ -551,7 +551,7 @@
 		 * @return static
 		 * @throws GitException
 		 */
-		public function setRemoteUrl($name, $url, array $options = NULL)
+		public function setRemoteUrl($name, $url, ?array $options = NULL)
 		{
 			$this->run('remote', 'set-url', $options, '--end-of-options', $name, $url);
 			return $this;
@@ -571,11 +571,30 @@
 
 
 		/**
+		 * Runs command and returns result.
+		 * @param  mixed ...$args
+		 * @return RunnerResult
+		 * @throws GitException
+		 */
+		public function run(...$args)
+		{
+			$result = $this->runner->run($this->repository, $args);
+
+			if (!$result->isOk()) {
+				throw new GitException("Command '{$result->getCommand()}' failed (exit-code {$result->getExitCode()}).", $result->getExitCode(), NULL, $result);
+			}
+
+			return $result;
+		}
+
+
+		/**
 		 * @param  array<mixed> $args
+		 * @param  (callable(string $value): (string|FALSE))|NULL $filter
 		 * @return string[]|NULL
 		 * @throws GitException
 		 */
-		protected function extractFromCommand(array $args, callable $filter = NULL)
+		protected function extractFromCommand(array $args, ?callable $filter = NULL)
 		{
 			$result = $this->run(...$args);
 			$output = $result->getOutput();
@@ -601,23 +620,5 @@
 			}
 
 			return $output;
-		}
-
-
-		/**
-		 * Runs command.
-		 * @param  mixed ...$args
-		 * @return RunnerResult
-		 * @throws GitException
-		 */
-		protected function run(...$args)
-		{
-			$result = $this->runner->run($this->repository, $args);
-
-			if (!$result->isOk()) {
-				throw new GitException("Command '{$result->getCommand()}' failed (exit-code {$result->getExitCode()}).", $result->getExitCode(), NULL, $result);
-			}
-
-			return $result;
 		}
 	}
