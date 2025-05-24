@@ -46,6 +46,9 @@ git add .
 git commit -m "Initial Commit"
 ```
 
+Please note: Make a first commit to the repository. If you have a repository with no commits, the git content view
+in the panel will not work.
+
 Remove the `content/` folder from your current git repository
 
 ```bash
