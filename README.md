@@ -11,6 +11,9 @@ This plugin supports **Kirby from version 3.6 (including Kirby 4 and 5)** and re
 Please make sure that PHP on your server has not disabled both `proc_open` and `proc_close` as they are required
 by czproject/git-php used to communicate with git.
 
+Another requirement is that the git repository in your content folder is owned by the user running the PHP process
+otherwise git failes with a `dubious ownership` error.
+
 If you are **updating to Kirby 5**, please make sure to add the `_changes` folder to your `.gitignore` file.
 
 ## Usage

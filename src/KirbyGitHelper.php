@@ -53,8 +53,11 @@ class KirbyGitHelper
 
     public function log(int $limit = 10)
     {
-        $log = $this->getRepo()->execute('log', '--pretty=format:%H|%s|%an|%ae|%cI', '--max-count=' . $limit);
-
+		try {
+			$log = $this->getRepo()->execute('log', '--pretty=format:%H|%s|%an|%ae|%cI', '--max-count=' . $limit);
+		} catch (GitException $e) {
+			$this->catchGitException($e);
+		}
 
         $log = array_map(
             function ($line) {
@@ -114,6 +117,16 @@ class KirbyGitHelper
 		$errorMessage = $e->getMessage();
 		if ($runnerResult = $e->getRunnerResult()) {
 			$errorMessage .= "\n\n" . implode("\n", $runnerResult->getErrorOutput()) . "\n\n" . implode("\n", $runnerResult->getOutput());
+		}
+
+		// make the dubious ownership error more user friendly
+		if (strpos($errorMessage, 'dubious ownership') !== false) {
+			$phpUser = posix_getpwuid(posix_geteuid());
+			$phpUserName = $phpUser['name'];
+
+			throw new Exception('The content repository is not owned by the user running the PHP process. ' .
+				'Please change the owner to ' . $phpUserName . ', eg. by running `chown -R ' . $phpUserName . ' "' . $this->repoPath . '"`.'
+			);
 		}
 
 		$ignoredErrors = [
