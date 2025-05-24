@@ -8,6 +8,9 @@ This is a plugin for [Kirby](http://getkirby.com/) that commits and pushes conte
 
 This plugin supports **Kirby from version 3.6 (including Kirby 4 and 5)** and requires **git version > 2.24**
 
+Please make sure that PHP on your server has not disabled both `proc_open` and `proc_close` as they are required
+by czproject/git-php used to communicate with git.
+
 ## Usage
 
 You can use this plugin to commit and push changes made via the Panel to your git repository. Either automatically
