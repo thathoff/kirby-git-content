@@ -98,30 +98,40 @@ class KirbyGitHelper
 
             $this->getRepo()->commit($commitMessage, $params);
         } catch (GitException $e) {
-            /* Sometimes a change results in multiple hooks being fired (for example status change). This causes a race condition:
-               As the file change can only be committed once, latter hooks will fail when calling either 'git add' or 'git commit'.
-               The files in question have actually been committed already in an earlier hook call and therefore we may ignore the errors.
-
-               We don’t run git status in front because that is much slower in large repositories.
-
-               Refer to #84
-            */
-
-            /* We concat the actual git error message, the error output and regular output together to then search for "exclusion strings".
-            For some reason, the output is sometimes obtainable using getErrorOutput() and sometimes using getOutput(). */
-            $errorMessage = $e->getMessage();
-            if ($runnerResult = $e->getRunnerResult()) {
-                $errorMessage .= "\n\n" . implode("\n", $runnerResult->getErrorOutput()) . "\n\n" . implode("\n", $runnerResult->getOutput());
-            }
-
-            if (
-                !strpos($errorMessage, 'nothing to commit') &&
-                !strpos($errorMessage, 'did not match any files')
-            ) {
-                throw $e;
-            }
+			$this->catchGitException($e);
         }
     }
+
+	private function catchGitException(GitException $e) {
+		// Sometimes a change results in multiple hooks being fired (for example status change). This causes a race condition:
+		// As the file change can only be committed once, latter hooks will fail when calling either 'git add' or 'git commit'.
+		// The files in question have actually been committed already in an earlier hook call and therefore we may ignore the errors.
+		// We don’t run git status in front because that is much slower in large repositories.
+		// Refer to #84
+
+		// We concat the actual git error message, the error output and regular output together to then search for "exclusion strings".
+		// For some reason, the output is sometimes obtainable using getErrorOutput() and sometimes using getOutput().
+		$errorMessage = $e->getMessage();
+		if ($runnerResult = $e->getRunnerResult()) {
+			$errorMessage .= "\n\n" . implode("\n", $runnerResult->getErrorOutput()) . "\n\n" . implode("\n", $runnerResult->getOutput());
+		}
+
+		$ignoredErrors = [
+			'nothing to commit',
+			'did not match any files'
+		];
+
+		// if the error message is not in the ignored errors, throw the exception
+		// check if one of the ignored errors is in the error message
+		foreach ($ignoredErrors as $ignoredError) {
+			if (strpos($errorMessage, $ignoredError) !== false) {
+				return;
+			}
+		}
+
+		// otherwise throw the exception
+		throw $e;
+	}
 
     public function push()
     {
