@@ -6,7 +6,7 @@ This is a plugin for [Kirby](http://getkirby.com/) that commits and pushes conte
 
 ## Requirements
 
-This plugin supports **Kirby from version 3.6 (including Kirby 4)** and requires **git version > 2.24**
+This plugin supports **Kirby from version 3.6 (including Kirby 4 and 5)** and requires **git version > 2.24**
 
 ## Usage
 
