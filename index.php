@@ -19,6 +19,16 @@ Kirby::plugin('thathoff/git-content', [
     'areas' => [
         'git-content' => require __DIR__ . '/src/areas/git-content.php',
     ],
+    'permissions' => [
+        'thathoff.git-content' => [
+            'revert'       => true,
+            'commit'       => true,
+            'pull'         => true,
+            'push'         => true,
+            'createBranch' => true,
+            'switchBranch' => true,
+        ],
+    ],
     'options' => [
         'path'             => null,
         'pull'             => null,
@@ -29,6 +39,7 @@ Kirby::plugin('thathoff/git-content', [
         'commitMessage'    => ':action:(:item:): :url:',
         'windowsMode'      => null,
         'gitBin'           => null,
+        'buttons'          => null,
         'displayErrors'    => null,
         'disableBranchManagement' => null,
         'disable'          => null,
