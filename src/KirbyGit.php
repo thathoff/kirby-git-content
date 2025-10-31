@@ -98,7 +98,16 @@ class KirbyGit
                     return $helper->httpGitHelperAction('push', "successfully pushed the content folder");
                 case "pull":
                     return $helper->httpGitHelperAction('pull', "successfully pulled the content folder");
-                    break;
+                case "reset":
+                    if (!$secret) {
+                        return [
+                            "status" => "forbidden",
+                            "message" => "Please configure a cron hook secret for the reset command.",
+                        ];
+                    }
+
+                    $helper->httpGitHelperAction('fetch', "successfully fetched remote changes");
+                    return $helper->httpGitHelperAction('resetToOrigin', "successfully reset the content folder");
             }
 
             Header::missing();
