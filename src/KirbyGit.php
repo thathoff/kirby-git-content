@@ -39,6 +39,13 @@ class KirbyGit
                 },
             ],
             [
+                'pattern' => 'git-content/fetch',
+                'method'  => 'POST',
+                'action'  => function () use ($kirbyGit) {
+                    return $kirbyGit->httpGitHelperAction('fetch', "successfully fetched remote changes");
+                },
+            ],
+            [
                 'pattern' => 'git-content/status',
                 'method' => 'GET',
                 'action' => function () use ($kirbyGit) {

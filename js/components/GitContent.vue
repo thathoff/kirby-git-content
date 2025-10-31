@@ -125,6 +125,13 @@ export default {
     remoteButtons() {
       const buttons = [
         {
+        	key: "fetch",
+        	text: "Fetch",
+        	icon: "refresh",
+        	click: this.fetch,
+        	class: "btn-fetch",
+        },
+        {
           key: "pull",
           text: "Pull",
           icon: "download",
@@ -158,7 +165,7 @@ export default {
         {
           key: "switchBranch",
           text: "Switch Branch",
-          icon: "refresh",
+          icon: "split",
           click: this.switchBranch,
           class: "btn-switch",
         },
@@ -200,6 +207,10 @@ export default {
     },
     push: async function () {
       await panel.app.$api.post("/git-content/push");
+      this.$reload();
+    },
+    fetch: async function () {
+      await panel.app.$api.post("/git-content/fetch");
       this.$reload();
     },
     revert: async function () {

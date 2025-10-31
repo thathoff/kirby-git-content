@@ -27,6 +27,7 @@ Kirby::plugin('thathoff/git-content', [
             'push'         => true,
             'createBranch' => true,
             'switchBranch' => true,
+            'fetch'        => true,
         ],
     ],
     'options' => [

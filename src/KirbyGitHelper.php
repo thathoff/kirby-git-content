@@ -161,6 +161,11 @@ class KirbyGitHelper
         $this->getRepo()->pull(null, ['--no-rebase']);
     }
 
+    public function fetch()
+    {
+        $this->getRepo()->fetch();
+    }
+
     public function reset()
     {
         $this->getRepo()->execute('reset', '--hard', 'HEAD');
