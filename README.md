@@ -184,6 +184,20 @@ cloning and updating your content repository can take a lot of time. If you are 
 *.gif filter=lfs diff=lfs merge=lfs -text
 ```
 
+## Running on Shared Hosting
+
+Running this plugin on shared hosting can be tricky. You need to ensure that the PHP process has access to the Git binary,
+and that the repository is owned by the user running the PHP process.
+
+Accessing the repository via SSH may also be difficult. In these cases, it may be easier to use the HTTPS URL.
+Check out the repository using HTTPS, a personal access token or password, depending on your Git provider.
+
+When cloning the repository, you can include the username and password like this:
+
+```bash
+git clone https://username:personal-access-token@github.com/yourusername/yourrepository.git
+```
+
 ## Authors
 
 Maintained and developed by [Markus Denhoff](https://markus.denhoff.com) and [Contributors](https://github.com/thathoff/kirby-git-content/graphs/contributors). Initial version by [Pascal Küsgen](https://github.com/Pascalmh).
