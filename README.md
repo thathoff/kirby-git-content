@@ -101,6 +101,42 @@ return [
 - `helpText` (String): Supply a custom help text shown in the panel UI. (default: `null`)
 - `menuIcon` (String): Supply a custom icon for the panel menu item. (default: `sitemap`)
 - `menuLabel` (String): Supply a custom label for the panel menu item. (default: `Git Content`)
+- `buttons` (Array): Enable or disable buttons in the panel UI. See [Buttons & Permissions](#buttons--permissions) for options.
+
+### Buttons & Permissions
+
+The plugin allows you to enable or disable buttons in the panel UI either globally or per role.
+
+To enable or disable buttons globally, set the `buttons` option to an array of button names. The keys are:
+
+- `fetch`: Fetches the latest changes from the remote repository.
+- `commit`: Allows to commit changes to the repository.
+- `pull`: Allows to pull changes from the remote repository.
+- `push`: Allows to push changes to the remote repository.
+- `createBranch`: Allows to create a new branch.
+- `switchBranch`: Allows to switch to a different branch.
+- `removeIndexLock`: Removes the index lock file if it exists.
+- `reset`: Resets the local repository to the remote repository (disabled by default).
+
+```php
+return [
+  'thathoff.git-content.buttons' => [
+    'reset' => true, // enables the reset to origin button (default: false)
+    'fetch' => false, // disables the fetch button (default: true)
+  ],
+];
+```
+
+You also can enable or disable buttons per role by adding the permission to to users blueprint. For example to
+disable the fetch button for the role `editor`, add the following to the `editor` blueprint:
+
+```yaml
+permissions:
+  thathoff.git-content:
+    fetch: false
+```
+
+You can use the same keys as in the `buttons` option to enable or disable buttons per role.
 
 ### Custom Commit Message
 
