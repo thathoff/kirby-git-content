@@ -53,15 +53,18 @@ class KirbyGitHelper
 
     public function log(int $limit = 10)
     {
+        $separator = "\|";
+        $format = implode($separator, ["%H", "%s", "%an", "%ae", "%cI"]);
+
 		try {
-			$log = $this->getRepo()->execute('log', '--pretty=format:%H|%s|%an|%ae|%cI', '--max-count=' . $limit);
+			$log = $this->getRepo()->execute('log', '--pretty=format:' . $format, '--max-count=' . $limit);
 		} catch (GitException $e) {
 			$this->catchGitException($e);
 		}
 
         $log = array_map(
-            function ($line) {
-                $entry = explode("|", $line);
+            function ($line) use ($separator) {
+                $entry = explode($separator, $line);
 
                 return [
                     'hash' => $entry[0],
