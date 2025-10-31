@@ -96,7 +96,6 @@ class KirbyGit
             switch ($gitCommand) {
                 case "push":
                     return $helper->httpGitHelperAction('push', "successfully pushed the content folder");
-                    break;
                 case "pull":
                     return $helper->httpGitHelperAction('pull', "successfully pulled the content folder");
                     break;
