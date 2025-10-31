@@ -45,6 +45,20 @@ class KirbyGit
                     return $kirbyGit->httpGitHelperAction('fetch', "successfully fetched remote changes");
                 },
             ],
+			[
+                'pattern' => 'git-content/reset',
+                'method'  => 'POST',
+                'action'  => function () use ($kirbyGit) {
+                    return $kirbyGit->httpGitHelperAction('reset', "successfully reset the content folder");
+                },
+            ],
+            [
+                'pattern' => 'git-content/remove-index-lock',
+                'method'  => 'POST',
+                'action'  => function () use ($kirbyGit) {
+                    return $kirbyGit->httpGitHelperAction('removeIndexLock', "successfully removed the index lock");
+                },
+            ],
             [
                 'pattern' => 'git-content/status',
                 'method' => 'GET',

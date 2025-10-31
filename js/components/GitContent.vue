@@ -49,6 +49,10 @@ export default {
       type: String,
       default: "",
     },
+    hasIndexLock: {
+      type: Boolean,
+      default: false,
+    },
     disableBranchManagement: {
       type: Boolean,
       default: false,
@@ -60,6 +64,9 @@ export default {
     },
   },
   computed: {
+    differsFromRemote() {
+      return this.status.diffFromOrigin !== 0;
+    },
     buttonMap() {
       return {
         revert: true,
@@ -147,7 +154,29 @@ export default {
         },
       ];
 
-      return buttons.filter((button) => this.buttonMap[button.key]);
+      if (this.differsFromRemote) {
+        buttons.unshift({
+					key: "reset",
+					text: "Reset",
+					icon: "undo",
+					click: this.reset,
+					class: "btn-reset",
+				});
+      }
+
+      const filteredButtons = buttons.filter((button) => this.buttonMap[button.key]);
+
+      if (this.hasIndexLock) {
+        filteredButtons.unshift({
+          key: "removeIndexLock",
+          text: "Remove Index Lock",
+          icon: "unlock",
+          click: this.removeIndexLock,
+          class: "btn-remove-index-lock",
+        });
+      }
+
+      return filteredButtons;
     },
     branchButtons() {
       if (this.disableBranchManagement) {
@@ -213,8 +242,15 @@ export default {
       await panel.app.$api.post("/git-content/fetch");
       this.$reload();
     },
+    removeIndexLock: async function () {
+      await panel.app.$api.post("/git-content/remove-index-lock");
+      this.$reload();
+    },
     revert: async function () {
       this.$dialog("git-content/revert");
+    },
+		reset: async function () {
+      this.$dialog("git-content/reset");
     },
     commit: async function () {
       this.$dialog("git-content/commit");
