@@ -8,10 +8,7 @@
 
     <k-section
       v-if="status.files.length"
-      :buttons="[
-        { text: 'Revert Changes', icon: 'undo', click: revert },
-        { text: 'Commit Changes', icon: 'check', click: commit },
-      ]"
+      :buttons="changeButtons"
       label="Uncommitted changes"
     >
       <k-collection
@@ -21,20 +18,14 @@
     </k-section>
 
     <k-section
-      :buttons="[
-        { text: 'Pull', icon: 'download', click: pull },
-        { text: 'Push', icon: 'upload', click: push },
-      ]"
+      :buttons="remoteButtons"
       label="Remote synchronization"
     >
       <k-box :text="remoteStatus.text" :theme="remoteStatus.theme" />
     </k-section>
 
     <k-section
-      :buttons="[
-        { text: 'Create Branch', icon: 'add', click: createBranch },
-        { text: 'Switch Branch', icon: 'refresh', click: switchBranch },
-      ]"
+      :buttons="branchButtons"
       :label="`Latest ${log.length} changes on branch »${branch}«`"
     >
       <k-collection :items="commitItems" />
@@ -63,8 +54,23 @@ export default {
       default: false,
     },
     helpText: {},
+    buttons: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   computed: {
+    buttonMap() {
+      return {
+        revert: true,
+        commit: true,
+        pull: true,
+        push: true,
+        createBranch: true,
+        switchBranch: true,
+        ...this.buttons,
+      };
+    },
     commitItems() {
       const items = [];
 
@@ -95,6 +101,70 @@ export default {
       });
 
       return items;
+    },
+    changeButtons() {
+      const buttons = [
+        {
+          key: "revert",
+          text: "Revert Changes",
+          icon: "undo",
+          click: this.revert,
+          class: "btn-revert",
+        },
+        {
+          key: "commit",
+          text: "Commit Changes",
+          icon: "check",
+          click: this.commit,
+          class: "btn-commit",
+        },
+      ];
+
+      return buttons.filter((button) => this.buttonMap[button.key]);
+    },
+    remoteButtons() {
+      const buttons = [
+        {
+          key: "pull",
+          text: "Pull",
+          icon: "download",
+          click: this.pull,
+          class: "btn-pull",
+        },
+        {
+          key: "push",
+          text: "Push",
+          icon: "upload",
+          click: this.push,
+          class: "btn-push",
+        },
+      ];
+
+      return buttons.filter((button) => this.buttonMap[button.key]);
+    },
+    branchButtons() {
+      if (this.disableBranchManagement) {
+        return [];
+      }
+
+      const buttons = [
+        {
+          key: "createBranch",
+          text: "Create Branch",
+          icon: "add",
+          click: this.createBranch,
+          class: "btn-create",
+        },
+        {
+          key: "switchBranch",
+          text: "Switch Branch",
+          icon: "refresh",
+          click: this.switchBranch,
+          class: "btn-switch",
+        },
+      ];
+
+      return buttons.filter((button) => this.buttonMap[button.key]);
     },
     remoteStatus() {
       if (!this.status.hasRemote) {
