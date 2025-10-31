@@ -144,6 +144,7 @@ return [
                     'commit' => true,
                     'pull' => true,
                     'push' => true,
+                    'fetch' => true,
                     'createBranch' => true,
                     'switchBranch' => true,
                 ];
