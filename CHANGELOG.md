@@ -1,3 +1,14 @@
+<a name="5.4.0"></a>
+# [5.4.0](https://github.com/thathoff/kirby-git-content/compare/v5.3.0...v5.4.0) (2025-11-01)
+
+### Features
+- Add support for buttons configuration (Thanks to @chrfickinger)
+- Add fetch, reset and remove index lock buttons
+- Add webhook for resetting the local repository to the remote repository (requires secret to be set)
+
+### Bugfixes
+- Fix git log parsing for messages containing pipe characters (See #118)
+
 <a name="5.3.0"></a>
 # [5.3.0](https://github.com/thathoff/kirby-git-content/compare/v5.2.0...v5.3.0) (2025-05-24)
 
