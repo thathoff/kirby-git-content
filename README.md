@@ -34,9 +34,8 @@ by setting the `commit` option to `true` or manually by visiting the panel view 
 `git submodule add https://github.com/thathoff/kirby-git-content.git site/plugins/git-content`
 
 #### Manual Installation
-- [download the source code](https://github.com/thathoff/kirby-git-content/archive/master.zip)
+- [download the source code](https://github.com/thathoff/kirby-git-content/archive/main.zip)
 - copy the folder to `site/plugins/git-content`.
-
 
 ### Create a new git repository for your content
 
