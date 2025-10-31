@@ -26,6 +26,24 @@ return [
                 return true;
             }
         ],
+        'git-content.reset' => [
+            'pattern' => 'git-content/reset',
+            'load' => fn () => [
+                'component' => 'k-remove-dialog',
+                'props' => [
+                    'text' => "Are you sure you want to reset the content folder?<br><br>⚠️ Will remove all local changes and reset to the remote branch.",
+                    'submitButton' => 'Reset',
+                    'icon' => 'undo',
+                ]
+            ],
+            'submit' => function () {
+                $git = new KirbyGitHelper();
+                $git->resetToOrigin();
+                $git->clean();
+
+                return true;
+            }
+        ],
         'git-content.commit' => [
             'pattern' => 'git-content/commit',
             'load' => fn () => [
@@ -141,6 +159,7 @@ return [
 
                 $defaultButtons = [
                     'revert' => true,
+                    'reset' => false,
                     'commit' => true,
                     'pull' => true,
                     'push' => true,
@@ -202,6 +221,7 @@ return [
                         'log' => $logFormatted,
                         'helpText' => option('thathoff.git-content.helpText'),
                         'branch' => $git->getCurrentBranch(),
+                        'hasIndexLock' => $git->hasIndexLock(),
                         'status' => $git->status(), // is associative array consisting of changed files and whether repo is ahead/behind to origin
                     ],
                 ];

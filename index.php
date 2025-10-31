@@ -21,13 +21,15 @@ Kirby::plugin('thathoff/git-content', [
     ],
     'permissions' => [
         'thathoff.git-content' => [
-            'revert'       => true,
-            'commit'       => true,
-            'pull'         => true,
-            'push'         => true,
-            'createBranch' => true,
-            'switchBranch' => true,
-            'fetch'        => true,
+            'revert'            => true,
+            'commit'            => true,
+            'pull'              => true,
+            'push'              => true,
+            'createBranch'      => true,
+            'switchBranch'      => true,
+            'fetch'             => true,
+            'reset'             => true,
+            'removeIndexLock'   => true,
         ],
     ],
     'options' => [

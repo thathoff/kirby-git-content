@@ -171,6 +171,30 @@ class KirbyGitHelper
         $this->getRepo()->execute('reset', '--hard', 'HEAD');
     }
 
+    public function resetToOrigin()
+    {
+        $remoteBranch = $this->getRepo()->execute('rev-parse', '--abbrev-ref', '@{u}');
+        $remoteBranch = $remoteBranch[0] ?? null;
+        if (empty($remoteBranch)) {
+            throw new Exception('No remote branch found. Please add a remote branch first.');
+        }
+        $this->getRepo()->execute('reset', '--hard', $remoteBranch);
+    }
+
+    public function removeIndexLock()
+    {
+        if (!$this->hasIndexLock()) {
+            return;
+        }
+
+        unlink($this->repoPath . '/.git/index.lock');
+    }
+
+    public function hasIndexLock()
+    {
+        return file_exists($this->repoPath . '/.git/index.lock');
+    }
+
     public function clean()
     {
         $this->getRepo()->execute('clean', '-fd');
