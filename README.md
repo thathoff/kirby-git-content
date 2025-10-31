@@ -91,8 +91,7 @@ return [
 - `push` (Boolean): Push your changes to remote? (default: `false`)
 - `commitMessage` (String): Configure the template for the commit message (default: `:action:(:item:): :url:`)
 - `cronHooksEnabled` (Boolean): Whether `/git-content/push` and `/git-content/pull` endpoints are enabled or not. (default: `true`)
-- `cronHooksSecret` (String): When set, this secret must be sent with the cronHooks as a get parameter.  Note: If you set
-  a secret, only the GET method will work on the webhooks.   `/git-content/(pull|push)?secret=S0up3rS3c3t`
+- `cronHooksSecret` (String): When set, this secret must be sent with the cronHooks as a get parameter, see [Cron / Webhooks](#cron--webhooks) for more details.
 - `displayErrors` (Boolean): Display git errors when saving pages (default: `true`)
 - `gitBin` (String): Path to the `git` binary
 - `disable` (Boolean): If set to `true`, the plugin won't initialize. (default: `false`)
@@ -101,6 +100,23 @@ return [
 - `menuIcon` (String): Supply a custom icon for the panel menu item. (default: `sitemap`)
 - `menuLabel` (String): Supply a custom label for the panel menu item. (default: `Git Content`)
 - `buttons` (Array): Enable or disable buttons in the panel UI. See [Buttons & Permissions](#buttons--permissions) for options.
+
+### Cron / Webhooks
+
+The plugin provides three webhook that you can trigger via cron or webhooks in your CI/CD pipeline. You can
+enable or disable the webhooks by setting the `cronHooksEnabled` option.
+
+- `/git-content/push`: Pushes changes to the remote repository.
+- `/git-content/pull`: Fetches the latest changes from the remote repository.
+- `/git-content/reset`: Resets the local repository to the remote repository (requires a secret to be set).
+
+You can call the webhooks via HTTP GET or POST request. If you have a secret set, you can either provide the
+secret as a query parameter or as a body parameter.
+
+```bash
+curl https://example.com/git-content/pull?secret=S0up3rS3c3t"
+curl -X POST https://example.com/git-content/push --data "secret=S0up3rS3c3t"
+```
 
 ### Buttons & Permissions
 
