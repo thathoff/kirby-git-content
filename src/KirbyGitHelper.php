@@ -97,15 +97,73 @@ class KirbyGitHelper
                 $this->getRepo()->execute('add', '--', ...$uniquePaths);
             }
 
-            $params = [];
+            $args = ['commit', '-m', $commitMessage];
+
             if ($author) {
-                $params[] = "--author=" . $author;
+                $args[] = "--author=" . $author;
             }
 
-            $this->getRepo()->commit($commitMessage, $params);
+            // restrict the commit to the given paths, so unrelated staged
+            // changes (eg. from another file selection) are left untouched
+            if ($paths) {
+                $args[] = '--';
+                $args = array_merge($args, array_unique($paths));
+            }
+
+            $this->getRepo()->execute(...$args);
         } catch (GitException $e) {
 			$this->catchGitException($e);
         }
+    }
+
+    public function revertFiles(array $files)
+    {
+        if (empty($files)) {
+            return;
+        }
+
+        $trackedFiles = [];
+        $untrackedFiles = [];
+
+        foreach ($this->status()['files'] as $file) {
+            if (!in_array($file['filename'], $files, true)) {
+                continue;
+            }
+
+            if (strpos($file['code'], '?') !== false) {
+                $untrackedFiles[] = $file['filename'];
+            } else {
+                $trackedFiles[] = $file['filename'];
+            }
+        }
+
+        try {
+            if ($trackedFiles) {
+                // unstage first, so files that were only `git add`ed (eg. new files) are included in the checkout below
+                $this->getRepo()->execute('reset', 'HEAD', '--', ...$trackedFiles);
+                $this->getRepo()->execute('checkout', 'HEAD', '--', ...$trackedFiles);
+            }
+
+            if ($untrackedFiles) {
+                $this->getRepo()->execute('clean', '-fd', '--', ...$untrackedFiles);
+            }
+        } catch (GitException $e) {
+            $this->catchGitException($e);
+        }
+    }
+
+    public function commitFiles(?string $title, ?string $description, array $files)
+    {
+        if (!$title) {
+            throw new Exception('A commit title is required.');
+        }
+
+        $message = $title;
+        if ($description) {
+            $message .= "\n\n" . $description;
+        }
+
+        $this->commit($message, $files ?: null, $this->getAuthorString());
     }
 
 	private function catchGitException(GitException $e) {
