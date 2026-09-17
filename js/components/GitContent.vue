@@ -11,10 +11,24 @@
       :buttons="changeButtons"
       label="Uncommitted changes"
     >
-      <k-collection
-        :items="statusItems"
-        help="Refer to the <a target='_blank' href='https://git-scm.com/docs/git-status#_short_format'>Git documentation</a> on how to interpret the status codes to the right."
-      />
+      <ul class="k-git-content-status-list">
+        <li
+          v-for="file in status.files"
+          :key="file.filename"
+          class="k-git-content-status-item"
+        >
+          <k-checkbox-input
+            :checked="isFileSelected(file.filename)"
+            :value="isFileSelected(file.filename)"
+            @input="toggleFile(file.filename)"
+          />
+          <span class="k-git-content-status-filename">{{ file.filename }}</span>
+          <span class="k-git-content-status-code">{{ file.code }}</span>
+        </li>
+      </ul>
+      <p class="k-git-content-status-help">
+        Refer to the <a target="_blank" href="https://git-scm.com/docs/git-status#_short_format">Git documentation</a> on how to interpret the status codes to the right.
+      </p>
     </k-section>
 
     <k-section
@@ -63,7 +77,26 @@ export default {
       default: () => ({}),
     },
   },
+  data() {
+    return {
+      selectedFiles: [],
+    };
+  },
+  watch: {
+    "status.files": {
+      immediate: true,
+      handler() {
+        this.selectedFiles = [];
+      },
+    },
+  },
   computed: {
+    allFilesSelected() {
+      return (
+        this.status.files.length > 0
+        && this.selectedFiles.length === this.status.files.length
+      );
+    },
     differsFromRemote() {
       return this.status.diffFromOrigin !== 0;
     },
@@ -96,19 +129,6 @@ export default {
 
       return items;
     },
-    statusItems() {
-      const items = [];
-
-      this.status.files.forEach((file) => {
-        items.push({
-          text: file.filename,
-          info: file.code,
-          link: false,
-        });
-      });
-
-      return items;
-    },
     changeButtons() {
       const buttons = [
         {
@@ -117,6 +137,7 @@ export default {
           icon: "undo",
           click: this.revert,
           class: "btn-revert",
+          disabled: this.selectedFiles.length === 0,
         },
         {
           key: "commit",
@@ -124,10 +145,21 @@ export default {
           icon: "check",
           click: this.commit,
           class: "btn-commit",
+          disabled: this.selectedFiles.length === 0,
         },
-      ];
+      ].filter((button) => this.buttonMap[button.key]);
 
-      return buttons.filter((button) => this.buttonMap[button.key]);
+      buttons.unshift({
+        key: "selectAll",
+        text: this.allFilesSelected ? "Deselect All" : "Select All",
+        icon: this.allFilesSelected ? "circle-nested" : "circle",
+        click: this.toggleSelectAll,
+        class: "btn-select-all",
+        // render as a plain link instead of the group's filled button style
+        variant: null,
+      });
+
+      return buttons;
     },
     remoteButtons() {
       const buttons = [
@@ -246,14 +278,82 @@ export default {
       await panel.app.$api.post("/git-content/remove-index-lock");
       this.$reload();
     },
-    revert: async function () {
-      this.$dialog("git-content/revert");
+    toggleSelectAll() {
+      this.selectedFiles = this.allFilesSelected
+        ? []
+        : this.status.files.map((file) => file.filename);
+    },
+    isFileSelected(filename) {
+      return this.selectedFiles.includes(filename);
+    },
+    toggleFile(filename) {
+      this.selectedFiles = this.isFileSelected(filename)
+        ? this.selectedFiles.filter((selected) => selected !== filename)
+        : [...this.selectedFiles, filename];
+    },
+    revert: function () {
+      const files = this.selectedFiles;
+      if (files.length === 0) {
+        return;
+      }
+
+      panel.dialog.open({
+        component: "k-remove-dialog",
+        props: {
+          text: "Are you sure you want to revert the selected changes?<br><br>⚠️ This cannot be undone.",
+          submitButton: "Revert changes",
+          icon: "undo",
+        },
+        on: {
+          submit: async () => {
+            await panel.app.$api.post("/git-content/revert", { files });
+            panel.dialog.close();
+            this.$reload();
+          },
+        },
+      });
     },
 		reset: async function () {
       this.$dialog("git-content/reset");
     },
-    commit: async function () {
-      this.$dialog("git-content/commit");
+    commit: function () {
+      const files = this.selectedFiles;
+      if (files.length === 0) {
+        return;
+      }
+
+      panel.dialog.open({
+        component: "k-form-dialog",
+        props: {
+          fields: {
+            title: {
+              label: "Title",
+              type: "text",
+              counter: true,
+              maxlength: 72,
+              required: true,
+            },
+            description: {
+              label: "Description",
+              type: "textarea",
+              buttons: false,
+              required: false,
+            },
+          },
+          size: "large",
+        },
+        on: {
+          submit: async (values) => {
+            await panel.app.$api.post("/git-content/commit", {
+              title: values.title,
+              description: values.description,
+              files,
+            });
+            panel.dialog.close();
+            this.$reload();
+          },
+        },
+      });
     },
     switchBranch: async function () {
       this.$dialog("git-content/branch");
@@ -269,3 +369,45 @@ export default {
   },
 };
 </script>
+<style scoped>
+.k-git-content-view ::v-deep .btn-select-all {
+  margin-inline-end: var(--spacing-1);
+  padding-inline-end: var(--spacing-3);
+  border-inline-end: 1px solid var(--color-border);
+  border-radius: 0;
+}
+.k-git-content-status-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--rounded);
+  overflow: hidden;
+}
+.k-git-content-status-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-3);
+}
+.k-git-content-status-item ::v-deep .k-choice-input-icon,
+.k-git-content-status-item ::v-deep .k-choice-input input {
+  top: 0;
+}
+.k-git-content-status-item + .k-git-content-status-item {
+  border-top: 1px solid var(--color-border);
+}
+.k-git-content-status-filename {
+  flex-grow: 1;
+  overflow-wrap: anywhere;
+}
+.k-git-content-status-code {
+  font-family: var(--font-mono);
+  color: var(--color-text-dimmed);
+}
+.k-git-content-status-help {
+  margin-top: var(--spacing-2);
+  color: var(--color-text-dimmed);
+  font-size: var(--text-sm);
+}
+</style>

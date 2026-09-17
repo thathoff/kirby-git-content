@@ -8,24 +8,6 @@ return [
     'menu'  => true,
     'link'  => 'git-content',
     'dialogs' => [
-        'git-content.revert' => [
-            'pattern' => 'git-content/revert',
-            'load' => fn () => [
-                'component' => 'k-remove-dialog',
-                'props' => [
-                    'text' => "Are you sure you want to revert all changes?<br><br>⚠️ This cannot be undone.",
-                    'submitButton' => 'Revert changes',
-                    'icon' => 'undo',
-                ]
-            ],
-            'submit' => function () {
-                $git = new KirbyGitHelper();
-                $git->reset();
-                $git->clean();
-
-                return true;
-            }
-        ],
         'git-content.reset' => [
             'pattern' => 'git-content/reset',
             'load' => fn () => [
@@ -40,44 +22,6 @@ return [
                 $git = new KirbyGitHelper();
                 $git->resetToOrigin();
                 $git->clean();
-
-                return true;
-            }
-        ],
-        'git-content.commit' => [
-            'pattern' => 'git-content/commit',
-            'load' => fn () => [
-                'component' => 'k-form-dialog',
-                'props' => [
-                    'fields' => [
-                        'title' => [
-                            'label'    => "Title",
-                            'type'     => 'text',
-                            'counter'  => true,
-                            'maxlength' => 72,
-                            'required' => true,
-                        ],
-                        'description' => [
-                            'label'    => "Description",
-                            'type'     => 'textarea',
-                            'buttons'  => false,
-                            'required' => false,
-                        ],
-                    ],
-                    'size' => 'large'
-                ]
-            ],
-            'submit' => function () {
-                $message = get('title');
-                $description = get('description');
-
-                if ($description) {
-                    $message .= "\n\n" . $description;
-                }
-
-                $git = new KirbyGitHelper();
-                $git->addAll();
-                $git->commit($message, null, $git->getAuthorString());
 
                 return true;
             }

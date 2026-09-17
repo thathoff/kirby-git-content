@@ -53,6 +53,28 @@ class KirbyGit
                 },
             ],
             [
+                'pattern' => 'git-content/revert',
+                'method'  => 'POST',
+                'action'  => function () use ($kirbyGit) {
+                    return $kirbyGit->httpGitHelperAction(
+                        'revertFiles',
+                        "successfully reverted the selected files",
+                        [get('files', [])]
+                    );
+                },
+            ],
+            [
+                'pattern' => 'git-content/commit',
+                'method'  => 'POST',
+                'action'  => function () use ($kirbyGit) {
+                    return $kirbyGit->httpGitHelperAction(
+                        'commitFiles',
+                        "successfully committed the selected files",
+                        [get('title'), get('description'), get('files', [])]
+                    );
+                },
+            ],
+            [
                 'pattern' => 'git-content/remove-index-lock',
                 'method'  => 'POST',
                 'action'  => function () use ($kirbyGit) {
@@ -120,13 +142,13 @@ class KirbyGit
         return [$route];
     }
 
-    public function httpGitHelperAction(string $action, ?string $successMessage = null)
+    public function httpGitHelperAction(string $action, ?string $successMessage = null, array $args = [])
     {
         try {
             kirby()->trigger('thathoff.git-content.' . $action . ':before');
 
             // when no $successMessage is provided, the response of the $action call is returned
-            $response = $this->gitHelper->$action();
+            $response = $this->gitHelper->$action(...$args);
 
             kirby()->trigger('thathoff.git-content.' . $action . ':after', ['response' => $response]);
 
