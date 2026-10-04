@@ -145,6 +145,36 @@ The maintainer has switched, be prepared for config option name changes in versi
 
 
 <a name="2.2.2"></a>
+## [5.5.0](https://github.com/thathoff/kirby-git-content/compare/v5.4.0...v5.5.0) (2026-10-04)
+
+
+### Features
+
+* allow selecting individual files to revert/commit ([b3ce671](https://github.com/thathoff/kirby-git-content/commit/b3ce671b7ea2c4cf29e8c417fdd8d80b0ff2c706))
+
+
+### Bug Fixes
+
+* use valid message type for error_log ([1643557](https://github.com/thathoff/kirby-git-content/commit/164355722a1754079c3d5e4ad84a972a9b87ddc2))
+
+
+### Refactoring
+
+* add type declarations and handle nullable values ([b628baa](https://github.com/thathoff/kirby-git-content/commit/b628baaf99a978538f9560df456c17764382b6fe))
+* replace deprecated iso8601 date format with atom ([4713cf6](https://github.com/thathoff/kirby-git-content/commit/4713cf6ddc501a042db88a77d7c7375760c10ebe))
+
+
+### Build System
+
+* add phpcs with psr-12 ruleset ([400f5ae](https://github.com/thathoff/kirby-git-content/commit/400f5ae6dc08b3fe06a8de73d1c14b5c79a3b6ae))
+* add phpstan level 8 ([0512a7f](https://github.com/thathoff/kirby-git-content/commit/0512a7ffc53144bfb69caab78828763dc73b432b))
+* update dependencies and remove kirby dev dependency ([e4f53a0](https://github.com/thathoff/kirby-git-content/commit/e4f53a04bd6489203404bc7147bef76244ece6a6))
+
+
+### CI
+
+* add release-please workflow ([b22130b](https://github.com/thathoff/kirby-git-content/commit/b22130bc6f69d560366c5659441a300753fab8c0))
+
 ## [2.2.2](https://github.com/thathoff/kirby-git-content/compare/v2.2.1...v2.2.2) (2018-01-24)
 
 
