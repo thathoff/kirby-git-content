@@ -7,6 +7,7 @@ use CzProject\GitPhp\Runners\CliRunner;
 use CzProject\GitPhp\GitException;
 use CzProject\GitPhp\GitRepository;
 use DateTime;
+use DateTimeInterface;
 use Exception;
 use Kirby\Cms\App;
 
@@ -75,7 +76,7 @@ class KirbyGitHelper
                     'message' => $entry[1],
                     'author' => $entry[2],
                     'email' => $entry[3],
-                    'date' => DateTime::createFromFormat(DateTime::ISO8601, $entry[4]) ?: null,
+                    'date' => DateTime::createFromFormat(DateTimeInterface::ATOM, $entry[4]) ?: null,
                 ];
             },
             $log
