@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ruleset name="kirby-git-content">
+    <description>Coding standard for the kirby-git-content plugin.</description>
+
+    <file>src</file>
+    <file>index.php</file>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>node_modules/*</exclude-pattern>
+    <exclude-pattern>.cache/*</exclude-pattern>
+
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg value="ps"/>
+
+    <rule ref="PSR12">
+        <!-- PSR-12 enforces a 120 char soft / 120 char hard limit by default. -->
+        <!-- We loosen this to 150 (warning) / 200 (error). -->
+        <exclude name="Generic.Files.LineLength"/>
+    </rule>
+
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="150"/>
+            <property name="absoluteLineLimit" value="200"/>
+        </properties>
+    </rule>
+</ruleset>

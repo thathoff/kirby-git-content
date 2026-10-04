@@ -27,3 +27,7 @@ kirby
 /vendor/**/tests/*
 /vendor/**/php4/*
 /vendor/getkirby/composer-installer
+
+# dev dependencies (install with `composer install`, restore with `composer install --no-dev` before committing)
+/vendor/bin
+/vendor/squizlabs
