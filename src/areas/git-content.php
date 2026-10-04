@@ -30,7 +30,7 @@ return [
             'pattern' => 'git-content/branch',
             'load' => function () {
                 $git = new KirbyGitHelper();
-                $branches = $git->getBranches();
+                $branches = $git->getBranches() ?? [];
                 $currentBranch = $git->getCurrentBranch();
 
                 $branchesOptions = [];
@@ -141,7 +141,7 @@ return [
                         return [
                             'hash'    => $entry['hash'],
                             'message' => $entry['message'],
-                            'date'    => $entry['date']->format(DateTime::ISO8601),
+                            'date'    => $entry['date']?->format(DateTime::ISO8601),
                             'author'  => $entry['author'],
                             'email'  => $entry['email'],
                         ];

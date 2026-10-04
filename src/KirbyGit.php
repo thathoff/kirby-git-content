@@ -8,17 +8,17 @@ use CzProject\GitPhp\GitException;
 
 class KirbyGit
 {
-    /**
-     * @var KirbyGitHelper
-     */
-    private $gitHelper = null;
+    private KirbyGitHelper $gitHelper;
 
     public function __construct()
     {
         $this->gitHelper = new KirbyGitHelper();
     }
 
-    public function getApiRoutes()
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function getApiRoutes(): array
     {
         // save instance in variable because $this is not available in closures
         $kirbyGit = $this;
@@ -91,7 +91,10 @@ class KirbyGit
         ];
     }
 
-    public function getRoutes()
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function getRoutes(): array
     {
         if (!option("thathoff.git-content.cronHooksEnabled", true)) {
             return [];
@@ -142,7 +145,11 @@ class KirbyGit
         return [$route];
     }
 
-    public function httpGitHelperAction(string $action, ?string $successMessage = null, array $args = [])
+    /**
+     * @param array<int, mixed> $args
+     * @return array{status: string, message: mixed}
+     */
+    public function httpGitHelperAction(string $action, ?string $successMessage = null, array $args = []): array
     {
         try {
             kirby()->trigger('thathoff.git-content.' . $action . ':before');
@@ -172,7 +179,10 @@ class KirbyGit
         }
     }
 
-    public function getHooks()
+    /**
+     * @return array<string, \Closure>
+     */
+    public function getHooks(): array
     {
         $gitHelper = $this->gitHelper;
 
@@ -181,7 +191,7 @@ class KirbyGit
             * Site
             */
             'site.update:after' => function ($newSite) use ($gitHelper) {
-                $gitHelper->kirbyChange('update', 'site', [$newSite->root()], $newSite);
+                $gitHelper->kirbyChange('update', 'site', [$newSite->root()], $newSite->url());
             },
 
             /*
