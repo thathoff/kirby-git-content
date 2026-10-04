@@ -7,9 +7,15 @@ on:
     branches: [main]
 
 jobs:
-  phpcs:
-    name: PHPCS
+  checks:
+    name: PHP ${{ matrix.php-version }} / Kirby ${{ matrix.kirby-version }}
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.2', '8.3', '8.4']
+        kirby-version: ['^4.0', '^5.0']
 
     steps:
       - name: Checkout
@@ -18,12 +24,31 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: ${{ matrix.php-version }}
           coverage: none
           tools: composer:v2
 
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-kirby-${{ matrix.kirby-version }}-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php-version }}-kirby-${{ matrix.kirby-version }}-
+
+      # Kirby is only required for static analysis and therefore not part of composer.json
+      - name: Install Kirby
+        run: composer require --dev --no-update "getkirby/cms:${{ matrix.kirby-version }}"
+
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        run: composer update --no-interaction --no-progress --prefer-dist
+
+      - name: Run PHPStan
+        run: composer phpstan
 
       - name: Run PHPCS
         run: composer phpcs
