@@ -8,53 +8,57 @@ use CzProject\GitPhp\GitException;
 use CzProject\GitPhp\GitRepository;
 use DateTime;
 use Exception;
+use Kirby\Cms\App;
 
 class KirbyGitHelper
 {
-    private $kirby;
-    private $repo;
-    private $repoPath;
-    private $commitMessageTemplate;
-    private $pullOnChange;
-    private $pushOnChange;
-    private $commitOnChange;
-    private $gitBin;
-    private $git;
+    private App $kirby;
+    private ?GitRepository $repo = null;
+    private string $repoPath;
+    private string $commitMessageTemplate;
+    private bool $pullOnChange = false;
+    private bool $pushOnChange = false;
+    private bool $commitOnChange = true;
+    private string $gitBin = 'git';
+    private Git $git;
 
-    public function __construct($repoPath = false)
+    public function __construct(?string $repoPath = null)
     {
         $this->kirby = kirby();
         $this->repoPath = $repoPath ? $repoPath : option('thathoff.git-content.path', $this->kirby->root("content"));
         $this->commitMessageTemplate = option('thathoff.git-content.commitMessage', ':action:(:item:): :url:');
     }
 
-    private function initRepo()
+    private function initRepo(): GitRepository
     {
         if ($this->repo) {
-            return true;
+            return $this->repo;
         }
 
         if (!class_exists("CzProject\GitPhp\Git")) {
             throw new Exception('Git class not found. Make sure you run composer install inside this plugins directory');
         }
 
-        $this->pullOnChange = option('thathoff.git-content.pull', false);
-        $this->pushOnChange = option('thathoff.git-content.push', false);
-        $this->commitOnChange = option('thathoff.git-content.commit', true);
-        $this->gitBin = option('thathoff.git-content.gitBin', '');
-        if (!$this->gitBin) {
-            $this->gitBin = 'git';
-        }
+        $this->pullOnChange = (bool) option('thathoff.git-content.pull', false);
+        $this->pushOnChange = (bool) option('thathoff.git-content.push', false);
+        $this->commitOnChange = (bool) option('thathoff.git-content.commit', true);
+        $this->gitBin = (string) option('thathoff.git-content.gitBin', '') ?: 'git';
         // force English locale for predictable command outputs
         $runner = new CliRunner('LC_ALL=C ' . $this->gitBin);
         $this->git = new Git($runner);
         $this->repo = $this->git->open($this->repoPath);
+
+        return $this->repo;
     }
 
-    public function log(int $limit = 10)
+    /**
+     * @return array<int, array{hash: string, message: string, author: string, email: string, date: DateTime|null}>
+     */
+    public function log(int $limit = 10): array
     {
         $separator = "\|";
         $format = implode($separator, ["%H", "%s", "%an", "%ae", "%cI"]);
+        $log = [];
 
         try {
             $log = $this->getRepo()->execute('log', '--pretty=format:' . $format, '--max-count=' . $limit);
@@ -63,7 +67,7 @@ class KirbyGitHelper
         }
 
         $log = array_map(
-            function ($line) use ($separator) {
+            function (string $line) use ($separator): array {
                 $entry = explode($separator, $line);
 
                 return [
@@ -71,7 +75,7 @@ class KirbyGitHelper
                     'message' => $entry[1],
                     'author' => $entry[2],
                     'email' => $entry[3],
-                    'date' => DateTime::createFromFormat(DateTime::ISO8601, $entry[4]),
+                    'date' => DateTime::createFromFormat(DateTime::ISO8601, $entry[4]) ?: null,
                 ];
             },
             $log
@@ -82,14 +86,13 @@ class KirbyGitHelper
 
     private function getRepo(): GitRepository
     {
-        if ($this->repo == null) {
-            $this->initRepo();
-        }
-
-        return $this->repo;
+        return $this->initRepo();
     }
 
-    public function commit($commitMessage, $paths, $author = null)
+    /**
+     * @param string[]|null $paths
+     */
+    public function commit(string $commitMessage, ?array $paths, ?string $author = null): void
     {
         try {
             if ($paths) {
@@ -116,7 +119,10 @@ class KirbyGitHelper
         }
     }
 
-    public function revertFiles(array $files)
+    /**
+     * @param string[] $files
+     */
+    public function revertFiles(array $files): void
     {
         if (empty($files)) {
             return;
@@ -152,7 +158,10 @@ class KirbyGitHelper
         }
     }
 
-    public function commitFiles(?string $title, ?string $description, array $files)
+    /**
+     * @param string[] $files
+     */
+    public function commitFiles(?string $title, ?string $description, array $files): void
     {
         if (!$title) {
             throw new Exception('A commit title is required.');
@@ -166,7 +175,7 @@ class KirbyGitHelper
         $this->commit($message, $files ?: null, $this->getAuthorString());
     }
 
-    private function catchGitException(GitException $e)
+    private function catchGitException(GitException $e): void
     {
         // Sometimes a change results in multiple hooks being fired (for example status change). This causes a race condition:
         // As the file change can only be committed once, latter hooks will fail when calling either 'git add' or 'git commit'.
@@ -184,7 +193,7 @@ class KirbyGitHelper
         // make the dubious ownership error more user friendly
         if (strpos($errorMessage, 'dubious ownership') !== false) {
             $phpUser = posix_getpwuid(posix_geteuid());
-            $phpUserName = $phpUser['name'];
+            $phpUserName = $phpUser !== false ? $phpUser['name'] : (string) posix_geteuid();
 
             throw new Exception('The content repository is not owned by the user running the PHP process. ' .
                 'Please change the owner to ' . $phpUserName . ', eg. by running `chown -R ' . $phpUserName . ' "' . $this->repoPath . '"`.');
@@ -207,32 +216,32 @@ class KirbyGitHelper
         throw $e;
     }
 
-    public function push()
+    public function push(): void
     {
         $this->getRepo()->push();
     }
 
-    public function getCurrentBranch()
+    public function getCurrentBranch(): string
     {
         return $this->getRepo()->getCurrentBranchName();
     }
 
-    public function pull()
+    public function pull(): void
     {
         $this->getRepo()->pull(null, ['--no-rebase']);
     }
 
-    public function fetch()
+    public function fetch(): void
     {
         $this->getRepo()->fetch();
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->getRepo()->execute('reset', '--hard', 'HEAD');
     }
 
-    public function resetToOrigin()
+    public function resetToOrigin(): void
     {
         $remoteBranch = $this->getRepo()->execute('rev-parse', '--abbrev-ref', '@{u}');
         $remoteBranch = $remoteBranch[0] ?? null;
@@ -242,7 +251,7 @@ class KirbyGitHelper
         $this->getRepo()->execute('reset', '--hard', $remoteBranch);
     }
 
-    public function removeIndexLock()
+    public function removeIndexLock(): void
     {
         if (!$this->hasIndexLock()) {
             return;
@@ -251,37 +260,43 @@ class KirbyGitHelper
         unlink($this->repoPath . '/.git/index.lock');
     }
 
-    public function hasIndexLock()
+    public function hasIndexLock(): bool
     {
         return file_exists($this->repoPath . '/.git/index.lock');
     }
 
-    public function clean()
+    public function clean(): void
     {
         $this->getRepo()->execute('clean', '-fd');
     }
 
-    public function addAll()
+    public function addAll(): void
     {
         $this->getRepo()->addAllChanges();
     }
 
-    public function checkout(string $branch)
+    public function checkout(string $branch): void
     {
         $this->getRepo()->checkout($branch);
     }
 
-    public function getBranches()
+    /**
+     * @return string[]|null
+     */
+    public function getBranches(): ?array
     {
         return $this->getRepo()->getLocalBranches();
     }
 
-    public function createBranch(string $branch)
+    public function createBranch(string $branch): GitRepository
     {
         return $this->getRepo()->createBranch($branch, true);
     }
 
-    public function status()
+    /**
+     * @return array{hasRemote: bool, diffFromOrigin: int|null, files: array<int, array{code: string, filename: string}>}
+     */
+    public function status(): array
     {
         /* git returns a two character code for every entry in 'git status --porcelain'. these codes are shown below, split in index and worktree codes.
            the first code character always refers to the index state of the file, the second for the worktree
@@ -302,8 +317,8 @@ class KirbyGitHelper
 
                 preg_match('/\+\d+/', $line, $ahead);
                 preg_match('/\-\d+/', $line, $behind);
-                $ahead = substr($ahead[0], 1);
-                $behind = substr($behind[0], 1);
+                $ahead = (int) substr($ahead[0] ?? '+0', 1);
+                $behind = (int) substr($behind[0] ?? '-0', 1);
 
                 $diff = $ahead - $behind;
                 break;
@@ -337,7 +352,10 @@ class KirbyGitHelper
         return $user->name()->or($user->email()) . " <" . $user->email() . ">";
     }
 
-    public function kirbyChange($action, $item, $paths, $url = '')
+    /**
+     * @param string[] $paths
+     */
+    public function kirbyChange(string $action, string $item, array $paths, string $url = ''): void
     {
         try {
             $this->initRepo();
@@ -374,7 +392,7 @@ class KirbyGitHelper
         }
     }
 
-    private function commitMessage($action, $item, $url)
+    private function commitMessage(string $action, string $item, string $url): string
     {
         return strtr($this->commitMessageTemplate, [
             ':action:' => $action,
