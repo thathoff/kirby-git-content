@@ -56,11 +56,11 @@ class KirbyGitHelper
         $separator = "\|";
         $format = implode($separator, ["%H", "%s", "%an", "%ae", "%cI"]);
 
-		try {
-			$log = $this->getRepo()->execute('log', '--pretty=format:' . $format, '--max-count=' . $limit);
-		} catch (GitException $e) {
-			$this->catchGitException($e);
-		}
+        try {
+            $log = $this->getRepo()->execute('log', '--pretty=format:' . $format, '--max-count=' . $limit);
+        } catch (GitException $e) {
+            $this->catchGitException($e);
+        }
 
         $log = array_map(
             function ($line) use ($separator) {
@@ -112,7 +112,7 @@ class KirbyGitHelper
 
             $this->getRepo()->execute(...$args);
         } catch (GitException $e) {
-			$this->catchGitException($e);
+            $this->catchGitException($e);
         }
     }
 
@@ -166,46 +166,46 @@ class KirbyGitHelper
         $this->commit($message, $files ?: null, $this->getAuthorString());
     }
 
-	private function catchGitException(GitException $e) {
-		// Sometimes a change results in multiple hooks being fired (for example status change). This causes a race condition:
-		// As the file change can only be committed once, latter hooks will fail when calling either 'git add' or 'git commit'.
-		// The files in question have actually been committed already in an earlier hook call and therefore we may ignore the errors.
-		// We don’t run git status in front because that is much slower in large repositories.
-		// Refer to #84
+    private function catchGitException(GitException $e)
+    {
+        // Sometimes a change results in multiple hooks being fired (for example status change). This causes a race condition:
+        // As the file change can only be committed once, latter hooks will fail when calling either 'git add' or 'git commit'.
+        // The files in question have actually been committed already in an earlier hook call and therefore we may ignore the errors.
+        // We don’t run git status in front because that is much slower in large repositories.
+        // Refer to #84
 
-		// We concat the actual git error message, the error output and regular output together to then search for "exclusion strings".
-		// For some reason, the output is sometimes obtainable using getErrorOutput() and sometimes using getOutput().
-		$errorMessage = $e->getMessage();
-		if ($runnerResult = $e->getRunnerResult()) {
-			$errorMessage .= "\n\n" . implode("\n", $runnerResult->getErrorOutput()) . "\n\n" . implode("\n", $runnerResult->getOutput());
-		}
+        // We concat the actual git error message, the error output and regular output together to then search for "exclusion strings".
+        // For some reason, the output is sometimes obtainable using getErrorOutput() and sometimes using getOutput().
+        $errorMessage = $e->getMessage();
+        if ($runnerResult = $e->getRunnerResult()) {
+            $errorMessage .= "\n\n" . implode("\n", $runnerResult->getErrorOutput()) . "\n\n" . implode("\n", $runnerResult->getOutput());
+        }
 
-		// make the dubious ownership error more user friendly
-		if (strpos($errorMessage, 'dubious ownership') !== false) {
-			$phpUser = posix_getpwuid(posix_geteuid());
-			$phpUserName = $phpUser['name'];
+        // make the dubious ownership error more user friendly
+        if (strpos($errorMessage, 'dubious ownership') !== false) {
+            $phpUser = posix_getpwuid(posix_geteuid());
+            $phpUserName = $phpUser['name'];
 
-			throw new Exception('The content repository is not owned by the user running the PHP process. ' .
-				'Please change the owner to ' . $phpUserName . ', eg. by running `chown -R ' . $phpUserName . ' "' . $this->repoPath . '"`.'
-			);
-		}
+            throw new Exception('The content repository is not owned by the user running the PHP process. ' .
+                'Please change the owner to ' . $phpUserName . ', eg. by running `chown -R ' . $phpUserName . ' "' . $this->repoPath . '"`.');
+        }
 
-		$ignoredErrors = [
-			'nothing to commit',
-			'did not match any files'
-		];
+        $ignoredErrors = [
+            'nothing to commit',
+            'did not match any files'
+        ];
 
-		// if the error message is not in the ignored errors, throw the exception
-		// check if one of the ignored errors is in the error message
-		foreach ($ignoredErrors as $ignoredError) {
-			if (strpos($errorMessage, $ignoredError) !== false) {
-				return;
-			}
-		}
+        // if the error message is not in the ignored errors, throw the exception
+        // check if one of the ignored errors is in the error message
+        foreach ($ignoredErrors as $ignoredError) {
+            if (strpos($errorMessage, $ignoredError) !== false) {
+                return;
+            }
+        }
 
-		// otherwise throw the exception
-		throw $e;
-	}
+        // otherwise throw the exception
+        throw $e;
+    }
 
     public function push()
     {
@@ -281,12 +281,13 @@ class KirbyGitHelper
         return $this->getRepo()->createBranch($branch, true);
     }
 
-    public function status() {
+    public function status()
+    {
         /* git returns a two character code for every entry in 'git status --porcelain'. these codes are shown below, split in index and worktree codes.
            the first code character always refers to the index state of the file, the second for the worktree
            for more info refer to https://git-scm.com/docs/git-status#_short_format
         */
-        $upstreamResponse = $this->getRepo()->execute('status',  '--porcelain=2', '--branch');
+        $upstreamResponse = $this->getRepo()->execute('status', '--porcelain=2', '--branch');
         $filesResponse = $this->getRepo()->execute('status', '--porcelain');
 
         // REMOTE INFORMATION --------------
