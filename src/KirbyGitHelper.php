@@ -370,7 +370,7 @@ class KirbyGitHelper
                 throw new Exception('Unable to update git: ' . $message);
             }
 
-            error_log('Unable to update git: ' . $message, E_USER_ERROR);
+            error_log('Unable to update git: ' . $message);
         }
     }
 
