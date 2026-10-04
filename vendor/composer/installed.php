@@ -3,7 +3,7 @@
         'name' => 'thathoff/kirby-git-content',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '81acf2fbdaa403259ce1717c7af0014f95b3c09a',
+        'reference' => '7c3a60335289818eec6a1b134f85e34d9bfadfca',
         'type' => 'kirby-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'czproject/git-php' => array(
-            'pretty_version' => 'v4.5.0',
-            'version' => '4.5.0.0',
-            'reference' => '3ea910e188849d5e239d65167010c05196310915',
+            'pretty_version' => 'v4.6.0',
+            'version' => '4.6.0.0',
+            'reference' => '1f1ecc92aea9ee31120f4f5b759f5aa947420b0a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../czproject/git-php',
             'aliases' => array(),
@@ -31,7 +31,7 @@
         'thathoff/kirby-git-content' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '81acf2fbdaa403259ce1717c7af0014f95b3c09a',
+            'reference' => '7c3a60335289818eec6a1b134f85e34d9bfadfca',
             'type' => 'kirby-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
