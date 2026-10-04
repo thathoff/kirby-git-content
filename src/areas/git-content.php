@@ -141,7 +141,7 @@ return [
                         return [
                             'hash'    => $entry['hash'],
                             'message' => $entry['message'],
-                            'date'    => $entry['date']?->format(DateTime::ISO8601),
+                            'date'    => $entry['date']?->format(DateTimeInterface::ATOM),
                             'author'  => $entry['author'],
                             'email'  => $entry['email'],
                         ];
