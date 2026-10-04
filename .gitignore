@@ -31,3 +31,4 @@ kirby
 # dev dependencies (install with `composer install`, restore with `composer install --no-dev` before committing)
 /vendor/bin
 /vendor/squizlabs
+/vendor/phpstan

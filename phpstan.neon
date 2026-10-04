@@ -1,0 +1,9 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - index.php
+    bootstrapFiles:
+        - vendor/autoload.php
+    excludePaths:
+        - vendor
