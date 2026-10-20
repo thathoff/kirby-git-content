@@ -95,9 +95,15 @@ class KirbyGitHelper
      * @param string[] $commitOnlyPaths paths which are only passed to `git commit`, not to `git add`
      *                                  (eg. staged deletions or the original path of a staged rename,
      *                                  which `git add` would reject)
+     * @param bool $ignoreRaceConditionErrors whether to ignore errors caused by hooks committing the same change (#84)
      */
-    public function commit(string $commitMessage, ?array $paths, ?string $author = null, array $commitOnlyPaths = []): void
-    {
+    public function commit(
+        string $commitMessage,
+        ?array $paths,
+        ?string $author = null,
+        array $commitOnlyPaths = [],
+        bool $ignoreRaceConditionErrors = true
+    ): void {
         try {
             if ($paths) {
                 $uniquePaths = array_unique($paths);
@@ -119,7 +125,7 @@ class KirbyGitHelper
 
             $this->getRepo()->execute(...$args);
         } catch (GitException $e) {
-            $this->catchGitException($e);
+            $this->catchGitException($e, $ignoreRaceConditionErrors);
         }
     }
 
@@ -207,10 +213,11 @@ class KirbyGitHelper
             }
         }
 
-        $this->commit($message, $files ? array_values($addFiles) : null, $this->getAuthorString(), $commitOnlyFiles);
+        // a manual commit is not affected by the hook race condition, so all errors are shown to the user
+        $this->commit($message, $files ? array_values($addFiles) : null, $this->getAuthorString(), $commitOnlyFiles, false);
     }
 
-    private function catchGitException(GitException $e): void
+    private function catchGitException(GitException $e, bool $ignoreRaceConditionErrors = true): void
     {
         // Sometimes a change results in multiple hooks being fired (for example status change). This causes a race condition:
         // As the file change can only be committed once, latter hooks will fail when calling either 'git add' or 'git commit'.
@@ -234,10 +241,10 @@ class KirbyGitHelper
                 'Please change the owner to ' . $phpUserName . ', eg. by running `chown -R ' . $phpUserName . ' "' . $this->repoPath . '"`.');
         }
 
-        $ignoredErrors = [
+        $ignoredErrors = $ignoreRaceConditionErrors ? [
             'nothing to commit',
             'did not match any files'
-        ];
+        ] : [];
 
         // if the error message is not in the ignored errors, throw the exception
         // check if one of the ignored errors is in the error message
