@@ -264,20 +264,31 @@ export default {
     },
   },
   methods: {
+    // returns whether the request was successful and shows the error otherwise
+    // (errors thrown in dialog submit listeners are not displayed by the panel)
+    post: async function (path, data) {
+      try {
+        await panel.app.$api.post(path, data);
+        return true;
+      } catch (error) {
+        panel.notification.error(error);
+        return false;
+      }
+    },
     pull: async function () {
-      await panel.app.$api.post("/git-content/pull");
+      await this.post("/git-content/pull");
       this.$reload();
     },
     push: async function () {
-      await panel.app.$api.post("/git-content/push");
+      await this.post("/git-content/push");
       this.$reload();
     },
     fetch: async function () {
-      await panel.app.$api.post("/git-content/fetch");
+      await this.post("/git-content/fetch");
       this.$reload();
     },
     removeIndexLock: async function () {
-      await panel.app.$api.post("/git-content/remove-index-lock");
+      await this.post("/git-content/remove-index-lock");
       this.$reload();
     },
     toggleSelectAll() {
@@ -308,9 +319,10 @@ export default {
         },
         on: {
           submit: async () => {
-            await panel.app.$api.post("/git-content/revert", { files });
-            panel.dialog.close();
-            this.$reload();
+            if (await this.post("/git-content/revert", { files })) {
+              panel.dialog.close();
+              this.$reload();
+            }
           },
         },
       });
@@ -346,13 +358,15 @@ export default {
         },
         on: {
           submit: async (values) => {
-            await panel.app.$api.post("/git-content/commit", {
+            const success = await this.post("/git-content/commit", {
               title: values.title,
               description: values.description,
               files,
             });
-            panel.dialog.close();
-            this.$reload();
+            if (success) {
+              panel.dialog.close();
+              this.$reload();
+            }
           },
         },
       });
