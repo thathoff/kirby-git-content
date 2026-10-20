@@ -145,6 +145,20 @@ The maintainer has switched, be prepared for config option name changes in versi
 
 
 <a name="2.2.2"></a>
+## [5.5.1](https://github.com/thathoff/kirby-git-content/compare/v5.5.0...v5.5.1) (2026-10-20)
+
+
+### Bug Fixes
+
+* check permissions in api routes and dialogs ([ae679e2](https://github.com/thathoff/kirby-git-content/commit/ae679e29b1b5205feb0adb7b1f68d36be3780536))
+* commit staged deletions of selected files ([10f8ae5](https://github.com/thathoff/kirby-git-content/commit/10f8ae54cba3c2e6ece58f2d02aa79668075d45f))
+* display api errors in the panel ([7c98fc3](https://github.com/thathoff/kirby-git-content/commit/7c98fc38da15dce2c56311632484bcc8da71fa2a))
+* handle renamed files when committing or reverting selected files ([d86a34f](https://github.com/thathoff/kirby-git-content/commit/d86a34fde7bde11bc8e046d325f2d7b4a6344ff6))
+* only commit changed files and treat paths literally ([1fc38f8](https://github.com/thathoff/kirby-git-content/commit/1fc38f847ee108f9fc20754206ba8f29753caa01))
+* revert staged new files without failing the whole revert ([9312b6f](https://github.com/thathoff/kirby-git-content/commit/9312b6f3c993f515c8b5f1a5ea7ae8eb98ee2537))
+* set error status codes via kirby response to avoid php 8.5 warning ([7847d8a](https://github.com/thathoff/kirby-git-content/commit/7847d8a90b043b95dbc315b059268a76bb682625))
+* show git errors when committing selected files ([7acb800](https://github.com/thathoff/kirby-git-content/commit/7acb800ed49265fe00c6a9d7ed403ca40b753611))
+
 ## [5.5.0](https://github.com/thathoff/kirby-git-content/compare/v5.4.0...v5.5.0) (2026-10-04)
 
 
