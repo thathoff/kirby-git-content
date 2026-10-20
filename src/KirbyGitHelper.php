@@ -93,7 +93,8 @@ class KirbyGitHelper
     /**
      * @param string[]|null $paths
      * @param string[] $commitOnlyPaths paths which are only passed to `git commit`, not to `git add`
-     *                                  (eg. the original path of a staged rename, which `git add` would reject)
+     *                                  (eg. staged deletions or the original path of a staged rename,
+     *                                  which `git add` would reject)
      */
     public function commit(string $commitMessage, ?array $paths, ?string $author = null, array $commitOnlyPaths = []): void
     {
@@ -111,9 +112,9 @@ class KirbyGitHelper
 
             // restrict the commit to the given paths, so unrelated staged
             // changes (eg. from another file selection) are left untouched
-            if ($paths) {
+            if ($paths || $commitOnlyPaths) {
                 $args[] = '--';
-                $args = array_merge($args, array_unique(array_merge($paths, $commitOnlyPaths)));
+                $args = array_merge($args, array_unique(array_merge($paths ?? [], $commitOnlyPaths)));
             }
 
             $this->getRepo()->execute(...$args);
@@ -189,15 +190,24 @@ class KirbyGitHelper
             $message .= "\n\n" . $description;
         }
 
-        // for staged renames, the original filename needs to be committed as well
-        $origFiles = [];
+        // staged deletions and the original filename of staged renames are no longer
+        // present in the index, so they can only be passed to `git commit`
+        $addFiles = $files;
+        $commitOnlyFiles = [];
         foreach ($this->status()['files'] as $file) {
-            if (isset($file['origFilename']) && in_array($file['filename'], $files, true)) {
-                $origFiles[] = $file['origFilename'];
+            if (!in_array($file['filename'], $files, true)) {
+                continue;
+            }
+
+            if (isset($file['origFilename'])) {
+                $commitOnlyFiles[] = $file['origFilename'];
+            } elseif ($file['code'][0] === 'D') {
+                $commitOnlyFiles[] = $file['filename'];
+                $addFiles = array_diff($addFiles, [$file['filename']]);
             }
         }
 
-        $this->commit($message, $files ?: null, $this->getAuthorString(), $origFiles);
+        $this->commit($message, $files ? array_values($addFiles) : null, $this->getAuthorString(), $commitOnlyFiles);
     }
 
     private function catchGitException(GitException $e): void
