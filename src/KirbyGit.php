@@ -170,8 +170,11 @@ class KirbyGit
             ];
 
             // enhance message when exception is a GitException
+            // some errors (eg. "nothing to commit") are only printed to stdout
             if ($e instanceof GitException && $runnerResult = $e->getRunnerResult()) {
-                $result['message'] = implode("\n", $runnerResult->getErrorOutput());
+                $result['message'] = implode("\n", $runnerResult->getErrorOutput())
+                    ?: implode("\n", $runnerResult->getOutput())
+                    ?: $e->getMessage();
             }
 
             Header::panic();
