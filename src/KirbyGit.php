@@ -3,7 +3,6 @@
 namespace Thathoff\GitContent;
 
 use Exception;
-use Kirby\Http\Header;
 use CzProject\GitPhp\GitException;
 
 class KirbyGit
@@ -135,7 +134,7 @@ class KirbyGit
                     return $helper->httpGitHelperAction('resetToOrigin', "successfully reset the content folder");
             }
 
-            Header::missing();
+            kirby()->response()->code(404);
             return [
                 "status" => "error",
                 "data" => "Unknown command " . $gitCommand . ".",
@@ -167,6 +166,8 @@ class KirbyGit
             $result = [
                 "status" => "error",
                 "message" => $e->getMessage(),
+                // used as status code by api routes
+                "code" => 500,
             ];
 
             // enhance message when exception is a GitException
@@ -177,7 +178,8 @@ class KirbyGit
                     ?: $e->getMessage();
             }
 
-            Header::panic();
+            // used as status code by regular routes (setting the header directly breaks the response on PHP 8.5)
+            kirby()->response()->code(500);
             return $result;
         }
     }
