@@ -92,8 +92,10 @@ class KirbyGitHelper
 
     /**
      * @param string[]|null $paths
+     * @param string[] $commitOnlyPaths paths which are only passed to `git commit`, not to `git add`
+     *                                  (eg. the original path of a staged rename, which `git add` would reject)
      */
-    public function commit(string $commitMessage, ?array $paths, ?string $author = null): void
+    public function commit(string $commitMessage, ?array $paths, ?string $author = null, array $commitOnlyPaths = []): void
     {
         try {
             if ($paths) {
@@ -111,7 +113,7 @@ class KirbyGitHelper
             // changes (eg. from another file selection) are left untouched
             if ($paths) {
                 $args[] = '--';
-                $args = array_merge($args, array_unique($paths));
+                $args = array_merge($args, array_unique(array_merge($paths, $commitOnlyPaths)));
             }
 
             $this->getRepo()->execute(...$args);
@@ -131,6 +133,7 @@ class KirbyGitHelper
 
         $trackedFiles = [];
         $untrackedFiles = [];
+        $renamedFiles = [];
 
         foreach ($this->status()['files'] as $file) {
             if (!in_array($file['filename'], $files, true)) {
@@ -139,17 +142,27 @@ class KirbyGitHelper
 
             if (strpos($file['code'], '?') !== false) {
                 $untrackedFiles[] = $file['filename'];
+            } elseif (isset($file['origFilename'])) {
+                // a staged rename: restore the original file and remove the new one
+                $trackedFiles[] = $file['origFilename'];
+                $renamedFiles[] = $file['filename'];
             } else {
                 $trackedFiles[] = $file['filename'];
             }
         }
 
         try {
-            if ($trackedFiles) {
+            if ($trackedFiles || $renamedFiles) {
                 // unstage first, so files that were only `git add`ed (eg. new files) are included in the checkout below
-                $this->getRepo()->execute('reset', 'HEAD', '--', ...$trackedFiles);
+                $this->getRepo()->execute('reset', 'HEAD', '--', ...$trackedFiles, ...$renamedFiles);
+            }
+
+            if ($trackedFiles) {
                 $this->getRepo()->execute('checkout', 'HEAD', '--', ...$trackedFiles);
             }
+
+            // after unstaging, the new files of renames are untracked
+            $untrackedFiles = array_merge($untrackedFiles, $renamedFiles);
 
             if ($untrackedFiles) {
                 $this->getRepo()->execute('clean', '-fd', '--', ...$untrackedFiles);
@@ -173,7 +186,15 @@ class KirbyGitHelper
             $message .= "\n\n" . $description;
         }
 
-        $this->commit($message, $files ?: null, $this->getAuthorString());
+        // for staged renames, the original filename needs to be committed as well
+        $origFiles = [];
+        foreach ($this->status()['files'] as $file) {
+            if (isset($file['origFilename']) && in_array($file['filename'], $files, true)) {
+                $origFiles[] = $file['origFilename'];
+            }
+        }
+
+        $this->commit($message, $files ?: null, $this->getAuthorString(), $origFiles);
     }
 
     private function catchGitException(GitException $e): void
@@ -295,7 +316,7 @@ class KirbyGitHelper
     }
 
     /**
-     * @return array{hasRemote: bool, diffFromOrigin: int|null, files: array<int, array{code: string, filename: string}>}
+     * @return array{hasRemote: bool, diffFromOrigin: int|null, files: array<int, array{code: string, filename: string, origFilename?: string}>}
      */
     public function status(): array
     {
@@ -304,7 +325,8 @@ class KirbyGitHelper
            for more info refer to https://git-scm.com/docs/git-status#_short_format
         */
         $upstreamResponse = $this->getRepo()->execute('status', '--porcelain=2', '--branch');
-        $filesResponse = $this->getRepo()->execute('status', '--porcelain');
+        // use -z, so filenames are not quoted and renames are reported as separate paths
+        $filesResponse = $this->getRepo()->run('status', '--porcelain', '-z')->getOutputAsString();
 
         // REMOTE INFORMATION --------------
         // the first few lines (length depending on whether remote branch is available) are branch information.
@@ -327,14 +349,26 @@ class KirbyGitHelper
         }
 
         // CHANGED FILES -------------------
-        // one line per file. line looks like this:
+        // one NUL terminated entry per file. entry looks like this:
         // XY filename.txt
+        // renames and copies are followed by an additional entry containing the original filename
         $files = [];
-        foreach ($filesResponse as $key => $file) {
-            $files[$key] = [
-                'code' => substr($file, 0, 2),
-                'filename' => substr($file, 3)
+        $entries = explode("\0", $filesResponse);
+        while (($entry = array_shift($entries)) !== null) {
+            if ($entry === '') {
+                continue;
+            }
+
+            $file = [
+                'code' => substr($entry, 0, 2),
+                'filename' => substr($entry, 3),
             ];
+
+            if (strpbrk($file['code'], 'RC') !== false) {
+                $file['origFilename'] = (string) array_shift($entries);
+            }
+
+            $files[] = $file;
         }
 
         return [
