@@ -27,6 +27,8 @@ class KirbyGit
                 'pattern' => 'git-content/push',
                 'method'  => 'POST',
                 'action'  => function () use ($kirbyGit) {
+                    Permissions::check('push');
+
                     return $kirbyGit->httpGitHelperAction('push', "successfully pushed the content folder");
                 },
             ],
@@ -34,6 +36,8 @@ class KirbyGit
                 'pattern' => 'git-content/pull',
                 'method'  => 'POST',
                 'action'  => function () use ($kirbyGit) {
+                    Permissions::check('pull');
+
                     return $kirbyGit->httpGitHelperAction('pull', "successfully pulled the content folder");
                 },
             ],
@@ -41,6 +45,8 @@ class KirbyGit
                 'pattern' => 'git-content/fetch',
                 'method'  => 'POST',
                 'action'  => function () use ($kirbyGit) {
+                    Permissions::check('fetch');
+
                     return $kirbyGit->httpGitHelperAction('fetch', "successfully fetched remote changes");
                 },
             ],
@@ -48,6 +54,8 @@ class KirbyGit
                 'pattern' => 'git-content/reset',
                 'method'  => 'POST',
                 'action'  => function () use ($kirbyGit) {
+                    Permissions::check('reset');
+
                     return $kirbyGit->httpGitHelperAction('reset', "successfully reset the content folder");
                 },
             ],
@@ -55,6 +63,8 @@ class KirbyGit
                 'pattern' => 'git-content/revert',
                 'method'  => 'POST',
                 'action'  => function () use ($kirbyGit) {
+                    Permissions::check('revert');
+
                     return $kirbyGit->httpGitHelperAction(
                         'revertFiles',
                         "successfully reverted the selected files",
@@ -66,6 +76,8 @@ class KirbyGit
                 'pattern' => 'git-content/commit',
                 'method'  => 'POST',
                 'action'  => function () use ($kirbyGit) {
+                    Permissions::check('commit');
+
                     return $kirbyGit->httpGitHelperAction(
                         'commitFiles',
                         "successfully committed the selected files",
@@ -77,6 +89,8 @@ class KirbyGit
                 'pattern' => 'git-content/remove-index-lock',
                 'method'  => 'POST',
                 'action'  => function () use ($kirbyGit) {
+                    Permissions::check('removeIndexLock');
+
                     return $kirbyGit->httpGitHelperAction('removeIndexLock', "successfully removed the index lock");
                 },
             ],
@@ -84,6 +98,8 @@ class KirbyGit
                 'pattern' => 'git-content/status',
                 'method' => 'GET',
                 'action' => function () use ($kirbyGit) {
+                    Permissions::check();
+
                     return $kirbyGit->httpGitHelperAction('status', null); // response message is response of 'git status'
                 }
             ]

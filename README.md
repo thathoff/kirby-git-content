@@ -126,6 +126,7 @@ To enable or disable buttons globally, set the `buttons` option to an array of b
 
 - `fetch`: Fetches the latest changes from the remote repository.
 - `commit`: Allows to commit changes to the repository.
+- `revert`: Allows to revert uncommitted changes.
 - `pull`: Allows to pull changes from the remote repository.
 - `push`: Allows to push changes to the remote repository.
 - `createBranch`: Allows to create a new branch.
@@ -151,7 +152,8 @@ permissions:
     fetch: false
 ```
 
-You can use the same keys as in the `buttons` option to enable or disable buttons per role.
+You can use the same keys as in the `buttons` option to enable or disable buttons per role. Disabled actions are
+also rejected by the API endpoints, not only hidden in the panel.
 
 ### Custom Commit Message
 

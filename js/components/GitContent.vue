@@ -110,6 +110,7 @@ export default {
         push: true,
         createBranch: true,
         switchBranch: true,
+        removeIndexLock: true,
         ...this.buttons,
       };
     },
@@ -200,7 +201,7 @@ export default {
 
       const filteredButtons = buttons.filter((button) => this.buttonMap[button.key]);
 
-      if (this.hasIndexLock) {
+      if (this.hasIndexLock && this.buttonMap.removeIndexLock) {
         filteredButtons.unshift({
           key: "removeIndexLock",
           text: "Remove Index Lock",
