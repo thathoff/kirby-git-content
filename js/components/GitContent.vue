@@ -22,7 +22,9 @@
             :value="isFileSelected(file.filename)"
             @input="toggleFile(file.filename)"
           />
-          <span class="k-git-content-status-filename">{{ file.filename }}</span>
+          <span class="k-git-content-status-filename">
+            <template v-if="file.origFilename">{{ file.origFilename }} → </template>{{ file.filename }}
+          </span>
           <span class="k-git-content-status-code">{{ file.code }}</span>
         </li>
       </ul>
