@@ -133,7 +133,8 @@ class KirbyGitHelper
 
         $trackedFiles = [];
         $untrackedFiles = [];
-        $renamedFiles = [];
+        // files which are only present in the index, but not in HEAD
+        $addedFiles = [];
 
         foreach ($this->status()['files'] as $file) {
             if (!in_array($file['filename'], $files, true)) {
@@ -145,24 +146,26 @@ class KirbyGitHelper
             } elseif (isset($file['origFilename'])) {
                 // a staged rename: restore the original file and remove the new one
                 $trackedFiles[] = $file['origFilename'];
-                $renamedFiles[] = $file['filename'];
+                $addedFiles[] = $file['filename'];
+            } elseif ($file['code'][0] === 'A') {
+                $addedFiles[] = $file['filename'];
             } else {
                 $trackedFiles[] = $file['filename'];
             }
         }
 
         try {
-            if ($trackedFiles || $renamedFiles) {
-                // unstage first, so files that were only `git add`ed (eg. new files) are included in the checkout below
-                $this->getRepo()->execute('reset', 'HEAD', '--', ...$trackedFiles, ...$renamedFiles);
+            if ($trackedFiles || $addedFiles) {
+                // unstage first, so staged changes are included in the checkout below
+                $this->getRepo()->execute('reset', 'HEAD', '--', ...$trackedFiles, ...$addedFiles);
             }
 
             if ($trackedFiles) {
                 $this->getRepo()->execute('checkout', 'HEAD', '--', ...$trackedFiles);
             }
 
-            // after unstaging, the new files of renames are untracked
-            $untrackedFiles = array_merge($untrackedFiles, $renamedFiles);
+            // after unstaging, added files are untracked
+            $untrackedFiles = array_merge($untrackedFiles, $addedFiles);
 
             if ($untrackedFiles) {
                 $this->getRepo()->execute('clean', '-fd', '--', ...$untrackedFiles);
