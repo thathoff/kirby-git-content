@@ -1,6 +1,7 @@
 <?php
 
 use Thathoff\GitContent\KirbyGitHelper;
+use Thathoff\GitContent\Permissions;
 
 return [
     'label' => option('thathoff.git-content.menuLabel', 'Git Content'),
@@ -19,6 +20,8 @@ return [
                 ]
             ],
             'submit' => function () {
+                Permissions::check('reset');
+
                 $git = new KirbyGitHelper();
                 $git->resetToOrigin();
                 $git->clean();
@@ -63,6 +66,8 @@ return [
                 ];
             },
             'submit' => function () {
+                Permissions::check('switchBranch');
+
                 $branchName = get('branch');
 
                 $git = new KirbyGitHelper();
@@ -87,6 +92,8 @@ return [
                 ],
             ],
             'submit' => function () {
+                Permissions::check('createBranch');
+
                 $branchName = get('branch');
 
                 $git = new KirbyGitHelper();
@@ -101,40 +108,7 @@ return [
             'action'  => function () {
                 $git = new Thathoff\GitContent\KirbyGitHelper();
 
-                $defaultButtons = [
-                    'revert' => true,
-                    'reset' => false,
-                    'commit' => true,
-                    'pull' => true,
-                    'push' => true,
-                    'fetch' => true,
-                    'createBranch' => true,
-                    'switchBranch' => true,
-                ];
-
-                $configuredButtons = option('thathoff.git-content.buttons', []);
-                if (!is_array($configuredButtons)) {
-                    $configuredButtons = [];
-                }
-
-                $normalizedButtons = [];
-                foreach ($configuredButtons as $key => $value) {
-                    if (array_key_exists($key, $defaultButtons)) {
-                        $normalizedButtons[$key] = (bool)$value;
-                    }
-                }
-
-                $buttons = array_merge($defaultButtons, $normalizedButtons);
-
-                if ($user = kirby()->user()) {
-                    $rolePermissions = $user->role()->permissions();
-
-                    foreach ($buttons as $key => $isEnabled) {
-                        if ($rolePermissions->for('thathoff.git-content', $key, true) === false) {
-                            $buttons[$key] = false;
-                        }
-                    }
-                }
+                $buttons = Permissions::buttons();
 
                 $logFormatted = array_map(
                     function ($entry) {
@@ -150,11 +124,6 @@ return [
                 );
 
                 $disableBranchManagement = (bool)option('thathoff.git-content.disableBranchManagement', false);
-
-                if ($disableBranchManagement) {
-                    $buttons['createBranch'] = false;
-                    $buttons['switchBranch'] = false;
-                }
 
                 return [
                     'component' => 'git-content',
