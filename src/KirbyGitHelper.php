@@ -13,6 +13,9 @@ use Kirby\Cms\App;
 
 class KirbyGitHelper
 {
+    // treat paths as plain file paths instead of patterns (eg. `*`, `[...]` or `:(exclude)`)
+    private const LITERAL_PATHSPECS = '--literal-pathspecs';
+
     private App $kirby;
     private ?GitRepository $repo = null;
     private string $repoPath;
@@ -107,10 +110,10 @@ class KirbyGitHelper
         try {
             if ($paths) {
                 $uniquePaths = array_unique($paths);
-                $this->getRepo()->execute('add', '--', ...$uniquePaths);
+                $this->getRepo()->execute(self::LITERAL_PATHSPECS, 'add', '--', ...$uniquePaths);
             }
 
-            $args = ['commit', '-m', $commitMessage];
+            $args = [self::LITERAL_PATHSPECS, 'commit', '-m', $commitMessage];
 
             if ($author) {
                 $args[] = "--author=" . $author;
@@ -164,18 +167,18 @@ class KirbyGitHelper
         try {
             if ($trackedFiles || $addedFiles) {
                 // unstage first, so staged changes are included in the checkout below
-                $this->getRepo()->execute('reset', 'HEAD', '--', ...$trackedFiles, ...$addedFiles);
+                $this->getRepo()->execute(self::LITERAL_PATHSPECS, 'reset', 'HEAD', '--', ...$trackedFiles, ...$addedFiles);
             }
 
             if ($trackedFiles) {
-                $this->getRepo()->execute('checkout', 'HEAD', '--', ...$trackedFiles);
+                $this->getRepo()->execute(self::LITERAL_PATHSPECS, 'checkout', 'HEAD', '--', ...$trackedFiles);
             }
 
             // after unstaging, added files are untracked
             $untrackedFiles = array_merge($untrackedFiles, $addedFiles);
 
             if ($untrackedFiles) {
-                $this->getRepo()->execute('clean', '-fd', '--', ...$untrackedFiles);
+                $this->getRepo()->execute(self::LITERAL_PATHSPECS, 'clean', '-fd', '--', ...$untrackedFiles);
             }
         } catch (GitException $e) {
             $this->catchGitException($e);
@@ -196,9 +199,10 @@ class KirbyGitHelper
             $message .= "\n\n" . $description;
         }
 
+        // only commit files which are actually changed, so no arbitrary paths can be passed
         // staged deletions and the original filename of staged renames are no longer
         // present in the index, so they can only be passed to `git commit`
-        $addFiles = $files;
+        $addFiles = [];
         $commitOnlyFiles = [];
         foreach ($this->status()['files'] as $file) {
             if (!in_array($file['filename'], $files, true)) {
@@ -206,15 +210,22 @@ class KirbyGitHelper
             }
 
             if (isset($file['origFilename'])) {
+                $addFiles[] = $file['filename'];
                 $commitOnlyFiles[] = $file['origFilename'];
             } elseif ($file['code'][0] === 'D') {
                 $commitOnlyFiles[] = $file['filename'];
-                $addFiles = array_diff($addFiles, [$file['filename']]);
+            } else {
+                $addFiles[] = $file['filename'];
             }
         }
 
+        // without any paths, `git commit` would commit everything which is staged
+        if (!$addFiles && !$commitOnlyFiles) {
+            throw new Exception('None of the selected files have uncommitted changes.');
+        }
+
         // a manual commit is not affected by the hook race condition, so all errors are shown to the user
-        $this->commit($message, $files ? array_values($addFiles) : null, $this->getAuthorString(), $commitOnlyFiles, false);
+        $this->commit($message, $addFiles, $this->getAuthorString(), $commitOnlyFiles, false);
     }
 
     private function catchGitException(GitException $e, bool $ignoreRaceConditionErrors = true): void
