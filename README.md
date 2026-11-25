@@ -6,7 +6,11 @@ This is a plugin for [Kirby](http://getkirby.com/) that commits and pushes conte
 
 ## Requirements
 
-This plugin requires **Kirby 6**, **PHP 8.3 or newer** and **git version > 2.24**.
+This plugin requires **Kirby 6**, **PHP 8.3 to 8.5** and **git version > 2.24**.
+
+PHP 8.6 is not supported yet, because [czproject/git-php](https://github.com/czproject/git-php), which is used
+to communicate with git, does not support it at the time of writing. A newer version with PHP 8.6 support might
+be available in the meantime.
 
 For Kirby 3.6 up to Kirby 5, use version 5.x of this plugin:
 `composer require thathoff/kirby-git-content:^5.0`
