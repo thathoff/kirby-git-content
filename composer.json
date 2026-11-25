@@ -19,11 +19,13 @@
   },
   "require": {
     "czproject/git-php": "^4.4.0",
-    "getkirby/composer-installer": "^1.2"
+    "getkirby/composer-installer": "^1.2",
+    "php": ">=8.3"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.10",
-    "phpstan/phpstan": "^2.0"
+    "phpstan/phpstan": "^2.0",
+    "getkirby/cms": "^6.0"
   },
   "scripts": {
     "phpstan": "phpstan analyse",
@@ -37,7 +39,10 @@
   },
   "extra": {
     "installer-name": "git-content",
-    "kirby-cms-path": false
+    "kirby-cms-path": false,
+    "kirby": {
+      "compatible": "^6.0"
+    }
   },
   "config": {
     "optimize-autoloader": true,

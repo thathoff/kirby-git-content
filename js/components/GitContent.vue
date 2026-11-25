@@ -1,9 +1,9 @@
 <template>
   <k-panel-inside class="k-git-content-view">
-    <k-header>Git Content {{ size }}</k-header>
+    <k-header>Git Content</k-header>
 
     <section class="k-section" v-if="helpText">
-      <k-box :text="helpText" html="true" theme="info" />
+      <k-box :text="$h(helpText)" theme="info" />
     </section>
 
     <k-section
@@ -59,7 +59,7 @@ export default {
     },
     log: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     branch: {
       type: String,
@@ -269,7 +269,7 @@ export default {
     // (errors thrown in dialog submit listeners are not displayed by the panel)
     post: async function (path, data) {
       try {
-        await panel.app.$api.post(path, data);
+        await panel.api.post(path, data);
         return true;
       } catch (error) {
         panel.notification.error(error);
@@ -314,7 +314,7 @@ export default {
       panel.dialog.open({
         component: "k-remove-dialog",
         props: {
-          text: "Are you sure you want to revert the selected changes?<br><br>⚠️ This cannot be undone.",
+          text: this.$h("Are you sure you want to revert the selected changes?<br><br>⚠️ This cannot be undone."),
           submitButton: "Revert changes",
           icon: "undo",
         },
@@ -387,7 +387,7 @@ export default {
 };
 </script>
 <style scoped>
-.k-git-content-view ::v-deep .btn-select-all {
+.k-git-content-view :deep(.btn-select-all) {
   margin-inline-end: var(--spacing-1);
   padding-inline-end: var(--spacing-3);
   border-inline-end: 1px solid var(--color-border);
@@ -407,8 +407,8 @@ export default {
   gap: var(--spacing-3);
   padding: var(--spacing-2) var(--spacing-3);
 }
-.k-git-content-status-item ::v-deep .k-choice-input-icon,
-.k-git-content-status-item ::v-deep .k-choice-input input {
+.k-git-content-status-item :deep(.k-choice-input-icon),
+.k-git-content-status-item :deep(.k-choice-input input) {
   top: 0;
 }
 .k-git-content-status-item + .k-git-content-status-item {

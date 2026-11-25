@@ -52,6 +52,7 @@ class ComposerStaticInitca34deab3a66e784250b35ed34b598ff
         'Kirby\\ComposerInstaller\\PluginInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/PluginInstaller.php',
         'Thathoff\\GitContent\\KirbyGit' => __DIR__ . '/../..' . '/src/KirbyGit.php',
         'Thathoff\\GitContent\\KirbyGitHelper' => __DIR__ . '/../..' . '/src/KirbyGitHelper.php',
+        'Thathoff\\GitContent\\Permissions' => __DIR__ . '/../..' . '/src/Permissions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
