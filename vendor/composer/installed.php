@@ -3,7 +3,7 @@
         'name' => 'thathoff/kirby-git-content',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '7c3a60335289818eec6a1b134f85e34d9bfadfca',
+        'reference' => '26c0370884b0de753e433ee53c11a02a046aa744',
         'type' => 'kirby-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -31,7 +31,7 @@
         'thathoff/kirby-git-content' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '7c3a60335289818eec6a1b134f85e34d9bfadfca',
+            'reference' => '26c0370884b0de753e433ee53c11a02a046aa744',
             'type' => 'kirby-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -3,7 +3,6 @@
 namespace Thathoff\GitContent;
 
 use Kirby\Exception\PermissionException;
-use Kirby\Panel\Panel;
 
 class Permissions
 {
@@ -67,11 +66,10 @@ class Permissions
      */
     public static function check(?string $action = null): void
     {
-        Panel::firewall(kirby()->user(), 'git-content');
+        kirby()->panel()->access()->area('git-content', throws: true);
 
         if ($action !== null && (static::buttons()[$action] ?? false) !== true) {
-            // pass the message as string, named arguments are only supported since Kirby 5
-            throw new PermissionException('You are not allowed to use the "' . $action . '" action.');
+            throw new PermissionException(message: 'You are not allowed to use the "' . $action . '" action.');
         }
     }
 }

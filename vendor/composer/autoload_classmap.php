@@ -29,4 +29,5 @@ return array(
     'Kirby\\ComposerInstaller\\PluginInstaller' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/PluginInstaller.php',
     'Thathoff\\GitContent\\KirbyGit' => $baseDir . '/src/KirbyGit.php',
     'Thathoff\\GitContent\\KirbyGitHelper' => $baseDir . '/src/KirbyGitHelper.php',
+    'Thathoff\\GitContent\\Permissions' => $baseDir . '/src/Permissions.php',
 );

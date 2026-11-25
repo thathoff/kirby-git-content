@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Toolkit\HtmlString;
 use Thathoff\GitContent\KirbyGitHelper;
 use Thathoff\GitContent\Permissions;
 
@@ -14,7 +15,7 @@ return [
             'load' => fn () => [
                 'component' => 'k-remove-dialog',
                 'props' => [
-                    'text' => "Are you sure you want to reset the content folder?<br><br>⚠️ Will remove all local changes and reset to the remote branch.",
+                    'text' => new HtmlString('Are you sure you want to reset the content folder?<br><br>⚠️ Will remove all local changes and reset to the remote branch.'),
                     'submitButton' => 'Reset',
                     'icon' => 'undo',
                 ]
