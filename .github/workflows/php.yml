@@ -8,14 +8,13 @@ on:
 
 jobs:
   checks:
-    name: PHP ${{ matrix.php-version }} / Kirby ${{ matrix.kirby-version }}
+    name: PHP ${{ matrix.php-version }}
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.2', '8.3', '8.4']
-        kirby-version: ['^4.0', '^5.0']
+        php-version: ['8.3', '8.4', '8.5', '8.6']
 
     steps:
       - name: Checkout
@@ -36,16 +35,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-php-${{ matrix.php-version }}-kirby-${{ matrix.kirby-version }}-${{ hashFiles('composer.json') }}
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-${{ matrix.php-version }}-kirby-${{ matrix.kirby-version }}-
-
-      # Kirby is only required for static analysis and therefore not part of composer.json
-      - name: Install Kirby
-        run: composer require --dev --no-update "getkirby/cms:${{ matrix.kirby-version }}"
+            ${{ runner.os }}-php-${{ matrix.php-version }}-
 
       - name: Install dependencies
-        run: composer update --no-interaction --no-progress --prefer-dist
+        run: composer install --no-interaction --no-progress --prefer-dist
 
       - name: Run PHPStan
         run: composer phpstan
