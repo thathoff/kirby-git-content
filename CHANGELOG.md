@@ -145,6 +145,29 @@ The maintainer has switched, be prepared for config option name changes in versi
 
 
 <a name="2.2.2"></a>
+## [6.0.0](https://github.com/thathoff/kirby-git-content/compare/v5.5.1...v6.0.0) (2026-11-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* requires kirby 6 and php 8.3 or newer. kirby 4 and 5 are no longer supported.
+
+### Features
+
+* add support for kirby 6 ([4716feb](https://github.com/thathoff/kirby-git-content/commit/4716feb405b7a484742e8b08240f53413c4003cb)), closes [#135](https://github.com/thathoff/kirby-git-content/issues/135)
+
+
+### Documentation
+
+* limit supported php versions to 8.3 to 8.5 ([b9d2169](https://github.com/thathoff/kirby-git-content/commit/b9d2169ab4bcfc8e4b85618f93a264203a3c1569))
+* update requirements for kirby 6 ([ac64f2f](https://github.com/thathoff/kirby-git-content/commit/ac64f2f3128db4faa82fead9581f5cb7ee3f9ea6))
+
+
+### CI
+
+* drop php 8.6 until czproject/git-php supports it ([f92d660](https://github.com/thathoff/kirby-git-content/commit/f92d660d7f8f2247cffe18355b5903aba7a6bec6))
+* run checks for php 8.3 to 8.6 and kirby 6 only ([f2a8dca](https://github.com/thathoff/kirby-git-content/commit/f2a8dca6ea4968cfbf468c86926a41d4d245a781))
+
 ## [5.5.1](https://github.com/thathoff/kirby-git-content/compare/v5.5.0...v5.5.1) (2026-10-20)
 
 
